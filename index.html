@@ -1353,9 +1353,125 @@ async function copyAI(section){
   }catch(e){alert('Select and copy the text manually.');}
 }
 
-function demoAlert(){alert('In the live hosted version, this button calls Claude AI with your real league data to generate fresh content. Your API key is all that\'s needed — it stays in your browser.');}
+function demoAlert(section) {
+  const btn = event.target;
+  btn.disabled = true;
+  btn.textContent = '…';
 
-function launch(){alert('Live league loading is enabled in the hosted version. Try "Preview with Demo Data" to explore all features!');}
+  const prompts = {
+    weekly: buildWeeklyPrompt(),
+    rankings: buildRankingsPrompt(),
+    trades: buildTradesPrompt(),
+    draft: buildDraftPrompt()
+  };
+
+  fetch('/.netlify/functions/claude', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prompt: prompts[section] })
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.error) throw new Error(data.error);
+    document.getElementById(`out-${section}`).innerHTML = markdownToHtml(data.text);
+    document.getElementById(`cp-${section}`).classList.remove('hidden');
+    aiText[section] = data.text;
+  })
+  .catch(err => {
+    document.getElementById(`out-${section}`).innerHTML =
+      `<div style="color:var(--loss);font-family:'IBM Plex Mono',monospace;font-size:12px;">Error: ${err.message}</div>`;
+  })
+  .finally(() => {
+    btn.disabled = false;
+    btn.textContent = '✦ Regenerate';
+  });
+}
+
+function markdownToHtml(md) {
+  return md
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/^↑ (.+)$/gm, '<p class="rising">↑ $1</p>')
+    .replace(/^↓ (.+)$/gm, '<p class="falling">↓ $1</p>')
+    .replace(/^→ (.+)$/gm, '<p class="steady">→ $1</p>')
+    .replace(/^---$/gm, '<hr>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>.*<\/li>\n?)+/g, m => '<ul>' + m + '</ul>')
+    .replace(/^(?!<[h234pul]|<hr)(.+)$/gm, '<p>$1</p>')
+    .replace(/<p><\/p>/g, '');
+}
+
+function buildWeeklyPrompt() {
+  const ms = D.matchups[D.week] || [];
+  const lines = ms.map(([t1,t2,p1,p2]) => {
+    const tm1 = D.teams.find(t=>t.id===t1), tm2 = D.teams.find(t=>t.id===t2);
+    const w = p1>p2?tm1:tm2, l = p1>p2?tm2:tm1;
+    return `${w.name} def. ${l.name} ${Math.max(p1,p2).toFixed(1)}–${Math.min(p1,p2).toFixed(1)}`;
+  }).join('\n');
+  const standings = D.teams.map((t,i)=>`${i+1}. ${t.name} (${t.wins}-${t.losses})`).join('\n');
+  return `You are an entertaining fantasy football analyst writing a weekly digest for a dynasty league commissioner to share with their league.
+
+LEAGUE: ${D.leagueName} | Week ${D.week} | ${D.season} Season
+
+WEEK ${D.week} RESULTS:
+${lines}
+
+STANDINGS:
+${standings}
+
+Write an engaging Weekly Digest. Include a creative headline, a recap of every game with 1-2 sentences each, a Performance of the Week highlight, and 2 storylines to watch next week. Use sports journalism style — direct, entertaining, with personality. Bold key names.`;
+}
+
+function buildRankingsPrompt() {
+  const teams = D.teams.map((t,i)=>`${i+1}. ${t.name} (${t.wins}-${t.losses}) — ${t.pf} pts for, streak: ${t.streak}`).join('\n');
+  return `You are a dynasty fantasy football power rankings analyst.
+
+LEAGUE: ${D.leagueName} | After Week ${D.week} | ${D.season} Season
+
+TEAM DATA:
+${teams}
+
+Write honest power rankings 1 through ${D.teams.length}. For each team include a bold team name with a one-line all-caps tagline, 2-3 sentences of specific analysis referencing their record and scoring, and end with ↑ Rising, ↓ Falling, or → Locked In. After all rankings add a short Bottom Line paragraph on the biggest story this week. Be direct and opinionated.`;
+}
+
+function buildTradesPrompt() {
+  const trades = D.trades.map((t,i)=>`Trade ${i+1} (${t.date}): ${t.teamA} received ${t.aGets.join(', ')} | ${t.teamB} received ${t.bGets.join(', ')}`).join('\n');
+  const standings = D.teams.map(t=>`${t.name}: ${t.wins}-${t.losses}`).join(', ');
+  return `You are a dynasty fantasy football trade analyst.
+
+LEAGUE: ${D.leagueName} | ${D.season} Season | Through Week ${D.week}
+
+TRADES:
+${trades}
+
+STANDINGS: ${standings}
+
+Write a shareable trade analysis covering: Trade of the Year, Biggest Win, Toughest Loss, Most Active Trader, and a Trade Market Outlook for the rest of the season. Be specific, name names, and give real opinions.`;
+}
+
+function buildDraftPrompt() {
+  const picks = Object.entries(D.picks).map(([team, ps]) =>
+    `${team}: ${ps.map(p=>`${p.yr} R${p.rd}${p.o!==team?' (orig: '+p.o+')':''}`).join(', ')}`
+  ).join('\n');
+  const standings = D.teams.map(t=>`${t.name}: ${t.wins}-${t.losses}`).join(', ');
+  return `You are a dynasty fantasy football draft capital analyst.
+
+LEAGUE: ${D.leagueName} | ${D.season} Season
+
+TRADED PICK HOLDINGS:
+${picks}
+
+STANDINGS: ${standings}
+
+Write a shareable draft capital report covering: the 3 pick-richest teams, the 2 pick-poorest teams, the single most valuable pick in the league and why, a Rebuilding vs Contending breakdown for every team, and a Draft Strategy Preview. Be specific about years and rounds.`;
+}
+
+function launch() {
+  alert('Live league loading coming soon! Use "Preview with Demo Data" to explore all features.');
+}
+
+
 </script>
 </body>
 </html>
