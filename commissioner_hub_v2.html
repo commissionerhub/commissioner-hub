@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commissioner Hub — Dynasty League Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  /* Core */
+  --bg:      #09090f;
+  --s0:      #0e0e18;
+  --s1:      #141420;
+  --s2:      #1c1c2c;
+  --s3:      #242438;
+  --border:  #2a2a40;
+  --border2: #363650;
+  /* Text */
+  --text:    #f0eef8;
+  --text2:   #c8c6d8;
+  --muted:   #6e6c88;
+  --dim:     #44425a;
+  /* Brand accents */
+  --orange:  #ff6b2b;
+  --orange2: #ff8c50;
+  --orange-dim: rgba(255,107,43,0.12);
+  --violet:  #9333ea;
+  --violet2: #a855f7;
+  --violet-dim: rgba(147,51,234,0.12);
+  /* Semantic */
+  --win:   #22c55e;
+  --loss:  #ef4444;
+  --tie:   #64748b;
+  --gold:  #fbbf24;
+  --blue:  #3b82f6;
+  --teal:  #06b6d4;
+  --r: 10px;
+  --r-sm: 6px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-weight:300;min-height:100vh;line-height:1.55;}
+.hidden{display:none!important;}
+::-webkit-scrollbar{width:3px;height:3px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+
+/* ══════════════════════════════════
+   LANDING
+══════════════════════════════════ */
+#screen-landing{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:40px 20px;
+  position:relative;overflow:hidden;
+}
+.land-bg{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 0%, rgba(147,51,234,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 80% 100%, rgba(255,107,43,0.07) 0%, transparent 70%);
+}
+.land-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(42,42,64,0.35) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(42,42,64,0.35) 1px,transparent 1px);
+  background-size:44px 44px;
+  mask-image:radial-gradient(ellipse at 50% 0%,black 0%,transparent 65%);
+  pointer-events:none;
+}
+.land-badge{
+  position:relative;z-index:1;
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--orange);background:var(--orange-dim);border:1px solid rgba(255,107,43,0.28);
+  padding:5px 14px;border-radius:100px;margin-bottom:24px;
+}
+.land-logo{position:relative;z-index:1;text-align:center;margin-bottom:6px;}
+.land-logo-mark{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(64px,12vw,120px);line-height:0.88;letter-spacing:0.03em;
+}
+.land-logo-mark .w1{color:var(--text);}
+.land-logo-mark .w2{color:var(--orange);}
+.land-tagline{
+  font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:400;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:48px;
+  position:relative;z-index:1;
+}
+.land-card{
+  width:100%;max-width:480px;
+  background:var(--s1);border:1px solid var(--border);border-radius:16px;
+  padding:32px;position:relative;z-index:1;
+}
+.land-card::after{
+  content:'';position:absolute;top:0;left:24px;right:24px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--orange),transparent);
+}
+.field-lbl{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;
+  text-transform:uppercase;color:var(--muted);display:block;margin-bottom:7px;
+}
+.field-hint{font-size:11px;color:var(--dim);margin-top:5px;font-family:'IBM Plex Mono',monospace;}
+.field-group{margin-bottom:18px;}
+.inp-wrap{position:relative;}
+.app-inp{
+  width:100%;background:var(--s2);border:1px solid var(--border);border-radius:var(--r-sm);
+  padding:11px 40px 11px 14px;color:var(--text);font-family:'IBM Plex Mono',monospace;
+  font-size:13px;outline:none;transition:border-color .15s,box-shadow .15s;
+}
+.app-inp:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,107,43,0.1);}
+.app-inp::placeholder{color:var(--dim);}
+.inp-icon{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:14px;opacity:0.5;}
+.divider{display:flex;align-items:center;gap:12px;margin:22px 0 18px;}
+.divider-line{flex:1;height:1px;background:var(--border);}
+.divider-txt{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.16em;color:var(--dim);text-transform:uppercase;}
+.btn-primary{
+  width:100%;background:var(--orange);color:#fff;border:none;border-radius:var(--r-sm);
+  padding:13px 24px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.1em;
+  cursor:pointer;transition:background .15s,transform .08s;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.btn-primary:hover{background:var(--orange2);}
+.btn-primary:active{transform:scale(0.99);}
+.btn-demo{
+  width:100%;background:transparent;color:var(--violet2);
+  border:1px solid rgba(168,85,247,0.35);border-radius:var(--r-sm);
+  padding:12px 24px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.1em;
+  cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;justify-content:center;gap:10px;margin-top:10px;
+}
+.btn-demo:hover{background:var(--violet-dim);border-color:var(--violet2);}
+.demo-note{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);text-align:center;margin-top:7px;}
+.err-msg{
+  background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:var(--r-sm);
+  padding:10px 14px;font-size:12px;color:var(--loss);font-family:'IBM Plex Mono',monospace;
+  margin-top:12px;display:none;
+}
+.land-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:36px;position:relative;z-index:1;}
+.land-pill{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.1em;
+  color:var(--muted);background:var(--s1);border:1px solid var(--border);
+  padding:5px 12px;border-radius:100px;
+}
+
+/* ══════════════════════════════════
+   DASHBOARD SHELL
+══════════════════════════════════ */
+#screen-dashboard{display:none;min-height:100vh;flex-direction:column;}
+
+/* Topbar */
+.topbar{
+  background:var(--s0);border-bottom:1px solid var(--border);
+  padding:0 20px 0 16px;display:flex;align-items:center;
+  justify-content:space-between;height:52px;
+  position:sticky;top:0;z-index:200;flex-shrink:0;
+}
+.topbar-left{display:flex;align-items:center;gap:12px;}
+.topbar-wordmark{
+  font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.06em;
+}
+.topbar-wordmark .o{color:var(--orange);}
+.topbar-sep{width:1px;height:20px;background:var(--border);}
+.topbar-league{
+  font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:600;
+  letter-spacing:0.06em;color:var(--text2);text-transform:uppercase;
+}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.week-pill{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.12em;
+  color:var(--orange);background:var(--orange-dim);border:1px solid rgba(255,107,43,0.25);
+  padding:4px 10px;border-radius:100px;
+}
+.demo-pill{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.1em;
+  color:var(--violet2);background:var(--violet-dim);border:1px solid rgba(168,85,247,0.25);
+  padding:4px 10px;border-radius:100px;
+}
+.btn-sm{
+  background:var(--s2);border:1px solid var(--border);border-radius:var(--r-sm);
+  padding:5px 12px;font-family:'IBM Plex Mono',monospace;font-size:10px;
+  letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);
+  cursor:pointer;transition:all .15s;
+}
+.btn-sm:hover{color:var(--text);border-color:var(--border2);}
+
+/* Layout */
+.dash-body{display:flex;flex:1;min-height:calc(100vh - 52px);}
+
+/* Sidebar */
+.sidebar{
+  width:210px;flex-shrink:0;background:var(--s0);border-right:1px solid var(--border);
+  padding:14px 0 24px;position:sticky;top:52px;height:calc(100vh - 52px);
+  overflow-y:auto;
+}
+.nav-group{margin-bottom:4px;}
+.nav-group-lbl{
+  font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.22em;
+  text-transform:uppercase;color:var(--dim);padding:10px 16px 4px;display:block;
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:9px 16px;
+  cursor:pointer;font-size:13px;font-weight:400;color:var(--muted);
+  transition:all .12s;border-left:2px solid transparent;position:relative;
+  user-select:none;
+}
+.nav-item:hover{color:var(--text2);background:rgba(255,255,255,0.03);}
+.nav-item.active{color:var(--orange);border-left-color:var(--orange);background:var(--orange-dim);font-weight:500;}
+.nav-icon{font-size:13px;width:16px;text-align:center;flex-shrink:0;}
+.nav-label{flex:1;}
+.ai-pip{
+  font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:0.08em;
+  padding:2px 5px;border-radius:3px;background:rgba(6,182,212,0.12);
+  color:var(--teal);border:1px solid rgba(6,182,212,0.22);flex-shrink:0;
+}
+.free-pip{
+  font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:0.08em;
+  padding:2px 5px;border-radius:3px;background:rgba(34,197,94,0.1);
+  color:var(--win);border:1px solid rgba(34,197,94,0.22);flex-shrink:0;
+}
+
+/* Main */
+.main{flex:1;padding:24px 28px 60px;overflow-y:auto;max-height:calc(100vh - 52px);}
+.tab{display:none;}
+.tab.active{display:block;}
+
+/* Section header */
+.sec-eyebrow{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.2em;
+  text-transform:uppercase;color:var(--orange);margin-bottom:4px;
+}
+.sec-title{
+  font-family:'Bebas Neue',sans-serif;font-size:38px;letter-spacing:0.04em;
+  color:var(--text);line-height:1;margin-bottom:6px;
+}
+.sec-title .accent{color:var(--orange);}
+.sec-desc{font-size:13px;color:var(--muted);margin-bottom:22px;}
+.sec-hd{margin-bottom:22px;}
+
+/* Cards */
+.card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.card-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;border-bottom:1px solid var(--border);
+}
+.card-title{
+  font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;
+  letter-spacing:0.14em;text-transform:uppercase;color:var(--orange);
+}
+.card-meta{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);}
+.card-body{padding:18px;}
+
+/* Stat strip */
+.stat-strip{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-bottom:22px;}
+.stat-card{
+  background:var(--s1);border:1px solid var(--border);border-radius:var(--r);
+  padding:14px 16px;position:relative;overflow:hidden;
+}
+.stat-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--orange),transparent);
+}
+.stat-num{
+  font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:0.03em;
+  color:var(--text);line-height:1;
+}
+.stat-num.orange{color:var(--orange);}
+.stat-num.green{color:var(--win);}
+.stat-num.violet{color:var(--violet2);}
+.stat-lbl{
+  font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.14em;
+  text-transform:uppercase;color:var(--muted);margin-top:3px;
+}
+
+/* Team avatar */
+.avatar{
+  width:32px;height:32px;border-radius:8px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;font-size:14px;color:#fff;letter-spacing:0.03em;
+}
+.avatar-sm{width:24px;height:24px;border-radius:6px;font-size:11px;}
+.avatar-lg{width:40px;height:40px;border-radius:10px;font-size:17px;}
+
+/* Win/loss pills */
+.pill{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.06em;
+  padding:3px 8px;border-radius:100px;font-weight:500;
+}
+.pill-w{background:rgba(34,197,94,0.12);color:var(--win);border:1px solid rgba(34,197,94,0.25);}
+.pill-l{background:rgba(239,68,68,0.1);color:var(--loss);border:1px solid rgba(239,68,68,0.22);}
+.pill-in{background:rgba(34,197,94,0.12);color:var(--win);border:1px solid rgba(34,197,94,0.25);}
+.pill-bubble{background:rgba(251,191,36,0.1);color:var(--gold);border:1px solid rgba(251,191,36,0.25);}
+.pill-out{background:rgba(239,68,68,0.1);color:var(--loss);border:1px solid rgba(239,68,68,0.22);}
+
+/* Standings table */
+.stbl{width:100%;border-collapse:collapse;font-size:13px;}
+.stbl th{
+  font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.16em;
+  text-transform:uppercase;color:var(--dim);text-align:left;
+  padding:10px 14px;border-bottom:1px solid var(--border);font-weight:400;
+}
+.stbl td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle;}
+.stbl tr:last-child td{border-bottom:none;}
+.stbl tr:hover td{background:rgba(255,255,255,0.02);}
+.stbl .rank{
+  font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--dim);
+  width:32px;text-align:center;
+}
+.stbl .rank.top{color:var(--orange);}
+.stbl .team-cell{display:flex;align-items:center;gap:10px;}
+.stbl .team-name{font-weight:500;font-size:13px;}
+.stbl .team-owner{font-size:11px;color:var(--muted);}
+.record-display{font-family:'IBM Plex Mono',monospace;font-size:12px;}
+.record-display .w{color:var(--win);}
+.record-display .l{color:var(--loss);}
+.pts-display{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text2);}
+.pts-display.dim{color:var(--muted);}
+.streak-badge{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;
+  padding:2px 7px;border-radius:4px;
+}
+.streak-w{background:rgba(34,197,94,0.1);color:var(--win);}
+.streak-l{background:rgba(239,68,68,0.08);color:var(--loss);}
+
+/* Matchup cards */
+.matchup-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;}
+.mc{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);}
+.mc-hd{
+  font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.14em;
+  text-transform:uppercase;color:var(--dim);padding:7px 13px;
+  background:var(--s1);border-bottom:1px solid var(--border);
+}
+.mc-row{display:flex;align-items:center;gap:10px;padding:10px 13px;border-bottom:1px solid rgba(255,255,255,0.04);}
+.mc-row:last-child{border-bottom:none;}
+.mc-row.winner .mc-pts{color:var(--win);font-weight:500;}
+.mc-row.loser .mc-pts{color:var(--muted);}
+.mc-row.loser .mc-name{color:var(--muted);}
+.mc-name{flex:1;font-size:13px;font-weight:500;}
+.mc-pts{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.03em;}
+
+/* Chart container */
+.chart-wrap{position:relative;height:280px;}
+.chart-wrap-tall{position:relative;height:360px;}
+
+/* Records grid */
+.records-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
+.record-card{
+  background:var(--s2);border:1px solid var(--border);border-radius:var(--r);
+  padding:16px;position:relative;overflow:hidden;
+}
+.record-card::before{
+  content:'';position:absolute;top:0;left:0;width:3px;height:100%;
+  background:var(--orange);
+}
+.record-icon{font-size:20px;margin-bottom:8px;display:block;}
+.record-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.record-val{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--orange);letter-spacing:0.03em;line-height:1;}
+.record-team{font-size:12px;color:var(--text2);margin-top:3px;}
+.record-ctx{font-size:11px;color:var(--dim);margin-top:2px;font-family:'IBM Plex Mono',monospace;}
+
+/* Playoff picture */
+.playoff-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+@media(max-width:640px){.playoff-grid{grid-template-columns:1fr;}}
+.pf-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:14px;}
+.pf-seed{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.06em;color:var(--dim);}
+.pf-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.pf-row:last-child{border-bottom:none;}
+.pf-num{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--orange);width:26px;text-align:center;}
+.pf-info{flex:1;}
+.pf-name{font-size:13px;font-weight:500;}
+.pf-record{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);}
+.pf-magic{font-family:'IBM Plex Mono',monospace;font-size:10px;text-align:right;}
+.magic-num{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gold);}
+.magic-lbl{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:0.1em;}
+.elim-badge{
+  font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.1em;
+  padding:2px 7px;border-radius:3px;background:rgba(239,68,68,0.1);
+  color:var(--loss);border:1px solid rgba(239,68,68,0.22);
+}
+.clinch-badge{
+  font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.1em;
+  padding:2px 7px;border-radius:3px;background:rgba(34,197,94,0.12);
+  color:var(--win);border:1px solid rgba(34,197,94,0.25);
+}
+
+/* Luck index */
+.luck-row{
+  display:flex;align-items:center;gap:12px;padding:11px 0;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+}
+.luck-row:last-child{border-bottom:none;}
+.luck-record{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);width:40px;}
+.luck-bar-wrap{flex:1;height:8px;background:var(--s3);border-radius:4px;position:relative;}
+.luck-bar{height:100%;border-radius:4px;position:absolute;top:0;}
+.luck-pos{background:var(--win);}
+.luck-neg{background:var(--loss);right:0;}
+.luck-diff{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;width:52px;text-align:right;}
+.luck-diff.pos{color:var(--win);}
+.luck-diff.neg{color:var(--loss);}
+.luck-diff.neu{color:var(--muted);}
+
+/* MVP cards */
+.mvp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;}
+.mvp-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:14px;}
+.mvp-week{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--dim);margin-bottom:6px;}
+.mvp-name{font-size:13px;font-weight:500;margin-bottom:2px;}
+.mvp-team{font-size:11px;color:var(--muted);margin-bottom:8px;}
+.mvp-score{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--orange);line-height:1;}
+.mvp-score-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);}
+
+/* Roster */
+.roster-pos-section{margin-bottom:14px;}
+.roster-pos-lbl{
+  font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.16em;
+  text-transform:uppercase;color:var(--dim);padding:6px 0;
+  border-bottom:1px solid var(--border);margin-bottom:6px;
+}
+.roster-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;}
+.roster-name{font-size:12px;color:var(--text2);}
+.pos-tag{
+  font-family:'IBM Plex Mono',monospace;font-size:9px;
+  padding:2px 6px;border-radius:3px;
+}
+.pos-QB{background:rgba(251,191,36,0.12);color:var(--gold);}
+.pos-RB{background:rgba(34,197,94,0.1);color:var(--win);}
+.pos-WR{background:rgba(59,130,246,0.1);color:var(--blue);}
+.pos-TE{background:rgba(239,68,68,0.1);color:var(--loss);}
+.pos-K,.pos-DEF{background:rgba(100,116,139,0.15);color:var(--tie);}
+
+/* Trade log */
+.trade-item{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden;}
+.trade-hd{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:var(--s1);border-bottom:1px solid var(--border);}
+.trade-date{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);}
+.trade-badge{
+  font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:0.1em;text-transform:uppercase;
+  padding:2px 7px;border-radius:3px;background:rgba(59,130,246,0.1);color:var(--blue);border:1px solid rgba(59,130,246,0.22);
+}
+.trade-body{display:grid;grid-template-columns:1fr 1fr;}
+.trade-side{padding:12px 14px;}
+.trade-side+.trade-side{border-left:1px solid var(--border);}
+.trade-side-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--dim);margin-bottom:6px;}
+.trade-asset{font-size:12px;padding:2px 0;color:var(--text2);}
+.trade-asset.pick{color:var(--orange);font-family:'IBM Plex Mono',monospace;font-size:11px;}
+
+/* Pick chips */
+.picks-wrap{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;}
+.pc{font-family:'IBM Plex Mono',monospace;font-size:9px;padding:3px 7px;border-radius:3px;white-space:nowrap;}
+.pc-1{background:var(--orange-dim);color:var(--orange);border:1px solid rgba(255,107,43,0.28);}
+.pc-2{background:rgba(59,130,246,0.1);color:var(--blue);border:1px solid rgba(59,130,246,0.25);}
+.pc-3{background:rgba(100,116,139,0.12);color:var(--muted);border:1px solid rgba(100,116,139,0.25);}
+
+/* AI section */
+.ai-wrap{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:18px;}
+.ai-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);background:var(--s0);}
+.ai-title{display:flex;align-items:center;gap:10px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);}
+.ai-chip{
+  font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:0.1em;
+  padding:2px 7px;border-radius:100px;background:rgba(6,182,212,0.12);
+  color:var(--teal);border:1px solid rgba(6,182,212,0.25);
+}
+.ai-btns{display:flex;gap:8px;}
+.btn-gen{
+  display:flex;align-items:center;gap:6px;background:var(--orange);color:#fff;border:none;
+  border-radius:var(--r-sm);padding:7px 14px;font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;
+  cursor:pointer;transition:background .15s;
+}
+.btn-gen:hover{background:var(--orange2);}
+.btn-gen:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-copy-ai{
+  display:flex;align-items:center;gap:6px;background:var(--s2);border:1px solid var(--border2);
+  color:var(--muted);border-radius:var(--r-sm);padding:7px 12px;
+  font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;
+  cursor:pointer;transition:all .15s;
+}
+.btn-copy-ai:hover{border-color:var(--teal);color:var(--teal);}
+.btn-copy-ai.copied{border-color:var(--win);color:var(--win);}
+.ai-body{padding:22px;min-height:80px;}
+.ai-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:44px 24px;text-align:center;}
+.ai-ph-icon{font-size:26px;opacity:0.25;}
+.ai-ph-txt{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:0.08em;}
+.ai-spinning{display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:44px;}
+.ai-spinning.on{display:flex;}
+.spin{width:26px;height:26px;border:2px solid var(--border2);border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin-lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);animation:fp 1.5s ease-in-out infinite;}
+@keyframes fp{0%,100%{opacity:1}50%{opacity:0.35}}
+.ai-out{display:none;}
+.ai-out.on{display:block;}
+.ai-out h2{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:0.05em;color:var(--orange);margin-bottom:14px;}
+.ai-out h3{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:0.04em;color:var(--text);margin:18px 0 7px;}
+.ai-out h4{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);margin:14px 0 5px;}
+.ai-out p{font-size:13px;color:var(--text2);line-height:1.75;margin-bottom:10px;}
+.ai-out p b,.ai-out p strong{color:var(--orange);font-weight:500;}
+.ai-out ul{margin:6px 0 12px 18px;}
+.ai-out li{font-size:13px;color:var(--muted);margin-bottom:5px;line-height:1.6;}
+.ai-out li b{color:var(--text2);font-weight:500;}
+.ai-out hr{border:none;border-top:1px solid var(--border);margin:18px 0;}
+.rising{color:var(--win);font-family:'IBM Plex Mono',monospace;font-size:11px;}
+.falling{color:var(--loss);font-family:'IBM Plex Mono',monospace;font-size:11px;}
+.steady{color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:11px;}
+
+/* Progress bar */
+.prog-wrap{width:100%;height:4px;background:var(--s3);border-radius:2px;overflow:hidden;margin-top:4px;}
+.prog-bar{height:100%;border-radius:2px;background:var(--orange);}
+
+/* Responsive */
+@media(max-width:768px){
+  .sidebar{
+    position:static;width:100%;height:auto;border-right:none;
+    border-bottom:1px solid var(--border);
+    display:flex;flex-direction:row;overflow-x:auto;padding:6px 0;
+  }
+  .nav-group-lbl{display:none;}
+  .nav-item{white-space:nowrap;border-left:none;border-bottom:2px solid transparent;padding:8px 12px;}
+  .nav-item.active{border-bottom-color:var(--orange);background:transparent;}
+  .dash-body{flex-direction:column;}
+  .main{padding:18px 16px 50px;}
+  .playoff-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     LANDING
+══════════════════════════════════ -->
+<div id="screen-landing">
+  <div class="land-bg"></div>
+  <div class="land-grid"></div>
+  <div class="land-badge">◆ Sleeper API + Claude AI</div>
+  <div class="land-logo">
+    <div class="land-logo-mark">
+      <span class="w1">Commissioner</span><br><span class="w2">Hub</span>
+    </div>
+  </div>
+  <div class="land-tagline">Dynasty League Intelligence Platform</div>
+  <div class="land-card">
+    <div class="field-group">
+      <label class="field-lbl" for="inp-league">Sleeper League ID</label>
+      <div class="inp-wrap">
+        <input class="app-inp" id="inp-league" type="text" placeholder="e.g. 1234567890123456789" autocomplete="off">
+        <span class="inp-icon">🏈</span>
+      </div>
+      <div class="field-hint">Sleeper → League → Settings → League ID</div>
+    </div>
+    <div class="divider"><div class="divider-line"></div><div class="divider-txt">AI Content (Optional)</div><div class="divider-line"></div></div>
+    <div class="field-group">
+      <label class="field-lbl" for="inp-key">Anthropic API Key</label>
+      <div class="inp-wrap">
+        <input class="app-inp" id="inp-key" type="password" placeholder="sk-ant-api03-..." autocomplete="off">
+        <span class="inp-icon">🔑</span>
+      </div>
+      <div class="field-hint">Only needed for AI-written storylines · Stays in your browser</div>
+    </div>
+    <div id="land-err" class="err-msg"></div>
+    <button class="btn-primary" onclick="launch()">⚡ Load My League</button>
+    <div class="divider" style="margin:20px 0 16px;"><div class="divider-line"></div><div class="divider-txt">No account needed</div><div class="divider-line"></div></div>
+    <button class="btn-demo" onclick="loadDemo()">🎮 Preview with Demo League</button>
+    <div class="demo-note">See every feature with a full fictional dynasty league</div>
+  </div>
+  <div class="land-pills">
+    <span class="land-pill">📊 8 Free Sections</span>
+    <span class="land-pill">📈 Scoring Charts</span>
+    <span class="land-pill">🎯 Playoff Picture</span>
+    <span class="land-pill">🍀 Luck Index</span>
+    <span class="land-pill">🏅 League Records</span>
+    <span class="land-pill">🤖 AI Optional</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     DASHBOARD
+══════════════════════════════════ -->
+<div id="screen-dashboard" style="flex-direction:column;">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-wordmark">C<span class="o">Hub</span></div>
+      <div class="topbar-sep"></div>
+      <div class="topbar-league" id="tb-league"></div>
+    </div>
+    <div class="topbar-right">
+      <div class="week-pill" id="tb-week"></div>
+      <div class="demo-pill hidden" id="tb-demo">🎮 Demo</div>
+      <button class="btn-sm" onclick="resetApp()">← Back</button>
+    </div>
+  </div>
+
+  <div class="dash-body">
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <div class="nav-group">
+        <span class="nav-group-lbl">League</span>
+        <div class="nav-item active" id="nav-overview" onclick="go('overview')"><span class="nav-icon">📊</span><span class="nav-label">Overview</span><span class="free-pip">Free</span></div>
+        <div class="nav-item" id="nav-standings" onclick="go('standings')"><span class="nav-icon">🏆</span><span class="nav-label">Standings</span><span class="free-pip">Free</span></div>
+        <div class="nav-item" id="nav-rosters" onclick="go('rosters')"><span class="nav-icon">👥</span><span class="nav-label">Rosters</span><span class="free-pip">Free</span></div>
+      </div>
+      <div class="nav-group">
+        <span class="nav-group-lbl">Analytics</span>
+        <div class="nav-item" id="nav-trends" onclick="go('trends')"><span class="nav-icon">📈</span><span class="nav-label">Scoring Trends</span><span class="free-pip">Free</span></div>
+        <div class="nav-item" id="nav-playoff" onclick="go('playoff')"><span class="nav-icon">🎯</span><span class="nav-label">Playoff Picture</span><span class="free-pip">Free</span></div>
+        <div class="nav-item" id="nav-luck" onclick="go('luck')"><span class="nav-icon">🍀</span><span class="nav-label">Luck Index</span><span class="free-pip">Free</span></div>
+        <div class="nav-item" id="nav-mvp" onclick="go('mvp')"><span class="nav-icon">⭐</span><span class="nav-label">Weekly MVPs</span><span class="free-pip">Free</span></div>
+        <div class="nav-item" id="nav-records" onclick="go('records')"><span class="nav-icon">🏅</span><span class="nav-label">League Records</span><span class="free-pip">Free</span></div>
+      </div>
+      <div class="nav-group">
+        <span class="nav-group-lbl">AI Content</span>
+        <div class="nav-item" id="nav-weekly" onclick="go('weekly')"><span class="nav-icon">📰</span><span class="nav-label">Weekly Digest</span><span class="ai-pip">AI</span></div>
+        <div class="nav-item" id="nav-rankings" onclick="go('rankings')"><span class="nav-icon">⚡</span><span class="nav-label">Power Rankings</span><span class="ai-pip">AI</span></div>
+        <div class="nav-item" id="nav-trades" onclick="go('trades')"><span class="nav-icon">🔄</span><span class="nav-label">Trade Analysis</span><span class="ai-pip">AI</span></div>
+        <div class="nav-item" id="nav-draft" onclick="go('draft')"><span class="nav-icon">🎯</span><span class="nav-label">Draft Capital</span><span class="ai-pip">AI</span></div>
+      </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+      <!-- ── OVERVIEW ── -->
+      <div class="tab active" id="tab-overview">
+        <div class="sec-hd">
+          <div class="sec-eyebrow">Season Summary</div>
+          <div class="sec-title">Season <span class="accent">Overview</span></div>
+        </div>
+        <div class="stat-strip" id="ov-stats"></div>
+        <div class="card">
+          <div class="card-hd"><div class="card-title" id="ov-wk-title">This Week's Matchups</div><div class="card-meta" id="ov-wk-sub"></div></div>
+          <div class="card-body" id="ov-matchups"></div>
+        </div>
+      </div>
+
+      <!-- ── STANDINGS ── -->
+      <div class="tab" id="tab-standings">
+        <div class="sec-hd">
+          <div class="sec-eyebrow">Current Standings</div>
+          <div class="sec-title">League <span class="accent">Table</span></div>
+          <div class="sec-desc">Teams sorted by wins, then points scored. Playoff cutline highlighted.</div>
+        </div>
+        <div class="card">
+          <div class="card-body" style="padding:0;">
+            <table class="stbl" id="standings-tbl"></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ROSTERS ── -->
+      <div class="tab" id="tab-rosters">
+        <div class="sec-hd">
+          <div class="sec-eyebrow">Dynasty Rosters</div>
+          <div class="sec-title">Team <span class="accent">Rosters</span></div>
+          <div class="sec-desc">Full dynasty rosters organized by position.</div>
+        </div>
+        <div id="rosters-content" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;"></div>
+      </div>
+
+      <!-- ── SCORING TRENDS ── -->
+      <div class="tab" id="tab-trends">
+        <div class="sec-hd">
+          <div class="sec-eyebrow">No AI Required · Auto-Calculated</div>
+          <div class="sec-title">Scoring <span class="accent">Trends</span></div>
+          <div class="sec-desc">Weekly point totals for every team across the season. Select a team to highlight.</div>
+        </div>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-hd"><div class="card-title">Weekly Scores — All Teams</div><div class="card-meta" id="trends-meta"></div></div>
+          <div class="card-body"><div class="chart-wrap-tall"><canvas id="chart-trends"></canvas></div></div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><div class="card-title">Points Per Game — Season Average</div></div>
+          <div class="card-body" id="ppg-bars"></div>
+        </div>
+      </div>
+
+      <!-- ── PLAYOFF PICTURE ── -->
+      <div class="tab" id="tab-playoff">
+        <div class="sec-hd">
+          <div class="sec-eyebrow">No AI Required · Auto-Calculated</div>
+          <div class="sec-title">Playoff <span class="accent">Picture</span></div>
+          <div class="sec-desc">Current projected playoff seedings, magic numbers to clinch, and elimination scenarios.</div>
+        </div>
+        <div id="playoff-content"></div>
+      </div>
+
+      <!-- ── LUCK INDEX ── -->
+      <div class="tab" id="tab-luck">
+        <div class="sec-hd">
+          <div class="sec-eyebrow">No AI Required · Commissioner Storytelling</div>
+          <div class="sec-title">Luck <span class="accent">Index</span></div>
+          <div class="sec-desc">Compares each team's actual record to their expected record based on weekly scoring. A positive number means they've been lucky; negative means they've been robbed.</div>
+        </div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-hd"><div class="card-title">Expected vs. Actual Record</div><div class="card-meta">Based on weekly point rank vs. all 10 teams</div></div>
+          <div class="card-body"><div class="chart-wrap"><canvas id="chart-luck"></canvas></div></div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><div class="card-title">Luck Differential — Season to Date</div><div class="card-meta">Positive = fortunate schedule · Negative = deserved better</div></div>
+          <div class="card-body" id="luck-rows"></div>
+        </div>
+      </div>
+
+      <!-- ── WEEKLY MVPS ── -->
+      <div class="tab" id="tab-mvp">
+        <div class="sec-hd">
+          <div class="sec-eyebrow">No AI Required · Auto-Generated</div>
+          <div class="sec-title">Weekly <span class="accent">MVPs</span></div>
+          <div class="sec-desc">The highest-scoring team each week — and the margin they won by.</div>
+        </div>
+        <div id="mvp-content"></div>
+      </div>
+
+      <!-- ── LEAGUE RECORDS ── -->
+      <div class="tab" id="tab-records">
+        <div class="sec-hd">
+          <div class="sec-eyebrow">No AI Required · Auto-Calculated</div>
+          <div class="sec-title">League <span class="accent">Records</span></div>
+          <div class="sec-desc">Season-best performances, streaks, and historical milestones — updated automatically each week.</div>
+        </div>
+        <div id="records-content"></div>
+      </div>
+
+      <!-- ── WEEKLY DIGEST (AI) ── -->
+      <div class="tab" id="tab-weekly">
+        <div class="sec-hd">
+          <div class="sec-eyebrow">AI Generated · Copy &amp; Share</div>
+          <div class="sec-title">Weekly <span class="accent">Digest</span></div>
+          <div class="sec-desc">AI-written matchup recaps and storylines — ready to drop in your league group chat.</div>
+        </div>
+        <div class="ai-wrap">
+          <div class="ai-hd">
+            <div class="ai-title">📰 Week 9 Digest <span class="ai-chip">Claude AI</span></div>
+            <div class="ai-btns">
+              <button class="btn-copy-ai" id="cp-weekly" onclick="copyAI('weekly')">📋 Copy</button>
+              <button class="btn-gen" onclick="demoAlert()">✦ Generate</button>
+            </div>
+          </div>
+          <div class="ai-body"><div class="ai-out on" id="out-weekly"></div></div>
+        </div>
+      </div>
+
+      <!-- ── POWER RANKINGS (AI) ── -->
+      <div class="tab" id="tab-rankings">
+        <div class="sec-hd">
+          <div class="sec-eyebrow">AI Generated · Copy &amp; Share</div>
+          <div class="sec-title">Power <span class="accent">Rankings</span></div>
+          <div class="sec-desc">Honest, data-driven rankings with sharp weekly analysis — great commissioner content.</div>
+        </div>
+        <div class="ai-wrap">
+          <div class="ai-hd">
+            <div class="ai-title">⚡ Power Rankings — Wk 9 <span class="ai-chip">Claude AI</span></div>
+            <div class="ai-btns">
+              <button class="btn-copy-ai" id="cp-rankings" onclick="copyAI('rankings')">📋 Copy</button>
+              <button class="btn-gen" onclick="demoAlert()">✦ Generate</button>
+            </div>
+          </div>
+          <div class="ai-body"><div class="ai-out on" id="out-rankings"></div></div>
+        </div>
+      </div>
+
+      <!-- ── TRADE ANALYSIS (AI) ── -->
+      <div class="tab" id="tab-trades">
+        <div class="sec-hd">
+          <div class="sec-eyebrow">AI Generated · Copy &amp; Share</div>
+          <div class="sec-title">Trade <span class="accent">Analysis</span></div>
+          <div class="sec-desc">Season trade log plus AI-generated breakdown of winners, losers, and market outlook.</div>
+        </div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-hd"><div class="card-title">Trade Log</div><div class="card-meta" id="trade-ct"></div></div>
+          <div class="card-body" id="trade-log"></div>
+        </div>
+        <div class="ai-wrap">
+          <div class="ai-hd">
+            <div class="ai-title">🔄 Trade Analysis <span class="ai-chip">Claude AI</span></div>
+            <div class="ai-btns">
+              <button class="btn-copy-ai" id="cp-trades" onclick="copyAI('trades')">📋 Copy</button>
+              <button class="btn-gen" onclick="demoAlert()">✦ Generate</button>
+            </div>
+          </div>
+          <div class="ai-body"><div class="ai-out on" id="out-trades"></div></div>
+        </div>
+      </div>
+
+      <!-- ── DRAFT CAPITAL (AI) ── -->
+      <div class="tab" id="tab-draft">
+        <div class="sec-hd">
+          <div class="sec-eyebrow">AI Generated · Copy &amp; Share</div>
+          <div class="sec-title">Draft <span class="accent">Capital</span></div>
+          <div class="sec-desc">Traded pick holdings across all years — who's building, who's contending, who's overextended.</div>
+        </div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-hd"><div class="card-title">Traded Picks by Team</div></div>
+          <div class="card-body" id="draft-picks"></div>
+        </div>
+        <div class="ai-wrap">
+          <div class="ai-hd">
+            <div class="ai-title">🎯 Draft Capital Analysis <span class="ai-chip">Claude AI</span></div>
+            <div class="ai-btns">
+              <button class="btn-copy-ai" id="cp-draft" onclick="copyAI('draft')">📋 Copy</button>
+              <button class="btn-gen" onclick="demoAlert()">✦ Generate</button>
+            </div>
+          </div>
+          <div class="ai-body"><div class="ai-out on" id="out-draft"></div></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════
+   DEMO DATA
+════════════════════════════════════ */
+const TEAM_COLORS = ['#6366f1','#f59e0b','#22c55e','#06b6d4','#8b5cf6','#f97316','#ec4899','#14b8a6','#ef4444','#64748b'];
+
+const D = {
+  leagueName:'Outlaws & Survivors',
+  season:2025,
+  week:9,
+  playoffSpots:6,
+  totalWeeks:14,
+  teams:[
+    {id:1,name:'Gridiron Ghosts',    owner:'Wolfgang22',  wins:8,losses:1,pf:2186,pa:1748,streak:'W3'},
+    {id:2,name:'Mahomes My Business',owner:'RobertVC',    wins:7,losses:2,pf:2041,pa:1820,streak:'W2'},
+    {id:3,name:'Run CMC',            owner:'Bully56',     wins:6,losses:3,pf:1998,pa:1901,streak:'W1'},
+    {id:4,name:'Comeback Cacti',     owner:'EnormiCacti', wins:5,losses:4,pf:1894,pa:1876,streak:'W1'},
+    {id:5,name:'Draftpunk',          owner:'DraketheMaye',wins:5,losses:4,pf:1870,pa:1920,streak:'L1'},
+    {id:6,name:"Tuesday Morning QBs",owner:'Coooter',     wins:4,losses:5,pf:1802,pa:1895,streak:'W2'},
+    {id:7,name:"Le'Veon a Prayer",   owner:'BenyK',       wins:4,losses:5,pf:1840,pa:1910,streak:'L2'},
+    {id:8,name:'Waiver Wire Wizard', owner:'JamesVanCuyck',wins:3,losses:6,pf:1750,pa:1980,streak:'L1'},
+    {id:9,name:'Hail Mary Squad',    owner:'Skolsplitter',wins:2,losses:7,pf:1688,pa:2050,streak:'L3'},
+    {id:10,name:'Fantasy Flatline',  owner:'PooPooMcGoo', wins:1,losses:8,pf:1580,pa:2120,streak:'L5'},
+  ],
+  // Weekly scores [wk1..wk9] per team id
+  weeklyScores:{
+    1:[248,271,238,295,264,252,241,268,287],
+    2:[218,229,244,231,238,225,207,219,242],
+    3:[201,238,227,186,243,219,231,190,263],
+    4:[195,208,224,218,187,211,198,235,218],
+    5:[187,213,196,221,202,189,216,201,225],
+    6:[168,192,178,199,181,204,215,188,235],
+    7:[211,197,208,224,176,198,179,249,198],
+    8:[194,201,183,176,208,192,187,207,201],
+    9:[149,172,158,161,147,169,174,163,158],
+  },
+  // matchups [wk][pair] = [team1Id, team2Id, team1pts, team2pts]
+  matchups:{
+    9:[[1,10,287.4,158.2],[2,9,241.8,198.6],[3,8,263.1,201.4],[4,5,218.3,224.7],[6,7,234.9,198.2]],
+    8:[[1,9,268,195],[2,8,219,207],[3,7,190,249],[4,6,235,188],[5,10,201,163]],
+    7:[[1,8,241,187],[2,7,207,179],[3,6,231,215],[4,10,198,174],[5,9,216,160]],
+    6:[[1,7,252,198],[2,6,225,204],[3,5,189,202],[4,9,211,183],[8,10,192,169]],
+    5:[[1,6,264,181],[2,5,238,202],[3,4,243,187],[7,9,176,171],[8,10,208,147]],
+    4:[[1,5,295,221],[2,4,231,218],[3,6,186,199],[7,8,224,176],[9,10,183,161]],
+    3:[[1,4,238,195],[2,3,244,227],[5,6,196,178],[7,10,208,158],[8,9,183,192]],
+    2:[[1,3,271,201],[2,10,229,172],[4,7,208,197],[5,8,213,201],[6,9,192,165]],
+    1:[[1,2,248,218],[3,10,238,149],[4,9,195,178],[5,6,187,168],[7,8,211,194]],
+  },
+  rosters:{
+    1:{QB:['Josh Allen','Patrick Mahomes'],RB:['Bijan Robinson','Jahmyr Gibbs','Ashton Jeanty','Quinshon Judkins'],WR:["Ja'Marr Chase",'Justin Jefferson','Malik Nabers','Rome Odunze'],TE:['Brock Bowers']},
+    2:{QB:['Caleb Williams','Jaxson Dart'],RB:['Jonathan Taylor','Omarion Hampton','J.K. Dobbins'],WR:['Jaxon Smith-Njigba','George Pickens','Emeka Egbuka','Ricky Pearsall'],TE:['Trey McBride','Colston Loveland']},
+    3:{QB:['Lamar Jackson','Dak Prescott'],RB:['Christian McCaffrey','Chase Brown','Kyren Williams','Derrick Henry'],WR:['Zay Flowers','Terry McLaurin'],TE:['Travis Kelce']},
+    4:{QB:['Jalen Hurts','Jordan Love'],RB:['Javonte Williams','Rico Dowdle','Zach Charbonnet'],WR:['Amon-Ra St. Brown','DK Metcalf','Marvin Harrison Jr.'],TE:['Tyler Warren','Sam LaPorta']},
+    5:{QB:['Drake Maye','Sam Darnold'],RB:["De'Von Achane",'Cam Skattebo','Chuba Hubbard'],WR:['Tee Higgins','DeVonta Smith','Xavier Worthy'],TE:['George Kittle','Jake Ferguson']},
+    6:{QB:['Jayden Daniels','Jacoby Brissett'],RB:['Bucky Irving','Rachaad White','Trey Benson'],WR:['Nico Collins','Tetairoa McMillan','Ladd McConkey'],TE:['Kyle Pitts']},
+    7:{QB:['Bo Nix','Trevor Lawrence'],RB:['Breece Hall','Travis Etienne'],WR:['Puka Nacua','A.J. Brown','Davante Adams','DJ Moore'],TE:['Tucker Kraft']},
+    8:{QB:['Josh Allen (BUF)','Baker Mayfield'],RB:['Saquon Barkley','David Montgomery','Kenneth Walker'],WR:['Deebo Samuel','Stefon Diggs'],TE:['Harold Fannin Jr.']},
+    9:{QB:['Daniel Jones','Brock Purdy'],RB:["D'Andre Swift",'Bucky Irving'],WR:['CeeDee Lamb','Drake London','Garrett Wilson'],TE:['Dallas Goedert']},
+    10:{QB:['Justin Herbert','Kyler Murray'],RB:['James Cook','Josh Jacobs','Jaylen Warren'],WR:['Rashee Rice','Jaylen Waddle','Luther Burden III'],TE:['Mark Andrews']},
+  },
+  trades:[
+    {date:'Oct 14',teamA:'Gridiron Ghosts',    teamB:"Le'Veon a Prayer", aGets:["A.J. Brown","2027 R1 (Le'Veon)"],bGets:['Justin Jefferson','2026 R2']},
+    {date:'Oct 8', teamA:'Comeback Cacti',     teamB:'Draftpunk',        aGets:['Amon-Ra St. Brown'],bGets:['2026 R1 (Draftpunk)','2027 R2']},
+    {date:'Sep 28',teamA:'Gridiron Ghosts',    teamB:'Hail Mary Squad',  aGets:['2027 R1 (Hail Mary)','2026 R2'],bGets:['Breece Hall','TJ Hockenson']},
+    {date:'Sep 21',teamA:'Mahomes My Business',teamB:'Waiver Wire Wizard',aGets:['Jonathan Taylor','2026 R1 (Flatline)'],bGets:['Josh Allen','2027 R3']},
+    {date:'Sep 14',teamA:'Run CMC',            teamB:"Tuesday Morning QBs",aGets:['Jayden Daniels'],bGets:['Travis Kelce','2026 R3']},
+  ],
+  picks:{
+    'Gridiron Ghosts':    [{yr:'2026',rd:2,o:'Hail Mary Squad'},{yr:'2027',rd:1,o:'Hail Mary Squad'},{yr:'2027',rd:1,o:"Le'Veon a Prayer"},{yr:'2027',rd:1,o:'Fantasy Flatline'},{yr:'2027',rd:2,o:'Fantasy Flatline'},{yr:'2028',rd:1,o:'Waiver Wire Wizard'}],
+    'Mahomes My Business':[{yr:'2026',rd:1,o:'Fantasy Flatline'},{yr:'2026',rd:2,o:'Waiver Wire Wizard'},{yr:'2027',rd:1,o:'Own'},{yr:'2028',rd:1,o:'Own'},{yr:'2028',rd:2,o:'Gridiron Ghosts'}],
+    'Run CMC':            [{yr:'2026',rd:2,o:'Own'},{yr:'2026',rd:3,o:'Tuesday Morning QBs'},{yr:'2027',rd:2,o:'Own'},{yr:'2028',rd:1,o:'Own'}],
+    'Comeback Cacti':     [{yr:'2026',rd:1,o:'Draftpunk'},{yr:'2026',rd:1,o:"Le'Veon a Prayer"},{yr:'2026',rd:1,o:'Hail Mary Squad'},{yr:'2026',rd:2,o:'Own'},{yr:'2028',rd:1,o:'Own'}],
+    'Draftpunk':          [{yr:'2026',rd:1,o:'Waiver Wire Wizard'},{yr:'2026',rd:2,o:'Own'},{yr:'2027',rd:2,o:'Own'},{yr:'2027',rd:3,o:'Own'},{yr:'2028',rd:1,o:'Own'},{yr:'2028',rd:2,o:'Own'}],
+    "Tuesday Morning QBs":[{yr:'2026',rd:1,o:'Own'},{yr:'2026',rd:2,o:'Fantasy Flatline'},{yr:'2026',rd:3,o:'Own'},{yr:'2027',rd:2,o:'Own'},{yr:'2028',rd:1,o:'Own'}],
+    "Le'Veon a Prayer":   [{yr:'2026',rd:1,o:'Run CMC'},{yr:'2026',rd:3,o:'Own'},{yr:'2027',rd:3,o:'Own'},{yr:'2028',rd:1,o:'Own'}],
+    'Waiver Wire Wizard': [{yr:'2026',rd:1,o:'Hail Mary Squad'},{yr:'2027',rd:2,o:'Own'},{yr:'2027',rd:3,o:'Own'},{yr:'2028',rd:3,o:'Own'}],
+    'Hail Mary Squad':    [{yr:'2028',rd:2,o:'Own'},{yr:'2028',rd:2,o:'Comeback Cacti'},{yr:'2028',rd:3,o:'Own'}],
+    'Fantasy Flatline':   [{yr:'2027',rd:2,o:'Own'},{yr:'2028',rd:1,o:'Own'},{yr:'2028',rd:2,o:'Own'},{yr:'2028',rd:3,o:'Own'}],
+  }
+};
+
+/* Pre-written AI demo content */
+const AI_CONTENT = {
+  weekly:`<h2>Week 9: The Ghost Ship Sails On</h2><p><strong>Gridiron Ghosts</strong> dropped 287 on the hapless <strong>Fantasy Flatline</strong> (158), extending their league-best record to 8-1. At this point it's less a matchup and more a scheduled demolition. Josh Allen rushed for two TDs before halftime.</p><hr><h3>Full Scoreboard</h3><p><strong>Gridiron Ghosts 287 def. Fantasy Flatline 158</strong> — The league's juggernaut continues. Bijan Robinson notched 34 quiet points while everyone watched the blowout. This felt like a bye week.</p><p><strong>Tuesday Morning QBs 235 def. Le'Veon a Prayer 198</strong> — The comeback is real. Jayden Daniels returned healthy with 42 points, and Coooter's squad is suddenly alive at 4-5 with momentum. Le'Veon drops two straight.</p><p><strong>Run CMC 263 def. Waiver Wire Wizard 201</strong> — CMC (38 pts) refuses to acknowledge his age. Bully56 quietly moves into a strong playoff position and is looking more dangerous every week.</p><p><strong>Mahomes My Business 242 def. Hail Mary Squad 199</strong> — JSN went off for 41 points. The Hail Mary Squad is now 2-7 and the season is mathematically alive but realistically over.</p><p><strong>Draftpunk 225 def. Comeback Cacti 218</strong> — Closest game of the week. Drake Maye posted 38 points for the third straight week while this league continues to sleep on him.</p><hr><h3>Performance of the Week</h3><p><strong>Gridiron Ghosts</strong> scored 287 points without their WR1 (Jefferson, hamstring). A 287-point week without your best receiver. That's the scariest sentence in the league.</p><hr><h3>What to Watch — Week 10</h3><p>The biggest game of the week: <strong>Run CMC vs. Mahomes My Business</strong>. Two top-3 teams, playoff seeding stakes. Elsewhere: <strong>Comeback Cacti vs. Tuesday Morning QBs</strong> is a bubble elimination game with massive implications for the 5th and 6th seeds.</p>`,
+  rankings:`<h2>Power Rankings — After Week 9</h2><h3>#1. Gridiron Ghosts — THE MACHINE</h3><p><strong>8-1.</strong> 287 points without their best WR. Josh Allen and Bijan Robinson on the same roster. The lead is insurmountable barring injury. Everyone else is playing for second. <span class="rising">↑ Locked In</span></p><h3>#2. Mahomes My Business — STEADY THREAT</h3><p><strong>7-2</strong> and the most consistent team in the league. JSN, Taylor, and McBride each have 15+ points in every game this season. The best-built roster behind the Ghosts. <span class="rising">↑ Rising</span></p><h3>#3. Run CMC — AGING CHAMPION</h3><p><strong>6-3</strong> and CMC refuses to slow down (38 pts this week). Winning ugly but winning. The concern is depth — if McCaffrey goes down, this team has a very different ceiling. <span class="steady">→ Locked In</span></p><h3>#4. Comeback Cacti — YEAR TWO LEAP</h3><p><strong>5-4</strong> and playing better than their record. Hurts, Amon-Ra, and Tyler Warren are top-15 at their positions. Three 2026 R1s sitting in the war chest gives them flexibility no one else has. <span class="rising">↑ Rising</span></p><h3>#5. Draftpunk — MOST UNDERRATED</h3><p><strong>5-4</strong> and Drake Maye is averaging 35+ points a game while nobody talks about him. The record doesn't reflect how good this team actually is. Two R1s to deploy this offseason. <span class="rising">↑ Rising</span></p><h3>#6. Tuesday Morning QBs — BUBBLE FIGHTERS</h3><p><strong>4-5</strong> but winners of 3 of their last 4. Daniels looked healthy. Collins and McMillan are a real WR duo. They need to keep winning but the momentum is genuine. <span class="rising">↑ Rising</span></p><h3>#7. Le'Veon a Prayer — WASTED TALENT</h3><p><strong>4-5</strong> with the 3rd-most points in the league. A.J. Brown and Puka Nacua deserve a better QB situation. The Bo Nix problem is costing this team wins it earned. <span class="falling">↓ Falling</span></p><h3>#8. Waiver Wire Wizard — THE ALLEN SHOW</h3><p><strong>3-6</strong> and Josh Allen is doing everything alone. Barkley has underperformed by 120 points. The supporting cast is a problem that doesn't go away. <span class="falling">↓ Falling</span></p><h3>#9. Hail Mary Squad — BUILDING TOWARD 2028</h3><p><strong>2-7.</strong> The season is over. The silver lining: five 2028 picks will slot early and the next rebuild is going to be legitimate. Just not this year. <span class="falling">↓ Falling</span></p><h3>#10. Fantasy Flatline — NO PULSE</h3><p><strong>1-8</strong> and the fewest points in the league. Geno Smith has scored 300+ pts on the bench untouched. Start your backup. Please. <span class="falling">↓ Falling</span></p><hr><p><strong>Bottom Line:</strong> The top 3 are pulling away. But the gap between #4 and #6 is razor thin — any of those three could be a dangerous playoff team if they get the right draw.</p>`,
+  trades:`<h2>Trade Report — Through Week 9</h2><h3>Trade of the Year</h3><p>The blockbuster: <strong>Mahomes My Business</strong> sent Josh Allen and a 2027 R3 to Waiver Wire Wizard for <strong>Jonathan Taylor and the Fantasy Flatline 2026 R1</strong>. On paper it looked like a coin flip. In hindsight, RobertVC won decisively. Taylor has been more consistent, and that Flatline R1 — from a 1-8 team — is probably the #1 overall pick in next year's draft.</p><h3>Biggest Win — Comeback Cacti</h3><p>Acquiring Amon-Ra St. Brown from Draftpunk for just a 2026 R1 and a 2027 R2 looked like an overpay at the time. Now, with Amon-Ra posting 21+ every week and the R1 likely landing in the top 4, this is the steal of the year. EnormiCacti got their true WR1.</p><h3>Toughest Loss — Hail Mary Squad</h3><p>Trading Breece Hall and TJ Hockenson to Gridiron Ghosts for picks was defensible in isolation. In context, it was catastrophic. Hall has been an RB1 all year, and Ghosts — already the best team in the league — used that depth to stay dominant. The picks are real, but you can't win with picks this season.</p><h3>Trade Market Outlook</h3><p>With five weeks left, expect movement. <strong>Le'Veon a Prayer</strong> should be shopping A.J. Brown — they're 4-5 with a QB problem. <strong>Fantasy Flatline</strong> should sell Herbert and Jacobs for picks and accept the rebuild. And <strong>Gridiron Ghosts</strong>? They'll keep buying whatever the market offers.</p>`,
+  draft:`<h2>Draft Capital Report — 2025</h2><h3>Pick-Richest Teams</h3><p><strong>Gridiron Ghosts</strong> holds three 2027 first-rounders plus a 2028 R1 from Waiver Wire Wizard. They are simultaneously the best team in the league AND the most loaded with future assets. This shouldn't be allowed.</p><p><strong>Comeback Cacti</strong> has three 2026 first-round picks — the highest concentration of R1s in a single year. Draftpunk, Le'Veon, and Hail Mary are all below .500, meaning those picks will land in the top half of the round.</p><h3>Most Valuable Single Pick</h3><p>The <strong>2026 R1 (Fantasy Flatline → Mahomes My Business)</strong>. Fantasy Flatline is 1-8 with the worst record in the league. That pick is almost certainly the #1 overall selection in the 2026 rookie draft. RobertVC acquired it in the Allen trade — and it could define their dynasty for years.</p><h3>Rebuilding vs. Contending</h3><p><strong>Contending now:</strong> Gridiron Ghosts, Run CMC, Mahomes My Business<br><strong>Contending + Building:</strong> Comeback Cacti, Draftpunk<br><strong>Stuck in the Middle:</strong> Tuesday QBs, Le'Veon a Prayer, Waiver Wire Wizard<br><strong>Rebuilding:</strong> Hail Mary Squad, Fantasy Flatline</p>`
+};
+
+const aiText = {};
+Object.entries(AI_CONTENT).forEach(([k,v])=>{aiText[k]=v.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();});
+
+/* ════════════════════════════════════
+   COMPUTED DATA
+════════════════════════════════════ */
+
+// Expected wins via luck index
+function computeLuck(){
+  const weeks = Object.keys(D.weeklyScores).map(Number).sort((a,b)=>a-b);
+  const expWins = {};
+  D.teams.forEach(t=>expWins[t.id]=0);
+  weeks.forEach(wk=>{
+    const scores = D.weeklyScores;
+    const wkScores = D.teams.map(t=>({id:t.id,pts:scores[t.id]?.[wk-1]||0}));
+    const sorted = [...wkScores].sort((a,b)=>a.pts-b.pts);
+    wkScores.forEach(({id,pts})=>{
+      const rank = sorted.findIndex(s=>s.id===id); // 0=lowest
+      expWins[id] += rank / (D.teams.length - 1);
+    });
+  });
+  return expWins;
+}
+
+// Weekly MVPs
+function computeMVPs(){
+  const mvps = [];
+  Object.keys(D.matchups).map(Number).sort((a,b)=>a-b).forEach(wk=>{
+    let best={pts:0,team:null,opp:null,margin:0};
+    D.matchups[wk].forEach(([t1,t2,p1,p2])=>{
+      if(p1>best.pts){best={pts:p1,team:D.teams.find(t=>t.id===t1),opp:D.teams.find(t=>t.id===t2),margin:+(p1-p2).toFixed(1)}}
+      if(p2>best.pts){best={pts:p2,team:D.teams.find(t=>t.id===t2),opp:D.teams.find(t=>t.id===t1),margin:+(p2-p1).toFixed(1)}}
+    });
+    mvps.push({wk,pts:best.pts,team:best.team,margin:best.margin});
+  });
+  return mvps;
+}
+
+// League records
+function computeRecords(){
+  let highGame={pts:0,team:null,wk:0},lowGame={pts:9999,team:null,wk:0};
+  let bigWin={margin:0,winner:null,loser:null,wk:0},closeGame={margin:9999,w:null,l:null,wk:0};
+  let highMatchup={total:0,t1:null,t2:null,wk:0};
+  Object.keys(D.matchups).map(Number).forEach(wk=>{
+    D.matchups[wk].forEach(([t1,t2,p1,p2])=>{
+      const team1=D.teams.find(t=>t.id===t1),team2=D.teams.find(t=>t.id===t2);
+      if(p1>highGame.pts){highGame={pts:p1,team:team1,wk};}
+      if(p2>highGame.pts){highGame={pts:p2,team:team2,wk};}
+      if(p1<lowGame.pts){lowGame={pts:p1,team:team1,wk};}
+      if(p2<lowGame.pts){lowGame={pts:p2,team:team2,wk};}
+      const margin=Math.abs(p1-p2);
+      const winner=p1>p2?team1:team2,loser=p1>p2?team2:team1;
+      if(margin>bigWin.margin){bigWin={margin:+margin.toFixed(1),winner,loser,wk};}
+      if(margin<closeGame.margin){closeGame={margin:+margin.toFixed(1),w:winner,l:loser,wk};}
+      const total=p1+p2;
+      if(total>highMatchup.total){highMatchup={total:+total.toFixed(1),t1:team1,t2:team2,wk};}
+    });
+  });
+  // Longest streak
+  let longestStreak={team:null,type:'',n:0};
+  D.teams.forEach(t=>{
+    const s=t.streak;const n=parseInt(s.slice(1));
+    if(n>longestStreak.n){longestStreak={team:t,type:s[0],n};}
+  });
+  return{highGame,lowGame,bigWin,closeGame,highMatchup,longestStreak};
+}
+
+/* ════════════════════════════════════
+   AVATAR & HELPERS
+════════════════════════════════════ */
+function initials(name){return name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();}
+function teamColor(id){return TEAM_COLORS[(id-1)%TEAM_COLORS.length];}
+function avatar(team,cls=''){
+  return `<div class="avatar ${cls}" style="background:${teamColor(team.id)}">${initials(team.name)}</div>`;
+}
+function fmt(n){return(+n).toFixed(1);}
+
+/* ════════════════════════════════════
+   DEMO LOADER
+════════════════════════════════════ */
+function loadDemo(){
+  document.getElementById('tb-league').textContent = D.leagueName;
+  document.getElementById('tb-week').textContent = `Season ${D.season} · Week ${D.week}`;
+  document.getElementById('tb-demo').classList.remove('hidden');
+  showScreen('dashboard');
+  buildAll();
+}
+
+function buildAll(){
+  buildOverview();
+  buildStandings();
+  buildRosters();
+  buildTrends();
+  buildPlayoff();
+  buildLuck();
+  buildMVPs();
+  buildRecords();
+  buildTrades();
+  buildDraftCapital();
+  buildAIContent();
+}
+
+/* ── OVERVIEW ── */
+function buildOverview(){
+  const trades = D.trades.length;
+  const topPPG = Math.max(...D.teams.map(t=>t.pf/D.week));
+  document.getElementById('ov-stats').innerHTML=`
+    <div class="stat-card"><div class="stat-num orange">${D.teams.length}</div><div class="stat-lbl">Teams</div></div>
+    <div class="stat-card"><div class="stat-num">${D.week}</div><div class="stat-lbl">Weeks Played</div></div>
+    <div class="stat-card"><div class="stat-num">${D.totalWeeks-D.week}</div><div class="stat-lbl">Weeks Remaining</div></div>
+    <div class="stat-card"><div class="stat-num green">${trades}</div><div class="stat-lbl">Trades Made</div></div>
+    <div class="stat-card"><div class="stat-num orange">${topPPG.toFixed(0)}</div><div class="stat-lbl">Top PPG</div></div>
+    <div class="stat-card"><div class="stat-num violet">${D.playoffSpots}</div><div class="stat-lbl">Playoff Spots</div></div>
+  `;
+  document.getElementById('ov-wk-title').textContent=`Week ${D.week} Matchups`;
+  const ms=D.matchups[D.week]||[];
+  document.getElementById('ov-matchups').innerHTML=`<div class="matchup-grid">`+ms.map(([t1id,t2id,p1,p2])=>{
+    const t1=D.teams.find(t=>t.id===t1id),t2=D.teams.find(t=>t.id===t2id);
+    const w1=p1>p2;
+    return`<div class="mc">
+      <div class="mc-hd">Week ${D.week} · ${t1?.name.split(' ')[0]} vs ${t2?.name.split(' ')[0]}</div>
+      <div class="mc-row ${w1?'winner':'loser'}">${avatar(t1,'avatar-sm')}<span class="mc-name">${t1?.name}</span><span class="mc-pts">${fmt(p1)}</span></div>
+      <div class="mc-row ${!w1?'winner':'loser'}">${avatar(t2,'avatar-sm')}<span class="mc-name">${t2?.name}</span><span class="mc-pts">${fmt(p2)}</span></div>
+    </div>`;
+  }).join('')+`</div>`;
+}
+
+/* ── STANDINGS ── */
+function buildStandings(){
+  const sorted=[...D.teams].sort((a,b)=>b.wins-a.wins||b.pf-a.pf);
+  const maxPF=Math.max(...sorted.map(t=>t.pf));
+  const rows=sorted.map((t,i)=>{
+    const playoff=i<D.playoffSpots;
+    const s=t.streak,sw=s[0]==='W',sn=parseInt(s.slice(1));
+    const pct=(t.pf/maxPF*100).toFixed(0);
+    return`<tr>
+      <td class="rank ${i<3?'top':''}">${i+1}</td>
+      <td>
+        <div class="team-cell">
+          ${avatar(t)}
+          <div><div class="team-name">${t.name}</div><div class="team-owner muted" style="font-size:11px;">${t.owner}</div></div>
+        </div>
+      </td>
+      <td><span class="record-display"><span class="w">${t.wins}</span>–<span class="l">${t.losses}</span></span></td>
+      <td><div class="pts-display">${t.pf.toLocaleString()}</div><div class="prog-wrap"><div class="prog-bar" style="width:${pct}%"></div></div></td>
+      <td><span class="pts-display dim">${t.pa.toLocaleString()}</span></td>
+      <td><span class="streak-badge ${sw?'streak-w':'streak-l'}">${s}</span></td>
+      <td><span class="pill ${playoff?'pill-in':'pill-out'}">${playoff?'IN':'OUT'}</span></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('standings-tbl').innerHTML=`
+    <thead><tr><th>#</th><th>Team</th><th>Record</th><th>Pts For</th><th>Pts Against</th><th>Streak</th><th>Playoff</th></tr></thead>
+    <tbody>${rows}</tbody>`;
+}
+
+/* ── ROSTERS ── */
+function buildRosters(){
+  const pos=['QB','RB','WR','TE'];
+  document.getElementById('rosters-content').innerHTML=D.teams.map(t=>{
+    const r=D.rosters[t.id]||{};
+    const players=pos.filter(p=>(r[p]||[]).length).map(p=>
+      (r[p]||[]).map(name=>`<div class="roster-row"><span class="roster-name">${name}</span><span class="pos-tag pos-${p}">${p}</span></div>`).join('')
+    ).join('');
+    return`<div class="card"><div class="card-hd">
+      <div style="display:flex;align-items:center;gap:10px;">${avatar(t)}<div><div class="card-title" style="font-size:12px;">${t.name}</div><div style="font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;">${t.wins}–${t.losses} · ${t.pf.toLocaleString()} pts</div></div></div>
+    </div><div class="card-body" style="padding:12px 16px;">${players||'<span class="muted" style="font-size:12px;">No data</span>'}</div></div>`;
+  }).join('');
+}
+
+/* ── SCORING TRENDS ── */
+let chartTrends=null;
+function buildTrends(){
+  const weeks=Array.from({length:D.week},(_,i)=>i+1);
+  document.getElementById('trends-meta').textContent=`Weeks 1–${D.week} · ${D.teams.length} Teams`;
+  const datasets=D.teams.map((t,i)=>({
+    label:t.name,
+    data:weeks.map(w=>(D.weeklyScores[t.id]||[])[w-1]||0),
+    backgroundColor:teamColor(t.id)+'bb',
+    borderColor:teamColor(t.id),
+    borderWidth:1.5,
+    borderRadius:3,
+    borderSkipped:false,
+  }));
+  const ctx=document.getElementById('chart-trends').getContext('2d');
+  if(chartTrends)chartTrends.destroy();
+  chartTrends=new Chart(ctx,{
+    type:'bar',
+    data:{labels:weeks.map(w=>`Wk ${w}`),datasets},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false}},
+      scales:{
+        x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#6e6c88',font:{family:'IBM Plex Mono',size:10}}},
+        y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#6e6c88',font:{family:'IBM Plex Mono',size:10}},min:100,
+          title:{display:true,text:'Points',color:'#6e6c88',font:{size:11,family:'IBM Plex Mono'}}}
+      }
+    }
+  });
+  // PPG bars
+  const ppgData=[...D.teams].map(t=>({team:t,ppg:t.pf/D.week})).sort((a,b)=>b.ppg-a.ppg);
+  const maxPPG=ppgData[0].ppg;
+  document.getElementById('ppg-bars').innerHTML=ppgData.map(({team,ppg})=>`
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);">
+      ${avatar(team,'avatar-sm')}
+      <span style="flex:1;font-size:13px;">${team.name}</span>
+      <div style="flex:2;height:6px;background:var(--s3);border-radius:3px;overflow:hidden;">
+        <div style="height:100%;width:${(ppg/maxPPG*100).toFixed(0)}%;background:${teamColor(team.id)};border-radius:3px;"></div>
+      </div>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--orange);min-width:48px;text-align:right;">${ppg.toFixed(1)}</span>
+    </div>
+  `).join('');
+}
+
+/* ── PLAYOFF PICTURE ── */
+function buildPlayoff(){
+  const sorted=[...D.teams].sort((a,b)=>b.wins-a.wins||b.pf-a.pf);
+  const weeksLeft=D.totalWeeks-D.week;
+  const inTeams=sorted.slice(0,D.playoffSpots);
+  const outTeams=sorted.slice(D.playoffSpots);
+
+  // Magic number = wins needed to clinch = (8th place wins + 1) - your wins + 1
+  const cutlineWins=sorted[D.playoffSpots]?.wins||0;
+
+  const inHTML=inTeams.map((t,i)=>{
+    const magic=Math.max(0,cutlineWins+1-t.wins);
+    const clinched=t.wins-cutlineWins>=weeksLeft+1||magic===0;
+    return`<div class="pf-row">
+      <div class="pf-num">${i+1}</div>
+      ${avatar(t)}
+      <div class="pf-info">
+        <div class="pf-name">${t.name}</div>
+        <div class="pf-record mono">${t.wins}–${t.losses} · ${t.pf.toLocaleString()} pts</div>
+      </div>
+      <div class="pf-magic">
+        ${clinched?`<span class="clinch-badge">CLINCHED</span>`:`<div class="magic-num">${magic}</div><div class="magic-lbl">Magic #</div>`}
+      </div>
+    </div>`;
+  }).join('');
+
+  const maxBehind=outTeams.length?Math.max(...outTeams.map(t=>cutlineWins-t.wins)):0;
+  const outHTML=outTeams.map(t=>{
+    const behind=cutlineWins-t.wins;
+    const elim=behind>weeksLeft;
+    return`<div class="pf-row">
+      <div class="pf-num" style="color:var(--muted);">${sorted.indexOf(t)+1}</div>
+      ${avatar(t)}
+      <div class="pf-info">
+        <div class="pf-name" style="color:var(--muted);">${t.name}</div>
+        <div class="pf-record mono">${t.wins}–${t.losses}</div>
+      </div>
+      <div class="pf-magic">
+        ${elim?`<span class="elim-badge">ELIMINATED</span>`:`<div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--loss);">GB: ${behind}</div>`}
+      </div>
+    </div>`;
+  }).join('');
+
+  // Scenarios
+  const nearBubble=sorted[D.playoffSpots-1];
+  const nearOut=sorted[D.playoffSpots];
+  const gapAtCutline=(nearBubble.wins-nearOut?.wins)||0;
+
+  document.getElementById('playoff-content').innerHTML=`
+    <div class="playoff-grid">
+      <div class="pf-card">
+        <div class="pf-seed" style="margin-bottom:10px;font-size:11px;letter-spacing:0.1em;color:var(--win);">▲ PLAYOFF FIELD (Top ${D.playoffSpots})</div>
+        ${inHTML}
+      </div>
+      <div class="pf-card">
+        <div class="pf-seed" style="margin-bottom:10px;font-size:11px;letter-spacing:0.1em;color:var(--loss);">▼ ON THE OUTSIDE</div>
+        ${outHTML}
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Playoff Scenarios</div></div>
+      <div class="card-body">
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;color:var(--text2);line-height:1.7;">
+          <p>📌 <strong style="color:var(--orange);">Cutline:</strong> ${nearBubble.name} (${nearBubble.wins}–${nearBubble.losses}) is the last team <span class="pill pill-in">IN</span> · ${nearOut?.name||'N/A'} (${nearOut?.wins||0}–${nearOut?.losses||0}) is first <span class="pill pill-out">OUT</span> — gap of <strong>${gapAtCutline}</strong> win${gapAtCutline!==1?'s':''}.</p>
+          <p>📅 <strong style="color:var(--orange);">${weeksLeft} weeks remaining</strong> in the regular season.</p>
+          <p>🔮 <strong style="color:var(--orange);">Magic Number</strong> = wins needed to clinch a playoff spot. A team clinches when their magic number reaches 0.</p>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ── LUCK INDEX ── */
+let chartLuck=null;
+function buildLuck(){
+  const expWins=computeLuck();
+  const data=D.teams.map(t=>({
+    team:t,
+    actual:t.wins,
+    expected:+expWins[t.id].toFixed(1),
+    diff:+(t.wins-expWins[t.id]).toFixed(1)
+  })).sort((a,b)=>b.diff-a.diff);
+
+  const ctx=document.getElementById('chart-luck').getContext('2d');
+  if(chartLuck)chartLuck.destroy();
+  chartLuck=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:data.map(d=>d.team.name.split(' ').slice(0,2).join(' ')),
+      datasets:[
+        {label:'Actual Wins',data:data.map(d=>d.actual),backgroundColor:'rgba(255,107,43,0.7)',borderColor:'#ff6b2b',borderWidth:1.5,borderRadius:3},
+        {label:'Expected Wins',data:data.map(d=>d.expected),backgroundColor:'rgba(110,108,136,0.4)',borderColor:'#6e6c88',borderWidth:1.5,borderRadius:3},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:'#6e6c88',font:{family:'IBM Plex Mono',size:10}}},tooltip:{mode:'index',intersect:false}},
+      scales:{
+        x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#6e6c88',font:{family:'IBM Plex Mono',size:9},maxRotation:30}},
+        y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#6e6c88',font:{family:'IBM Plex Mono',size:10}},
+          title:{display:true,text:'Wins',color:'#6e6c88',font:{size:11,family:'IBM Plex Mono'}}}
+      }
+    }
+  });
+
+  document.getElementById('luck-rows').innerHTML=data.map(({team,actual,expected,diff})=>{
+    const pos=diff>0,neg=diff<0;
+    const maxDiff=3;
+    const barW=Math.min(Math.abs(diff)/maxDiff*100,100);
+    return`<div class="luck-row">
+      ${avatar(team,'avatar-sm')}
+      <span style="flex:1;font-size:13px;">${team.name}</span>
+      <span class="luck-record">${actual}–${9-actual}</span>
+      <div class="luck-bar-wrap">
+        ${pos?`<div class="luck-bar luck-pos" style="width:${barW}%"></div>`:''}
+        ${neg?`<div class="luck-bar luck-neg" style="width:${barW}%"></div>`:''}
+      </div>
+      <span class="luck-diff ${pos?'pos':neg?'neg':'neu'}">${diff>0?'+':''}${diff.toFixed(1)}</span>
+    </div>`;
+  }).join('');
+}
+
+/* ── WEEKLY MVPS ── */
+function buildMVPs(){
+  const mvps=computeMVPs();
+  document.getElementById('mvp-content').innerHTML=`<div class="mvp-grid">`+mvps.map(({wk,pts,team,margin})=>`
+    <div class="mvp-card">
+      <div class="mvp-week">Week ${wk}</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">${avatar(team)}<div>
+        <div class="mvp-name">${team.name}</div>
+        <div class="mvp-team">${team.owner}</div>
+      </div></div>
+      <div class="mvp-score">${fmt(pts)}</div>
+      <div class="mvp-score-lbl">Won by ${fmt(margin)} pts</div>
+    </div>
+  `).join('')+`</div>`;
+}
+
+/* ── LEAGUE RECORDS ── */
+function buildRecords(){
+  const R=computeRecords();
+  const cards=[
+    {icon:'🏆',lbl:'Highest Single Score',val:fmt(R.highGame.pts),team:R.highGame.team?.name,ctx:`Week ${R.highGame.wk}`},
+    {icon:'📉',lbl:'Lowest Single Score',val:fmt(R.lowGame.pts),team:R.lowGame.team?.name,ctx:`Week ${R.lowGame.wk}`},
+    {icon:'💥',lbl:'Biggest Blowout',val:`+${fmt(R.bigWin.margin)}`,team:R.bigWin.winner?.name,ctx:`vs ${R.bigWin.loser?.name} · Wk ${R.bigWin.wk}`},
+    {icon:'😰',lbl:'Closest Game',val:`+${fmt(R.closeGame.margin)}`,team:R.closeGame.w?.name,ctx:`vs ${R.closeGame.l?.name} · Wk ${R.closeGame.wk}`},
+    {icon:'🔥',lbl:'Highest Scoring Matchup',val:fmt(R.highMatchup.total),team:`${R.highMatchup.t1?.name} vs ${R.highMatchup.t2?.name}`,ctx:`Week ${R.highMatchup.wk}`},
+    {icon:'⚡',lbl:'Longest Current Streak',val:`${R.longestStreak.type}${R.longestStreak.n}`,team:R.longestStreak.team?.name,ctx:`${R.longestStreak.n}-game ${R.longestStreak.type==='W'?'win':'loss'} streak`},
+    {icon:'📊',lbl:'Most Pts Scored',val:Math.max(...D.teams.map(t=>t.pf)).toLocaleString(),team:D.teams.reduce((a,b)=>a.pf>b.pf?a:b).name,ctx:'Season total'},
+    {icon:'🥶',lbl:'Fewest Pts Scored',val:Math.min(...D.teams.map(t=>t.pf)).toLocaleString(),team:D.teams.reduce((a,b)=>a.pf<b.pf?a:b).name,ctx:'Season total'},
+  ];
+  document.getElementById('records-content').innerHTML=`<div class="records-grid">`+cards.map(c=>`
+    <div class="record-card">
+      <span class="record-icon">${c.icon}</span>
+      <div class="record-lbl">${c.lbl}</div>
+      <div class="record-val">${c.val}</div>
+      <div class="record-team">${c.team}</div>
+      <div class="record-ctx">${c.ctx}</div>
+    </div>
+  `).join('')+`</div>`;
+}
+
+/* ── TRADES ── */
+function buildTrades(){
+  document.getElementById('trade-ct').textContent=`${D.trades.length} trades this season`;
+  document.getElementById('trade-log').innerHTML=D.trades.map(t=>`
+    <div class="trade-item">
+      <div class="trade-hd"><span class="trade-date">${t.date}, ${D.season}</span><span class="trade-badge">Trade</span></div>
+      <div class="trade-body">
+        <div class="trade-side">
+          <div class="trade-side-lbl">${t.teamA} Gets</div>
+          ${t.aGets.map(a=>`<div class="trade-asset ${a.includes('R')?'pick':''}">${a}</div>`).join('')}
+        </div>
+        <div class="trade-side">
+          <div class="trade-side-lbl">${t.teamB} Gets</div>
+          ${t.bGets.map(a=>`<div class="trade-asset ${a.includes('R')?'pick':''}">${a}</div>`).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ── DRAFT CAPITAL ── */
+function buildDraftCapital(){
+  const sorted=[...D.teams].sort((a,b)=>{
+    const pa=(D.picks[a.name]||[]).length,pb=(D.picks[b.name]||[]).length;
+    return pb-pa;
+  });
+  document.getElementById('draft-picks').innerHTML=sorted.map(t=>{
+    const picks=D.picks[t.name]||[];
+    if(!picks.length)return`<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04);">${avatar(t,'avatar-sm')}<span style="flex:1;font-size:13px;">${t.name}</span><span class="muted mono" style="font-size:11px;">No traded picks</span></div>`;
+    const byYr={};picks.forEach(p=>{if(!byYr[p.yr])byYr[p.yr]=[];byYr[p.yr].push(p);});
+    const chips=Object.keys(byYr).sort().map(yr=>`
+      <div style="display:inline-flex;align-items:center;gap:4px;margin-right:8px;">
+        <span class="muted mono" style="font-size:9px;">${yr}:</span>
+        ${byYr[yr].map(p=>`<span class="pc pc-${p.rd}">R${p.rd}${p.o!==t.name?' · '+p.o.split(' ')[0]:''}</span>`).join('')}
+      </div>
+    `).join('');
+    return`<div style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">${avatar(t,'avatar-sm')}<span style="flex:1;font-size:13px;font-weight:500;">${t.name}</span><span class="muted mono" style="font-size:11px;">${picks.length} picks</span></div>
+      <div style="padding-left:34px;display:flex;flex-wrap:wrap;gap:4px;">${chips}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ── AI CONTENT ── */
+function buildAIContent(){
+  document.getElementById('out-weekly').innerHTML=AI_CONTENT.weekly;
+  document.getElementById('out-rankings').innerHTML=AI_CONTENT.rankings;
+  document.getElementById('out-trades').innerHTML=AI_CONTENT.trades;
+  document.getElementById('out-draft').innerHTML=AI_CONTENT.draft;
+}
+
+/* ════════════════════════════════════
+   NAV, SCREEN, COPY
+════════════════════════════════════ */
+function go(tab){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById(`tab-${tab}`)?.classList.add('active');
+  document.getElementById(`nav-${tab}`)?.classList.add('active');
+}
+
+function showScreen(id){
+  document.getElementById('screen-landing').style.display='none';
+  document.getElementById('screen-dashboard').style.display=id==='dashboard'?'flex':'none';
+}
+
+function resetApp(){
+  document.getElementById('screen-landing').style.display='flex';
+  document.getElementById('screen-dashboard').style.display='none';
+  document.getElementById('tb-demo').classList.add('hidden');
+  go('overview');
+}
+
+async function copyAI(section){
+  const text=aiText[section];
+  if(!text)return;
+  try{
+    await navigator.clipboard.writeText(text);
+    const btn=document.getElementById(`cp-${section}`);
+    const orig=btn.textContent;
+    btn.textContent='✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent=orig;btn.classList.remove('copied');},2000);
+  }catch(e){alert('Select and copy the text manually.');}
+}
+
+function demoAlert(){alert('In the live hosted version, this button calls Claude AI with your real league data to generate fresh content. Your API key is all that\'s needed — it stays in your browser.');}
+
+function launch(){alert('Live league loading is enabled in the hosted version. Try "Preview with Demo Data" to explore all features!');}
+</script>
+</body>
+</html>
