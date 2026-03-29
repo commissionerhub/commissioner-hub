@@ -644,7 +644,7 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
         </div>
         <div class="card" style="margin-bottom:14px;">
           <div class="card-hd"><div class="card-title">Weekly Scores — All Teams</div><div class="card-meta" id="trends-meta"></div></div>
-          <div class="card-body"><div class="chart-wrap-tall"><canvas id="chart-trends"></canvas></div></div>
+          <div id="chart-trends-wrap"></div>
         </div>
         <div class="card">
           <div class="card-hd"><div class="card-title">Points Per Game — Season Average</div></div>
@@ -671,7 +671,7 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
         </div>
         <div class="card" style="margin-bottom:16px;">
           <div class="card-hd"><div class="card-title">Expected vs. Actual Record</div><div class="card-meta">Based on weekly point rank vs. all 10 teams</div></div>
-          <div class="card-body"><div class="chart-wrap"><canvas id="chart-luck"></canvas></div></div>
+          <div id="chart-luck-wrap"></div>
         </div>
         <div class="card">
           <div class="card-hd"><div class="card-title">Luck Differential — Season to Date</div><div class="card-meta">Positive = fortunate schedule · Negative = deserved better</div></div>
@@ -1046,33 +1046,67 @@ function buildRosters(){
 }
 
 /* ── SCORING TRENDS ── */
-let chartTrends=null;
 function buildTrends(){
   const weeks=Array.from({length:D.week},(_,i)=>i+1);
   document.getElementById('trends-meta').textContent=`Weeks 1–${D.week} · ${D.teams.length} Teams`;
-  const datasets=D.teams.map((t,i)=>({
-    label:t.name,
-    data:weeks.map(w=>(D.weeklyScores[t.id]||[])[w-1]||0),
-    backgroundColor:teamColor(t.id)+'bb',
-    borderColor:teamColor(t.id),
-    borderWidth:1.5,
-    borderRadius:3,
-    borderSkipped:false,
-  }));
-  const ctx=document.getElementById('chart-trends').getContext('2d');
-  if(chartTrends)chartTrends.destroy();
-  chartTrends=new Chart(ctx,{
-    type:'bar',
-    data:{labels:weeks.map(w=>`Wk ${w}`),datasets},
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false}},
-      scales:{
-        x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#6e6c88',font:{family:'IBM Plex Mono',size:10}}},
-        y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#6e6c88',font:{family:'IBM Plex Mono',size:10}},min:100,
-          title:{display:true,text:'Points',color:'#6e6c88',font:{size:11,family:'IBM Plex Mono'}}}
-      }
-    }
+
+  // Draw SVG bar chart
+  const W=800,H=300,padL=40,padB=30,padT=20,padR=20;
+  const innerW=W-padL-padR,innerH=H-padB-padT;
+  const allPts=D.teams.flatMap(t=>weeks.map(w=>(D.weeklyScores[t.id]||[])[w-1]||0));
+  const minPt=Math.min(...allPts)-20,maxPt=Math.max(...allPts)+20;
+  const xStep=innerW/weeks.length;
+  const barW=xStep/(D.teams.length+1);
+
+  let bars='';
+  weeks.forEach((wk,wi)=>{
+    D.teams.forEach((t,ti)=>{
+      const pts=(D.weeklyScores[t.id]||[])[wi]||0;
+      const x=padL+wi*xStep+ti*barW+barW*0.5;
+      const barH=(pts-minPt)/(maxPt-minPt)*innerH;
+      const y=padT+innerH-barH;
+      bars+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(barW*0.85).toFixed(1)}" height="${barH.toFixed(1)}" fill="${teamColor(t.id)}bb" rx="2">
+        <title>${t.name}: ${pts} pts (Wk ${wk})</title>
+      </rect>`;
+    });
+  });
+
+  // X axis labels
+  let xlabels='';
+  weeks.forEach((wk,wi)=>{
+    const x=padL+wi*xStep+xStep/2;
+    xlabels+=`<text x="${x}" y="${H-8}" text-anchor="middle" fill="#6e6c88" font-size="10" font-family="IBM Plex Mono">Wk ${wk}</text>`;
+  });
+
+  // Y axis labels
+  let ylabels='';
+  for(let i=0;i<=4;i++){
+    const val=(minPt+(maxPt-minPt)*i/4).toFixed(0);
+    const y=padT+innerH-innerH*i/4;
+    ylabels+=`<text x="${padL-6}" y="${y+4}" text-anchor="end" fill="#6e6c88" font-size="10" font-family="IBM Plex Mono">${val}</text>`;
+    ylabels+=`<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>`;
+  }
+
+  document.getElementById('chart-trends-wrap').innerHTML=`
+    <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block;">
+      ${ylabels}${bars}${xlabels}
+    </svg>`;
+
+  // PPG bars
+  const ppgData=[...D.teams].map(t=>({team:t,ppg:t.pf/D.week})).sort((a,b)=>b.ppg-a.ppg);
+  const maxPPG=ppgData[0].ppg;
+  document.getElementById('ppg-bars').innerHTML=ppgData.map(({team,ppg})=>`
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);">
+      ${avatar(team,'avatar-sm')}
+      <span style="flex:1;font-size:13px;">${team.name}</span>
+      <div style="flex:2;height:6px;background:var(--s3);border-radius:3px;overflow:hidden;">
+        <div style="height:100%;width:${(ppg/maxPPG*100).toFixed(0)}%;background:${teamColor(team.id)};border-radius:3px;"></div>
+      </div>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--orange);min-width:48px;text-align:right;">${ppg.toFixed(1)}</span>
+    </div>
+  `).join('');
+}
+
   });
   // PPG bars
   const ppgData=[...D.teams].map(t=>({team:t,ppg:t.pf/D.week})).sort((a,b)=>b.ppg-a.ppg);
@@ -1161,7 +1195,6 @@ function buildPlayoff(){
 }
 
 /* ── LUCK INDEX ── */
-let chartLuck=null;
 function buildLuck(){
   const expWins=computeLuck();
   const data=D.teams.map(t=>({
@@ -1171,26 +1204,54 @@ function buildLuck(){
     diff:+(t.wins-expWins[t.id]).toFixed(1)
   })).sort((a,b)=>b.diff-a.diff);
 
-  const ctx=document.getElementById('chart-luck').getContext('2d');
-  if(chartLuck)chartLuck.destroy();
-  chartLuck=new Chart(ctx,{
-    type:'bar',
-    data:{
-      labels:data.map(d=>d.team.name.split(' ').slice(0,2).join(' ')),
-      datasets:[
-        {label:'Actual Wins',data:data.map(d=>d.actual),backgroundColor:'rgba(255,107,43,0.7)',borderColor:'#ff6b2b',borderWidth:1.5,borderRadius:3},
-        {label:'Expected Wins',data:data.map(d=>d.expected),backgroundColor:'rgba(110,108,136,0.4)',borderColor:'#6e6c88',borderWidth:1.5,borderRadius:3},
-      ]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:'#6e6c88',font:{family:'IBM Plex Mono',size:10}}},tooltip:{mode:'index',intersect:false}},
-      scales:{
-        x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#6e6c88',font:{family:'IBM Plex Mono',size:9},maxRotation:30}},
-        y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#6e6c88',font:{family:'IBM Plex Mono',size:10}},
-          title:{display:true,text:'Wins',color:'#6e6c88',font:{size:11,family:'IBM Plex Mono'}}}
-      }
-    }
+  // SVG bar chart
+  const W=800,H=280,padL=140,padB=30,padT=20,padR=20;
+  const innerW=W-padL-padR,innerH=H-padB-padT;
+  const barH=innerH/data.length*0.6;
+  const maxVal=Math.max(...data.map(d=>Math.max(d.actual,d.expected)))+1;
+
+  let bars='',labels='',grid='';
+  for(let i=0;i<=5;i++){
+    const x=padL+innerW*i/5;
+    const val=(maxVal*i/5).toFixed(0);
+    grid+=`<line x1="${x}" y1="${padT}" x2="${x}" y2="${H-padB}" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>`;
+    grid+=`<text x="${x}" y="${H-8}" text-anchor="middle" fill="#6e6c88" font-size="10" font-family="IBM Plex Mono">${val}</text>`;
+  }
+
+  data.forEach((d,i)=>{
+    const y=padT+i*(innerH/data.length)+(innerH/data.length-barH*2)/2;
+    const actW=(d.actual/maxVal*innerW).toFixed(1);
+    const expW=(d.expected/maxVal*innerW).toFixed(1);
+    labels+=`<text x="${padL-8}" y="${y+barH}" text-anchor="end" fill="#c8c6d8" font-size="11" font-family="IBM Plex Sans">${d.team.name.split(' ').slice(0,2).join(' ')}</text>`;
+    bars+=`<rect x="${padL}" y="${y}" width="${actW}" height="${barH*0.9}" fill="${teamColor(d.team.id)}cc" rx="2"><title>Actual: ${d.actual} wins</title></rect>`;
+    bars+=`<rect x="${padL}" y="${y+barH}" width="${expW}" height="${barH*0.9}" fill="rgba(110,108,136,0.5)" rx="2"><title>Expected: ${d.expected} wins</title></rect>`;
+  });
+
+  document.getElementById('chart-luck-wrap').innerHTML=`
+    <div style="display:flex;gap:16px;margin-bottom:12px;font-family:'IBM Plex Mono',monospace;font-size:11px;">
+      <span><span style="display:inline-block;width:10px;height:10px;background:var(--orange);border-radius:2px;margin-right:5px;"></span>Actual Wins</span>
+      <span><span style="display:inline-block;width:10px;height:10px;background:rgba(110,108,136,0.5);border-radius:2px;margin-right:5px;"></span>Expected Wins</span>
+    </div>
+    <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block;">
+      ${grid}${labels}${bars}
+    </svg>`;
+
+  document.getElementById('luck-rows').innerHTML=data.map(({team,actual,expected,diff})=>{
+    const pos=diff>0,neg=diff<0;
+    const maxDiff=3;
+    const barW=Math.min(Math.abs(diff)/maxDiff*100,100);
+    return`<div class="luck-row">
+      ${avatar(team,'avatar-sm')}
+      <span style="flex:1;font-size:13px;">${team.name}</span>
+      <span class="luck-record">${actual}–${9-actual}</span>
+      <div class="luck-bar-wrap">
+        ${pos?`<div class="luck-bar luck-pos" style="width:${barW}%"></div>`:''}
+        ${neg?`<div class="luck-bar luck-neg" style="width:${barW}%"></div>`:''}
+      </div>
+      <span class="luck-diff ${pos?'pos':neg?'neg':'neu'}">${diff>0?'+':''}${diff.toFixed(1)}</span>
+    </div>`;
+  }).join('');
+}
   });
 
   document.getElementById('luck-rows').innerHTML=data.map(({team,actual,expected,diff})=>{
