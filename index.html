@@ -73,7 +73,7 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .nav-item.active{color:var(--orange);border-left-color:var(--orange);background:var(--orange-dim);font-weight:500;}
 .nav-icon{font-size:12px;width:15px;text-align:center;flex-shrink:0;}
 .nav-label{flex:1;}
-.ai-pip{font-family:'IBM Plex Mono',monospace;font-size:8px;padding:1px 5px;border-radius:3px;background:rgba(6,182,212,0.12);color:var(--teal);border:1px solid rgba(6,182,212,0.22);flex-shrink:0;}
+.pro-pip{font-family:'IBM Plex Mono',monospace;font-size:8px;padding:1px 5px;border-radius:3px;background:rgba(6,182,212,0.12);color:var(--teal);border:1px solid rgba(6,182,212,0.22);flex-shrink:0;}
 .free-pip{font-family:'IBM Plex Mono',monospace;font-size:8px;padding:1px 5px;border-radius:3px;background:rgba(34,197,94,0.1);color:var(--win);border:1px solid rgba(34,197,94,0.22);flex-shrink:0;}
 
 .main{flex:1;padding:24px 28px 60px;overflow-y:auto;max-height:calc(100vh - 52px);}
@@ -173,36 +173,36 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .trade-asset{font-size:12px;padding:2px 0;color:var(--text2);}
 .trade-asset.pick{color:var(--orange);font-family:'IBM Plex Mono',monospace;font-size:11px;}
 
-/* AI SECTIONS */
-.ai-wrap{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:16px;}
-.ai-hd{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid var(--border);background:var(--s0);}
-.ai-title{display:flex;align-items:center;gap:10px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);}
-.ai-chip{font-family:'IBM Plex Mono',monospace;font-size:8px;padding:2px 7px;border-radius:100px;background:rgba(6,182,212,0.12);color:var(--teal);border:1px solid rgba(6,182,212,0.25);}
-.ai-btns{display:flex;gap:8px;}
+/* Pro SECTIONS */
+.pro-wrap{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:16px;}
+.pro-hd{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid var(--border);background:var(--s0);}
+.pro-title{display:flex;align-items:center;gap:10px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);}
+.pro-chip{font-family:'IBM Plex Mono',monospace;font-size:8px;padding:2px 7px;border-radius:100px;background:rgba(6,182,212,0.12);color:var(--teal);border:1px solid rgba(6,182,212,0.25);}
+.pro-btns{display:flex;gap:8px;}
 .btn-gen{display:flex;align-items:center;gap:6px;background:var(--orange);color:#fff;border:none;border-radius:var(--r-sm);padding:7px 14px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:background .15s;}
 .btn-gen:hover{background:var(--orange2);}
 .btn-gen:disabled{opacity:0.5;cursor:not-allowed;}
-.btn-copy-ai{display:flex;align-items:center;gap:6px;background:var(--s2);border:1px solid var(--border2);color:var(--muted);border-radius:var(--r-sm);padding:7px 12px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all .15s;}
-.btn-copy-ai:hover{border-color:var(--teal);color:var(--teal);}
-.btn-copy-ai.copied{border-color:var(--win);color:var(--win);}
-.ai-body{padding:20px;min-height:80px;}
-.ai-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:44px 24px;text-align:center;}
-.ai-ph-icon{font-size:26px;opacity:0.25;}
-.ai-ph-txt{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:0.08em;}
-.ai-spinning{display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:44px;}
-.ai-spinning.on{display:flex;}
+.btn-copy-pro{display:flex;align-items:center;gap:6px;background:var(--s2);border:1px solid var(--border2);color:var(--muted);border-radius:var(--r-sm);padding:7px 12px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all .15s;}
+.btn-copy-pro:hover{border-color:var(--teal);color:var(--teal);}
+.btn-copy-pro.copied{border-color:var(--win);color:var(--win);}
+.pro-body{padding:20px;min-height:80px;}
+.pro-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:44px 24px;text-align:center;}
+.pro-ph-icon{font-size:26px;opacity:0.25;}
+.pro-ph-txt{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:0.08em;}
+.pro-spinning{display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:44px;}
+.pro-spinning.on{display:flex;}
 .spin{width:24px;height:24px;border:2px solid var(--border2);border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
 .spin-lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);}
-.ai-out{display:none;}
-.ai-out.on{display:block;}
-.ai-out h2{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:0.05em;color:var(--orange);margin-bottom:12px;}
-.ai-out h3{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--text);margin:16px 0 6px;}
-.ai-out p{font-size:13px;color:var(--text2);line-height:1.75;margin-bottom:10px;}
-.ai-out p strong{color:var(--orange);font-weight:500;}
-.ai-out ul{margin:6px 0 12px 18px;}
-.ai-out li{font-size:13px;color:var(--muted);margin-bottom:5px;line-height:1.6;}
-.ai-out hr{border:none;border-top:1px solid var(--border);margin:16px 0;}
+.pro-out{display:none;}
+.pro-out.on{display:block;}
+.pro-out h2{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:0.05em;color:var(--orange);margin-bottom:12px;}
+.pro-out h3{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--text);margin:16px 0 6px;}
+.pro-out p{font-size:13px;color:var(--text2);line-height:1.75;margin-bottom:10px;}
+.pro-out p strong{color:var(--orange);font-weight:500;}
+.pro-out ul{margin:6px 0 12px 18px;}
+.pro-out li{font-size:13px;color:var(--muted);margin-bottom:5px;line-height:1.6;}
+.pro-out hr{border:none;border-top:1px solid var(--border);margin:16px 0;}
 .rising{color:var(--win);font-family:'IBM Plex Mono',monospace;font-size:11px;display:block;margin-top:3px;}
 .falling{color:var(--loss);font-family:'IBM Plex Mono',monospace;font-size:11px;display:block;margin-top:3px;}
 .steady{color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:11px;display:block;margin-top:3px;}
@@ -396,10 +396,10 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
       </div>
       <div class="nav-group">
         <span class="nav-group-lbl">Pro Content</span>
-        <div class="nav-item" id="nav-weekly" onclick="go('weekly')"><span class="nav-icon">📰</span><span class="nav-label">Weekly Digest</span><span class="ai-pip">Pro</span></div>
-        <div class="nav-item" id="nav-rankings" onclick="go('rankings')"><span class="nav-icon">⚡</span><span class="nav-label">Power Rankings</span><span class="ai-pip">Pro</span></div>
-        <div class="nav-item" id="nav-aitrades" onclick="go('aitrades')"><span class="nav-icon">🤝</span><span class="nav-label">Trade Analysis</span><span class="ai-pip">Pro</span></div>
-        <div class="nav-item" id="nav-aidraft" onclick="go('aidraft')"><span class="nav-icon">🎯</span><span class="nav-label">Draft Analysis</span><span class="ai-pip">Pro</span></div>
+        <div class="nav-item" id="nav-weekly" onclick="go('weekly')"><span class="nav-icon">📰</span><span class="nav-label">Weekly Digest</span><span class="pro-pip">Pro</span></div>
+        <div class="nav-item" id="nav-rankings" onclick="go('rankings')"><span class="nav-icon">⚡</span><span class="nav-label">Power Rankings</span><span class="pro-pip">Pro</span></div>
+        <div class="nav-item" id="nav-protrades" onclick="go('protrades')"><span class="nav-icon">🤝</span><span class="nav-label">Trade Analysis</span><span class="pro-pip">Pro</span></div>
+        <div class="nav-item" id="nav-prodraft" onclick="go('prodraft')"><span class="nav-icon">🎯</span><span class="nav-label">Draft Analysis</span><span class="pro-pip">Pro</span></div>
       </div>
     </nav>
 
@@ -558,43 +558,43 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
         <div id="playoff-content"></div>
       </div>
 
-      <!-- AI: WEEKLY DIGEST -->
+      <!-- pro: WEEKLY DIGEST -->
       <div class="tab" id="tab-weekly">
-        <div class="sec-hd"><div class="sec-eyebrow">Pro · Copy &amp; Share</div><div class="sec-title">Weekly <span class="accent">Digest</span></div><div class="sec-desc">AI-written matchup recaps and storylines ready for your group chat.</div></div>
-        <div class="ai-wrap">
-          <div class="ai-hd"><div class="ai-title">📰 Weekly Digest <span class="ai-chip">Pro</span></div><div class="ai-btns"><button class="btn-copy-ai hidden" id="cp-weekly" onclick="copyAI('weekly')">📋 Copy</button><button class="btn-gen" id="btn-weekly" onclick="generateContent('weekly',this)">✦ Generate</button></div></div>
-          <div class="ai-body"><div class="ai-ph" id="ph-weekly"><div class="ai-ph-icon">📰</div><div class="ai-ph-txt">Click Generate to write this week's digest</div></div><div class="ai-spinning" id="spin-weekly"><div class="spin"></div><div class="spin-lbl">Writing digest…</div></div><div class="ai-out" id="out-weekly"></div></div>
+        <div class="sec-hd"><div class="sec-eyebrow">Pro · Copy &amp; Share</div><div class="sec-title">Weekly <span class="accent">Digest</span></div><div class="sec-desc">pro-written matchup recaps and storylines ready for your group chat.</div></div>
+        <div class="pro-wrap">
+          <div class="pro-hd"><div class="pro-title">📰 Weekly Digest <span class="pro-chip">Pro</span></div><div class="pro-btns"><button class="btn-copy-pro hidden" id="cp-weekly" onclick="copypro('weekly')">📋 Copy</button><button class="btn-gen" id="btn-weekly" onclick="generateContent('weekly',this)">✦ Generate</button></div></div>
+          <div class="pro-body"><div class="pro-ph" id="ph-weekly"><div class="pro-ph-icon">📰</div><div class="pro-ph-txt">Click Generate to write this week's digest</div></div><div class="pro-spinning" id="spin-weekly"><div class="spin"></div><div class="spin-lbl">Writing digest…</div></div><div class="pro-out" id="out-weekly"></div></div>
         </div>
       </div>
 
-      <!-- AI: POWER RANKINGS -->
+      <!-- pro: POWER RANKINGS -->
       <div class="tab" id="tab-rankings">
         <div class="sec-hd"><div class="sec-eyebrow">Pro · Copy &amp; Share</div><div class="sec-title">Power <span class="accent">Rankings</span></div><div class="sec-desc">Honest, data-driven rankings with sharp weekly analysis.</div></div>
-        <div class="ai-wrap">
-          <div class="ai-hd"><div class="ai-title">⚡ Power Rankings <span class="ai-chip">Pro</span></div><div class="ai-btns"><button class="btn-copy-ai hidden" id="cp-rankings" onclick="copyAI('rankings')">📋 Copy</button><button class="btn-gen" id="btn-rankings" onclick="generateContent('rankings',this)">✦ Generate</button></div></div>
-          <div class="ai-body"><div class="ai-ph" id="ph-rankings"><div class="ai-ph-icon">⚡</div><div class="ai-ph-txt">Click Generate to produce power rankings</div></div><div class="ai-spinning" id="spin-rankings"><div class="spin"></div><div class="spin-lbl">Ranking your league…</div></div><div class="ai-out" id="out-rankings"></div></div>
+        <div class="pro-wrap">
+          <div class="pro-hd"><div class="pro-title">⚡ Power Rankings <span class="pro-chip">Pro</span></div><div class="pro-btns"><button class="btn-copy-pro hidden" id="cp-rankings" onclick="copypro('rankings')">📋 Copy</button><button class="btn-gen" id="btn-rankings" onclick="generateContent('rankings',this)">✦ Generate</button></div></div>
+          <div class="pro-body"><div class="pro-ph" id="ph-rankings"><div class="pro-ph-icon">⚡</div><div class="pro-ph-txt">Click Generate to produce power rankings</div></div><div class="pro-spinning" id="spin-rankings"><div class="spin"></div><div class="spin-lbl">Ranking your league…</div></div><div class="pro-out" id="out-rankings"></div></div>
         </div>
       </div>
 
-      <!-- AI: TRADE ANALYSIS -->
-      <div class="tab" id="tab-aitrades">
+      <!-- pro: TRADE ANALYSIS -->
+      <div class="tab" id="tab-protrades">
         <div class="sec-hd"><div class="sec-eyebrow">Pro · Copy &amp; Share</div><div class="sec-title">Trade <span class="accent">Analysis</span></div><div class="sec-desc">Winners, losers, and season trade market outlook.</div></div>
         <div class="card" style="margin-bottom:14px;">
           <div class="card-hd"><div class="card-title">Trade Log</div><div class="card-meta" id="trade-ct"></div></div>
           <div class="card-body" id="trade-log"></div>
         </div>
-        <div class="ai-wrap">
-          <div class="ai-hd"><div class="ai-title">🤝 Trade Analysis <span class="ai-chip">Pro</span></div><div class="ai-btns"><button class="btn-copy-ai hidden" id="cp-aitrades" onclick="copyAI('aitrades')">📋 Copy</button><button class="btn-gen" id="btn-aitrades" onclick="generateContent('aitrades',this)">✦ Generate</button></div></div>
-          <div class="ai-body"><div class="ai-ph" id="ph-aitrades"><div class="ai-ph-icon">🤝</div><div class="ai-ph-txt">Click Generate to analyze this season's trades</div></div><div class="ai-spinning" id="spin-aitrades"><div class="spin"></div><div class="spin-lbl">Analyzing trades…</div></div><div class="ai-out" id="out-aitrades"></div></div>
+        <div class="pro-wrap">
+          <div class="pro-hd"><div class="pro-title">🤝 Trade Analysis <span class="pro-chip">Pro</span></div><div class="pro-btns"><button class="btn-copy-pro hidden" id="cp-protrades" onclick="copypro('protrades')">📋 Copy</button><button class="btn-gen" id="btn-protrades" onclick="generateContent('protrades',this)">✦ Generate</button></div></div>
+          <div class="pro-body"><div class="pro-ph" id="ph-protrades"><div class="pro-ph-icon">🤝</div><div class="pro-ph-txt">Click Generate to analyze this season's trades</div></div><div class="pro-spinning" id="spin-protrades"><div class="spin"></div><div class="spin-lbl">Analyzing trades…</div></div><div class="pro-out" id="out-protrades"></div></div>
         </div>
       </div>
 
-      <!-- AI: DRAFT ANALYSIS -->
-      <div class="tab" id="tab-aidraft">
+      <!-- pro: DRAFT ANALYSIS -->
+      <div class="tab" id="tab-prodraft">
         <div class="sec-hd"><div class="sec-eyebrow">Pro · Copy &amp; Share</div><div class="sec-title">Draft Capital <span class="accent">Analysis</span></div><div class="sec-desc">Who's building, who's contending, and what the pick market looks like.</div></div>
-        <div class="ai-wrap">
-          <div class="ai-hd"><div class="ai-title">🎯 Draft Analysis <span class="ai-chip">Pro</span></div><div class="ai-btns"><button class="btn-copy-ai hidden" id="cp-aidraft" onclick="copyAI('aidraft')">📋 Copy</button><button class="btn-gen" id="btn-aidraft" onclick="generateContent('aidraft',this)">✦ Generate</button></div></div>
-          <div class="ai-body"><div class="ai-ph" id="ph-aidraft"><div class="ai-ph-icon">🎯</div><div class="ai-ph-txt">Click Generate to analyze draft capital</div></div><div class="ai-spinning" id="spin-aidraft"><div class="spin"></div><div class="spin-lbl">Evaluating draft capital…</div></div><div class="ai-out" id="out-aidraft"></div></div>
+        <div class="pro-wrap">
+          <div class="pro-hd"><div class="pro-title">🎯 Draft Analysis <span class="pro-chip">Pro</span></div><div class="pro-btns"><button class="btn-copy-pro hidden" id="cp-prodraft" onclick="copypro('prodraft')">📋 Copy</button><button class="btn-gen" id="btn-prodraft" onclick="generateContent('prodraft',this)">✦ Generate</button></div></div>
+          <div class="pro-body"><div class="pro-ph" id="ph-prodraft"><div class="pro-ph-icon">🎯</div><div class="pro-ph-txt">Click Generate to analyze draft capital</div></div><div class="pro-spinning" id="spin-prodraft"><div class="spin"></div><div class="spin-lbl">Evaluating draft capital…</div></div><div class="pro-out" id="out-prodraft"></div></div>
         </div>
       </div>
 
@@ -718,7 +718,7 @@ var D = {
   }
 };
 
-var aiText = {};
+var proText = {};
 
 /* ═══════════ HELPERS ═══════════ */
 function tc(id){return TC[(id-1)%TC.length];}
@@ -1272,7 +1272,7 @@ function generateContent(section,btn){
     outEl.innerHTML=mdToHtml(data.text);outEl.classList.add('on');
     document.getElementById('spin-'+section).classList.remove('on');
     document.getElementById('cp-'+section).classList.remove('hidden');
-    aiText[section]=data.text;btn.textContent='↺ Regenerate';btn.disabled=false;
+    proText[section]=data.text;btn.textContent='↺ Regenerate';btn.disabled=false;
   })
   .catch(function(err){
     document.getElementById('spin-'+section).classList.remove('on');
@@ -1289,8 +1289,8 @@ function buildPrompt(section){
   var lines=ms.map(function(m){var t1=gt(m[0]),t2=gt(m[1]),p1=m[2],p2=m[3];var w=p1>p2?t1:t2,l=p1>p2?t2:t1;return w.name+' def. '+l.name+' '+Math.max(p1,p2).toFixed(1)+'–'+Math.min(p1,p2).toFixed(1);}).join('\n');
   if(section==='weekly'){return'You are an entertaining fantasy football analyst writing a weekly digest for a dynasty league commissioner to share with their league.\n\nLEAGUE: '+D.leagueName+' | Week '+D.week+' | '+D.season+'\n\nRESULTS:\n'+lines+'\n\nSTANDINGS:\n'+standings+'\n\nWrite an engaging Weekly Digest with a creative headline, recap of every game (1-2 sentences each), Performance of the Week, and 2 storylines to watch. Sports journalism style — direct, entertaining. Bold key team names.';}
   if(section==='rankings'){var td=D.teams.map(function(t,i){return(i+1)+'. '+t.name+' ('+t.wins+'-'+t.losses+') '+t.pf+' pts streak:'+t.streak;}).join('\n');return'Dynasty fantasy football power rankings analyst.\n\nLEAGUE: '+D.leagueName+' | After Week '+D.week+'\n\nTEAMS:\n'+td+'\n\nWrite honest rankings 1–'+D.teams.length+'. Each: bold name + all-caps tagline, 2-3 sentences analysis, end with ↑ Rising / ↓ Falling / → Locked In. Add Bottom Line paragraph. Be direct and opinionated.';}
-  if(section==='aitrades'){var tl=D.trades.map(function(t,i){return'Trade '+(i+1)+' ('+t.date+'): '+t.teamA+' got '+t.aGets.join(', ')+' | '+t.teamB+' got '+t.bGets.join(', ');}).join('\n');return'Dynasty trade analyst.\n\nLEAGUE: '+D.leagueName+' | Through Week '+D.week+'\n\nTRADES:\n'+tl+'\n\nSTANDINGS: '+standings+'\n\nWrite trade analysis: Trade of the Year, Biggest Win, Toughest Loss, Most Active Trader, Trade Market Outlook. Be specific and opinionated.';}
-  if(section==='aidraft'){var pl=Object.keys(D.picks).map(function(team){return team+': '+D.picks[team].map(function(p){return p.yr+' R'+p.rd+(p.o!==team?' ('+p.o+')':'');}).join(', ');}).join('\n');return'Dynasty draft capital analyst.\n\nLEAGUE: '+D.leagueName+' | '+D.season+'\n\nPICKS:\n'+pl+'\n\nSTANDINGS:\n'+standings+'\n\nDraft capital report: 3 pick-richest, 2 pick-poorest, most valuable single pick, Rebuilding vs Contending for every team, Draft Strategy Preview.';}
+  if(section==='protrades'){var tl=D.trades.map(function(t,i){return'Trade '+(i+1)+' ('+t.date+'): '+t.teamA+' got '+t.aGets.join(', ')+' | '+t.teamB+' got '+t.bGets.join(', ');}).join('\n');return'Dynasty trade analyst.\n\nLEAGUE: '+D.leagueName+' | Through Week '+D.week+'\n\nTRADES:\n'+tl+'\n\nSTANDINGS: '+standings+'\n\nWrite trade analysis: Trade of the Year, Biggest Win, Toughest Loss, Most Active Trader, Trade Market Outlook. Be specific and opinionated.';}
+  if(section==='prodraft'){var pl=Object.keys(D.picks).map(function(team){return team+': '+D.picks[team].map(function(p){return p.yr+' R'+p.rd+(p.o!==team?' ('+p.o+')':'');}).join(', ');}).join('\n');return'Dynasty draft capital analyst.\n\nLEAGUE: '+D.leagueName+' | '+D.season+'\n\nPICKS:\n'+pl+'\n\nSTANDINGS:\n'+standings+'\n\nDraft capital report: 3 pick-richest, 2 pick-poorest, most valuable single pick, Rebuilding vs Contending for every team, Draft Strategy Preview.';}
   return '';
 }
 
@@ -1298,8 +1298,8 @@ function mdToHtml(md){
   return md.replace(/^## (.+)$/gm,'<h2>$1</h2>').replace(/^### (.+)$/gm,'<h3>$1</h3>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/^↑ (.+)$/gm,'<span class="rising">↑ $1</span>').replace(/^↓ (.+)$/gm,'<span class="falling">↓ $1</span>').replace(/^→ (.+)$/gm,'<span class="steady">→ $1</span>').replace(/^---$/gm,'<hr>').replace(/^- (.+)$/gm,'<li>$1</li>').replace(/(<li>[^]*?<\/li>\n?)+/g,function(m){return'<ul>'+m+'</ul>';}).replace(/^(?!<[h234pulsi]|<hr)(.+)$/gm,'<p>$1</p>').replace(/<p><\/p>/g,'');
 }
 
-function copyAI(section){
-  var text=aiText[section];if(!text)return;
+function copypro(section){
+  var text=proText[section];if(!text)return;
   navigator.clipboard.writeText(text).then(function(){var btn=document.getElementById('cp-'+section);btn.textContent='✓ Copied!';btn.classList.add('copied');setTimeout(function(){btn.textContent='📋 Copy';btn.classList.remove('copied');},2000);}).catch(function(){alert('Please copy the text manually.');});
 }
 
