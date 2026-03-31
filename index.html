@@ -778,75 +778,59 @@ function setStep(id,st){var el=document.getElementById('step-'+id);if(el)el.clas
 /* ════════════════════════════
    PICK HOLDINGS (FIXED)
 ════════════════════════════ */
-function buildFullPickHoldings(tradedPicks,currentSeason,rounds){
-  var holdings={};
-  D.teams.forEach(function(t){holdings[t.id]=[];});
+function buildFullPickHoldings(tradedPicks, currentSeason, rounds) {
+  var holdings = {};
+  D.teams.forEach(function(t) { holdings[t.id] = []; });
 
-  /* Determine year range from traded picks + default future window */
-  var maxYr=parseInt(currentSeason)+2; /* at minimum show 2 future years */
-  tradedPicks.forEach(function(tp){
-    var y=parseInt(tp.season)||0;
-    if(y>maxYr)maxYr=y;
-  });
-  /* Cap at current+3 years ahead to avoid runaway future picks */
-  var capYr=parseInt(currentSeason)+3;
-  if(maxYr>capYr)maxYr=capYr;
-
-  /* Build lookup: for each (season, round), which picks have been traded */
-  /* Sleeper returns previous_owner_id (not original_roster_id) — handle both */
-  var tradedMap={};
-  tradedPicks.forEach(function(tp){
-    var yr=String(tp.season);var rd=tp.round;
-    var key=yr+'_'+rd;
-    if(!tradedMap[key])tradedMap[key]=[];
-    /* Use original_roster_id if present, else previous_owner_id */
-    var origId=tp.original_roster_id||tp.previous_owner_id||null;
-    tradedMap[key].push({
-      currentOwnerId:parseInt(tp.roster_id),
-      originalOwnerId:origId?parseInt(origId):null
-    });
+  /* Determine year range from traded picks data */
+  var minYr = parseInt(currentSeason) + 1;
+  var maxYr = parseInt(currentSeason) + 3; /* default 3 future years */
+  tradedPicks.forEach(function(tp) {
+    var y = parseInt(tp.season) || 0;
+    if (y > maxYr) maxYr = y;
   });
 
-  /* Build full holdings year by year */
-  for(var yr=parseInt(currentSeason)+1;yr<=maxYr;yr++){
-    var yrStr=String(yr);
-    for(var rd=1;rd<=rounds;rd++){
-      var key=yrStr+'_'+rd;
-      var trades=tradedMap[key]||[];
+  /* Build ownership map keyed by (season_round_originalRosterId)
+     This uniquely identifies every single pick in the league.
+     Sleeper uses original_roster_id — fall back to previous_owner_id if missing */
+  var ownershipMap = {};
+  tradedPicks.forEach(function(tp) {
+    var origId = parseInt(tp.original_roster_id || tp.previous_owner_id || 0);
+    if (!origId) return;
+    var key = tp.season + '_' + tp.round + '_' + origId;
+    ownershipMap[key] = parseInt(tp.roster_id);
+  });
 
-      D.teams.forEach(function(team){
-        /* Was this team's pick traded away? */
-        var tradedAway=false;
-        for(var ti=0;ti<trades.length;ti++){
-          if(trades[ti].originalOwnerId===team.id){tradedAway=true;break;}
-        }
-
-        /* Did this team receive picks for this slot? */
-        var received=[];
-        for(var ri=0;ri<trades.length;ri++){
-          if(trades[ri].currentOwnerId===team.id&&trades[ri].originalOwnerId!==team.id){
-            received.push(trades[ri]);
-          }
-        }
-
-        /* Own pick — still held */
-        if(!tradedAway){
-          holdings[team.id].push({
-            yr:yrStr,round:rd,originalRosterId:team.id,isOwn:true
+  /* For every future year × round × team, determine current ownership */
+  for (var yr = minYr; yr <= maxYr; yr++) {
+    var yrStr = String(yr);
+    for (var rd = 1; rd <= rounds; rd++) {
+      D.teams.forEach(function(team) {
+        var key = yrStr + '_' + rd + '_' + team.id;
+        if (ownershipMap.hasOwnProperty(key)) {
+          /* This team's pick was traded — add it to current owner only */
+          var currentOwnerId = ownershipMap[key];
+          if (!holdings[currentOwnerId]) holdings[currentOwnerId] = [];
+          holdings[currentOwnerId].push({
+            yr: yrStr,
+            round: rd,
+            originalRosterId: team.id,
+            isOwn: currentOwnerId === team.id
           });
-        }
-
-        /* Received picks from other teams */
-        for(var rci=0;rci<received.length;rci++){
+          /* Original owner gets NOTHING — pick was traded away */
+        } else {
+          /* Pick never traded — original owner still holds it */
           holdings[team.id].push({
-            yr:yrStr,round:rd,
-            originalRosterId:received[rci].originalOwnerId||0,
-            isOwn:false
+            yr: yrStr,
+            round: rd,
+            originalRosterId: team.id,
+            isOwn: true
           });
         }
       });
     }
   }
+
   return holdings;
 }
 /* ════════════════════════════
