@@ -6,15 +6,7 @@
 <title>Commissioner Hub</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:#181820;--s0:#1e1e28;--s1:#252534;--s2:#2e2e3e;--s3:#383850;
-  --border:#3e3e56;--border2:#4e4e68;
-  --text:#f0eef8;--text2:#c8c6d8;--muted:#8886a8;--dim:#5a5878;
-  --orange:#ff6b2b;--orange2:#ff8c50;--orange-dim:rgba(255,107,43,0.14);
-  --violet:#a855f7;--violet-dim:rgba(168,85,247,0.12);
-  --win:#22c55e;--loss:#ef4444;--gold:#fbbf24;--blue:#3b82f6;--teal:#06b6d4;
-  --r:10px;--r-sm:6px;
-}
+:root{--bg:#181820;--s0:#1e1e28;--s1:#252534;--s2:#2e2e3e;--s3:#383850;--border:#3e3e56;--border2:#4e4e68;--text:#f0eef8;--text2:#c8c6d8;--muted:#8886a8;--dim:#5a5878;--orange:#ff6b2b;--orange2:#ff8c50;--orange-dim:rgba(255,107,43,0.14);--violet:#a855f7;--violet-dim:rgba(168,85,247,0.12);--win:#22c55e;--loss:#ef4444;--gold:#fbbf24;--blue:#3b82f6;--teal:#06b6d4;--r:10px;--r-sm:6px;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-weight:300;min-height:100vh;line-height:1.55;}
 .hidden{display:none!important;}
@@ -26,20 +18,20 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 #screen-landing{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;position:relative;overflow:hidden;}
 .land-bg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 40% at 20% 0%,rgba(147,51,234,0.1) 0%,transparent 70%),radial-gradient(ellipse 50% 40% at 80% 100%,rgba(255,107,43,0.08) 0%,transparent 70%);}
 .land-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(62,62,86,0.4) 1px,transparent 1px),linear-gradient(90deg,rgba(62,62,86,0.4) 1px,transparent 1px);background-size:44px 44px;mask-image:radial-gradient(ellipse at 50% 0%,black 0%,transparent 65%);pointer-events:none;}
-.land-logo-mark{font-family:'Bebas Neue',sans-serif;font-size:clamp(64px,12vw,110px);line-height:0.88;letter-spacing:0.03em;text-align:center;position:relative;z-index:1;}
+.land-logo-mark{font-family:'Bebas Neue',sans-serif;font-size:clamp(64px,12vw,110px);line-height:0.88;letter-spacing:0.03em;text-align:center;position:relative;z-index:1;margin-bottom:4px;}
 .land-logo-mark .w2{color:var(--orange);}
-.land-tagline{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:400;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:40px;position:relative;z-index:1;}
-.land-card{width:100%;max-width:440px;background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:30px;position:relative;z-index:1;}
+.land-tagline{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:400;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:36px;position:relative;z-index:1;}
+.land-card{width:100%;max-width:440px;background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:28px;position:relative;z-index:1;}
 .land-card::after{content:'';position:absolute;top:0;left:24px;right:24px;height:1px;background:linear-gradient(90deg,transparent,var(--orange),transparent);}
 .field-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:7px;}
 .field-hint{font-size:11px;color:var(--dim);margin-top:5px;font-family:'IBM Plex Mono',monospace;}
-.field-group{margin-bottom:16px;}
+.field-group{margin-bottom:14px;}
 .inp-wrap{position:relative;}
 .app-inp{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:var(--r-sm);padding:11px 40px 11px 14px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;outline:none;transition:border-color .15s;}
 .app-inp:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,107,43,0.1);}
 .app-inp::placeholder{color:var(--dim);}
 .inp-icon{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:14px;opacity:0.4;}
-.divider{display:flex;align-items:center;gap:12px;margin:18px 0 14px;}
+.divider{display:flex;align-items:center;gap:12px;margin:16px 0 12px;}
 .divider-line{flex:1;height:1px;background:var(--border);}
 .divider-txt{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.16em;color:var(--dim);text-transform:uppercase;}
 .btn-primary{width:100%;background:var(--orange);color:#fff;border:none;border-radius:var(--r-sm);padding:13px 24px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.1em;cursor:pointer;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:10px;}
@@ -49,7 +41,7 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .btn-demo:hover{background:var(--violet-dim);border-color:var(--violet);}
 .demo-note{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);text-align:center;margin-top:6px;}
 .err-msg{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:var(--r-sm);padding:10px 14px;font-size:12px;color:var(--loss);font-family:'IBM Plex Mono',monospace;margin-top:10px;display:none;}
-.load-steps{margin-top:16px;display:none;flex-direction:column;gap:6px;}
+.load-steps{margin-top:14px;display:none;flex-direction:column;gap:5px;}
 .load-step{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r-sm);font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);transition:all .2s;}
 .load-step.active{border-color:var(--orange);color:var(--text);}
 .load-step.done{border-color:var(--win);color:var(--win);}
@@ -57,7 +49,6 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .step-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);flex-shrink:0;transition:all .2s;}
 .load-step.active .step-dot{background:var(--orange);animation:pulse-dot 1s ease-in-out infinite;}
 .load-step.done .step-dot{background:var(--win);}
-.load-step.error .step-dot{background:var(--loss);}
 @keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:0.3}}
 
 /* DASHBOARD */
@@ -74,16 +65,20 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .btn-sm{background:var(--s2);border:1px solid var(--border);border-radius:var(--r-sm);padding:5px 12px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:all .15s;}
 .btn-sm:hover{color:var(--text);border-color:var(--border2);}
 .dash-body{display:flex;flex:1;min-height:calc(100vh - 52px);}
+
+/* SIDEBAR */
 .sidebar{width:214px;flex-shrink:0;background:var(--s0);border-right:1px solid var(--border);padding:12px 0 24px;position:sticky;top:52px;height:calc(100vh - 52px);overflow-y:auto;}
 .nav-group{margin-bottom:2px;}
 .nav-group-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--dim);padding:10px 16px 4px;display:block;}
-.nav-item{display:flex;align-items:center;gap:9px;padding:8px 16px;cursor:pointer;font-size:12px;font-weight:400;color:var(--muted);transition:all .12s;border-left:2px solid transparent;user-select:none;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 16px;cursor:pointer;font-size:12px;color:var(--muted);transition:all .12s;border-left:2px solid transparent;user-select:none;}
 .nav-item:hover{color:var(--text2);background:rgba(255,255,255,0.03);}
 .nav-item.active{color:var(--orange);border-left-color:var(--orange);background:var(--orange-dim);font-weight:500;}
 .nav-icon{font-size:12px;width:15px;text-align:center;flex-shrink:0;}
 .nav-label{flex:1;}
 .pro-pip{font-family:'IBM Plex Mono',monospace;font-size:8px;padding:1px 5px;border-radius:3px;background:rgba(6,182,212,0.12);color:var(--teal);border:1px solid rgba(6,182,212,0.22);flex-shrink:0;}
 .free-pip{font-family:'IBM Plex Mono',monospace;font-size:8px;padding:1px 5px;border-radius:3px;background:rgba(34,197,94,0.1);color:var(--win);border:1px solid rgba(34,197,94,0.22);flex-shrink:0;}
+
+/* MAIN */
 .main{flex:1;padding:24px 28px 60px;overflow-y:auto;max-height:calc(100vh - 52px);}
 .tab{display:none;}
 .tab.active{display:block;}
@@ -92,6 +87,8 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .sec-title .accent{color:var(--orange);}
 .sec-desc{font-size:13px;color:var(--muted);margin-bottom:20px;}
 .sec-hd{margin-bottom:20px;}
+
+/* CARDS */
 .card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:14px;}
 .card-hd{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid var(--border);}
 .card-title{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--orange);}
@@ -100,13 +97,13 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .stat-strip{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-bottom:20px;}
 .stat-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;position:relative;overflow:hidden;}
 .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--orange),transparent);}
-.stat-num{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:0.03em;color:var(--text);line-height:1;}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--text);line-height:1;}
 .stat-num.orange{color:var(--orange);}
 .stat-num.green{color:var(--win);}
 .stat-num.violet{color:var(--violet);}
 .stat-num.gold{color:var(--gold);}
 .stat-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-top:3px;}
-.avatar{width:32px;height:32px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:13px;color:#fff;letter-spacing:0.03em;}
+.avatar{width:32px;height:32px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:13px;color:#fff;}
 .avatar-sm{width:26px;height:26px;border-radius:7px;font-size:11px;}
 .stbl{width:100%;border-collapse:collapse;font-size:13px;}
 .stbl th{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--dim);text-align:left;padding:10px 14px;border-bottom:1px solid var(--border);font-weight:400;}
@@ -116,12 +113,11 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .rank-col{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--dim);width:32px;text-align:center;}
 .rank-col.top{color:var(--orange);}
 .team-cell{display:flex;align-items:center;gap:10px;}
-.rec{font-family:'IBM Plex Mono',monospace;font-size:12px;}
 .rec .w{color:var(--win);}
 .rec .l{color:var(--loss);}
 .mono-sm{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text2);}
 .mono-dim{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);}
-.pill{font-family:'IBM Plex Mono',monospace;font-size:10px;padding:3px 8px;border-radius:100px;font-weight:500;}
+.pill{font-family:'IBM Plex Mono',monospace;font-size:10px;padding:3px 8px;border-radius:100px;}
 .pill-in{background:rgba(34,197,94,0.12);color:var(--win);border:1px solid rgba(34,197,94,0.25);}
 .pill-out{background:rgba(239,68,68,0.1);color:var(--loss);border:1px solid rgba(239,68,68,0.22);}
 .streak-badge{font-family:'IBM Plex Mono',monospace;font-size:10px;padding:2px 7px;border-radius:4px;}
@@ -142,12 +138,12 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .mc-row{display:flex;align-items:center;gap:10px;padding:9px 13px;border-bottom:1px solid rgba(255,255,255,0.04);}
 .mc-row:last-child{border-bottom:none;}
 .mc-row.winner .mc-pts{color:var(--win);font-weight:500;}
-.mc-row.loser .mc-pts{color:var(--muted);}
-.mc-row.loser .mc-name{color:var(--muted);}
+.mc-row.loser .mc-pts,.mc-row.loser .mc-name{color:var(--muted);}
 .mc-name{flex:1;font-size:13px;font-weight:500;}
-.mc-pts{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.03em;}
+.mc-pts{font-family:'Bebas Neue',sans-serif;font-size:22px;}
 .pc{font-family:'IBM Plex Mono',monospace;font-size:9px;padding:3px 7px;border-radius:3px;white-space:nowrap;display:inline-block;margin:2px;}
-.pc-1{background:var(--orange-dim);color:var(--orange);border:1px solid rgba(255,107,43,0.28);}
+.pc-own{background:rgba(34,197,94,0.1);color:var(--win);border:1px solid rgba(34,197,94,0.25);}
+.pc-recv{background:var(--orange-dim);color:var(--orange);border:1px solid rgba(255,107,43,0.28);}
 .pc-2{background:rgba(59,130,246,0.1);color:var(--blue);border:1px solid rgba(59,130,246,0.25);}
 .pc-3{background:rgba(100,116,139,0.12);color:var(--muted);border:1px solid rgba(100,116,139,0.25);}
 .trade-item{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden;}
@@ -160,6 +156,58 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .trade-side-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--dim);margin-bottom:6px;}
 .trade-asset{font-size:12px;padding:2px 0;color:var(--text2);}
 .trade-asset.pick{color:var(--orange);font-family:'IBM Plex Mono',monospace;font-size:11px;}
+
+/* ── BATTLE CARDS (Matchup Recap) ── */
+.battle-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-bottom:20px;}
+.battle-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;position:relative;}
+.battle-header{background:var(--s1);padding:8px 14px;border-bottom:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--dim);}
+.battle-arena{display:grid;grid-template-columns:1fr 48px 1fr;align-items:center;padding:16px;}
+.battle-team{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.battle-team.winner .battle-score{color:var(--win);}
+.battle-team.loser .battle-score{color:var(--muted);}
+.battle-team.loser .battle-name{color:var(--muted);}
+.battle-emoji{font-size:36px;line-height:1;}
+.battle-name{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;text-align:center;}
+.battle-score{font-family:'Bebas Neue',sans-serif;font-size:38px;line-height:1;}
+.battle-record{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);text-align:center;}
+.battle-vs{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--dim);text-align:center;}
+.battle-winner-bar{height:3px;background:linear-gradient(90deg,transparent,var(--win),transparent);}
+.battle-result-badge{position:absolute;top:8px;right:8px;font-family:'IBM Plex Mono',monospace;font-size:9px;padding:2px 7px;border-radius:100px;background:rgba(34,197,94,0.12);color:var(--win);border:1px solid rgba(34,197,94,0.25);}
+
+/* ── PREVIEW CARDS ── */
+.preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-bottom:20px;}
+.preview-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.preview-hd{background:var(--s1);padding:8px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.preview-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--dim);}
+.preview-ou{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gold);}
+.preview-matchup{display:grid;grid-template-columns:1fr 40px 1fr;align-items:center;padding:14px;}
+.preview-side{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.preview-side.away{align-items:flex-end;}
+.preview-side.home{align-items:flex-start;}
+.preview-emoji{font-size:28px;line-height:1;}
+.preview-team-name{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;text-align:center;}
+.preview-ppg{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);}
+.preview-spread{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--orange);}
+.preview-vs-block{text-align:center;}
+.preview-vs{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--dim);}
+.preview-week{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);}
+.pick-banner{margin:0 14px 14px;background:var(--orange-dim);border:1px solid rgba(255,107,43,0.25);border-radius:var(--r-sm);padding:7px 12px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--orange);}
+
+/* ── WAIVER CARDS ── */
+.waiver-section{margin-bottom:20px;}
+.waiver-section-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:block;}
+.waiver-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r-sm);margin-bottom:6px;}
+.waiver-emoji{font-size:20px;flex-shrink:0;}
+.waiver-info{flex:1;}
+.waiver-player{font-size:13px;font-weight:500;}
+.waiver-detail{font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
+.waiver-owner{font-family:'IBM Plex Mono',monospace;font-size:10px;}
+.waiver-type{font-family:'IBM Plex Mono',monospace;font-size:9px;padding:2px 7px;border-radius:3px;}
+.wt-add{background:rgba(34,197,94,0.1);color:var(--win);border:1px solid rgba(34,197,94,0.25);}
+.wt-drop{background:rgba(239,68,68,0.1);color:var(--loss);border:1px solid rgba(239,68,68,0.22);}
+.wt-trade{background:rgba(59,130,246,0.1);color:var(--blue);border:1px solid rgba(59,130,246,0.22);}
+
+/* PRO SECTIONS */
 .pro-wrap{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:16px;}
 .pro-hd{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid var(--border);background:var(--s0);}
 .pro-title{display:flex;align-items:center;gap:10px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);}
@@ -182,7 +230,7 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .spin-lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);}
 .pro-out{display:none;}
 .pro-out.on{display:block;}
-.pro-out h2{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:0.05em;color:var(--orange);margin-bottom:12px;}
+.pro-out h2{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--orange);margin-bottom:12px;}
 .pro-out h3{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--text);margin:16px 0 6px;}
 .pro-out p{font-size:13px;color:var(--text2);line-height:1.75;margin-bottom:10px;}
 .pro-out p strong{color:var(--orange);font-weight:500;}
@@ -193,6 +241,19 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .falling{color:var(--loss);font-family:'IBM Plex Mono',monospace;font-size:11px;display:block;margin-top:3px;}
 .steady{color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:11px;display:block;margin-top:3px;}
 .chart-svg-wrap{width:100%;overflow-x:auto;}
+
+/* HISTORY */
+.hist-season{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:12px;overflow:hidden;}
+.hist-season-hd{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--s1);border-bottom:1px solid var(--border);}
+.hist-yr{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--orange);}
+.hist-champion-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--dim);margin-bottom:3px;}
+.hist-champion-name{font-size:14px;font-weight:500;}
+.hist-row{display:flex;align-items:center;gap:12px;padding:8px 16px;border-bottom:1px solid rgba(255,255,255,0.04);}
+.hist-row:last-child{border-bottom:none;}
+.hist-pos{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--dim);width:28px;text-align:center;}
+.hist-pos.top{color:var(--orange);}
+
+/* ODDS */
 .odds-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:12px;overflow:hidden;}
 .odds-hd{background:var(--s1);border-bottom:1px solid var(--border);padding:9px 16px;display:flex;align-items:center;justify-content:space-between;}
 .odds-hd-title{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);}
@@ -206,8 +267,10 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .odds-ou{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--gold);}
 .odds-ou-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.12em;text-transform:uppercase;}
 .odds-ml{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);margin-top:6px;}
-.odds-result-hit{color:var(--win);}
-.odds-result-miss{color:var(--loss);}
+.odds-hit{color:var(--win);}
+.odds-miss{color:var(--loss);}
+
+/* AWARDS */
 .award-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
 .award-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:16px;position:relative;overflow:hidden;}
 .award-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--orange);}
@@ -224,6 +287,8 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .award-card.green-card .award-val{color:var(--win);}
 .award-card.red-card .award-val{color:var(--loss);}
 .award-ctx{font-size:11px;color:var(--dim);margin-top:3px;font-family:'IBM Plex Mono',monospace;}
+
+/* MVP */
 .mvp-timeline{display:flex;flex-direction:column;gap:8px;}
 .mvp-row{display:flex;align-items:center;gap:14px;padding:12px 16px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);}
 .mvp-wk{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--orange);width:52px;flex-shrink:0;}
@@ -232,6 +297,8 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .mvp-owner{font-size:11px;color:var(--muted);}
 .mvp-score{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--text);text-align:right;}
 .mvp-margin{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--win);text-align:right;}
+
+/* RECORDS */
 .records-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
 .record-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:15px;position:relative;overflow:hidden;}
 .record-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--orange);}
@@ -240,6 +307,8 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .record-val{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--orange);line-height:1;}
 .record-team{font-size:12px;color:var(--text2);margin-top:3px;}
 .record-ctx{font-size:11px;color:var(--dim);margin-top:2px;font-family:'IBM Plex Mono',monospace;}
+
+/* PLAYOFF */
 .pf-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
 .pf-row:last-child{border-bottom:none;}
 .pf-num{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--orange);width:26px;text-align:center;}
@@ -251,9 +320,11 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .magic-lbl{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:0.1em;font-family:'IBM Plex Mono',monospace;}
 .elim-badge{font-family:'IBM Plex Mono',monospace;font-size:9px;padding:2px 7px;border-radius:3px;background:rgba(239,68,68,0.1);color:var(--loss);border:1px solid rgba(239,68,68,0.22);}
 .clinch-badge{font-family:'IBM Plex Mono',monospace;font-size:9px;padding:2px 7px;border-radius:3px;background:rgba(34,197,94,0.12);color:var(--win);border:1px solid rgba(34,197,94,0.25);}
+
+/* TRANSACTIONS */
 .txn-bar-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
 .txn-bar-row:last-child{border-bottom:none;}
-.txn-bar-track{flex:1;height:20px;background:var(--s3);border-radius:4px;overflow:hidden;position:relative;}
+.txn-bar-track{flex:1;height:20px;background:var(--s3);border-radius:4px;overflow:hidden;}
 .txn-bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding:0 8px;}
 .txn-bar-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#fff;font-weight:500;}
 .txn-num{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--orange);min-width:32px;text-align:right;}
@@ -271,7 +342,6 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .tp-name{font-size:13px;font-weight:500;margin-bottom:1px;}
 .tp-team{font-size:11px;color:var(--muted);margin-bottom:7px;}
 .tp-score{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--orange);line-height:1;}
-.tp-proj{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);}
 .wwl-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
 .wwl-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:14px;}
 .wwl-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;margin-bottom:10px;}
@@ -280,9 +350,9 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .wwl-item{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
 .wwl-item:last-child{border-bottom:none;}
 .wwl-name{flex:1;font-size:12px;}
-.wwl-val{font-family:'IBM Plex Mono',monospace;font-size:12px;}
-.wwl-val.pos{color:var(--win);}
-.wwl-val.neg{color:var(--loss);}
+.wwl-val.pos{color:var(--win);font-family:'IBM Plex Mono',monospace;font-size:12px;}
+.wwl-val.neg{color:var(--loss);font-family:'IBM Plex Mono',monospace;font-size:12px;}
+
 @media(max-width:768px){
   .sidebar{position:static;width:100%;height:auto;border-right:none;border-bottom:1px solid var(--border);display:flex;flex-direction:row;overflow-x:auto;padding:6px 0;}
   .nav-group-lbl{display:none;}
@@ -290,7 +360,7 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
   .nav-item.active{border-bottom-color:var(--orange);background:transparent;}
   .dash-body{flex-direction:column;}
   .main{padding:16px 14px 50px;}
-  .wwl-grid{grid-template-columns:1fr;}
+  .wwl-grid,.battle-grid,.preview-grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -314,9 +384,10 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
     <button class="btn-primary" id="btn-launch" onclick="launch()">⚡ Load My League</button>
     <div class="load-steps" id="load-steps">
       <div class="load-step" id="step-league"><div class="step-dot"></div>League info &amp; settings</div>
+      <div class="load-step" id="step-history"><div class="step-dot"></div>Historical seasons</div>
       <div class="load-step" id="step-teams"><div class="step-dot"></div>Teams &amp; rosters</div>
       <div class="load-step" id="step-matchups"><div class="step-dot"></div>Matchup results</div>
-      <div class="load-step" id="step-txns"><div class="step-dot"></div>Transactions &amp; trades</div>
+      <div class="load-step" id="step-txns"><div class="step-dot"></div>Transactions &amp; picks</div>
       <div class="load-step" id="step-players"><div class="step-dot"></div>Player database</div>
     </div>
     <div class="divider"><div class="divider-line"></div><div class="divider-txt">Or explore first</div><div class="divider-line"></div></div>
@@ -348,6 +419,7 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
         <div class="nav-item" id="nav-rosters" onclick="go('rosters')"><span class="nav-icon">👥</span><span class="nav-label">Rosters</span><span class="free-pip">Free</span></div>
         <div class="nav-item" id="nav-capital" onclick="go('capital')"><span class="nav-icon">🎯</span><span class="nav-label">Draft Capital</span><span class="free-pip">Free</span></div>
         <div class="nav-item" id="nav-transactions" onclick="go('transactions')"><span class="nav-icon">🔄</span><span class="nav-label">Transactions</span><span class="free-pip">Free</span></div>
+        <div class="nav-item" id="nav-history" onclick="go('history')"><span class="nav-icon">📜</span><span class="nav-label">League History</span><span class="free-pip">Free</span></div>
       </div>
       <div class="nav-group">
         <span class="nav-group-lbl">This Week</span>
@@ -367,19 +439,23 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
       </div>
       <div class="nav-group">
         <span class="nav-group-lbl">Pro Content</span>
+        <div class="nav-item" id="nav-recap" onclick="go('recap')"><span class="nav-icon">🎬</span><span class="nav-label">Matchup Recap</span><span class="pro-pip">Pro</span></div>
+        <div class="nav-item" id="nav-preview" onclick="go('preview')"><span class="nav-icon">🔮</span><span class="nav-label">Matchup Preview</span><span class="pro-pip">Pro</span></div>
+        <div class="nav-item" id="nav-waiver" onclick="go('waiver')"><span class="nav-icon">📋</span><span class="nav-label">Waiver Wire</span><span class="pro-pip">Pro</span></div>
         <div class="nav-item" id="nav-weekly" onclick="go('weekly')"><span class="nav-icon">📰</span><span class="nav-label">Weekly Digest</span><span class="pro-pip">Pro</span></div>
         <div class="nav-item" id="nav-rankings" onclick="go('rankings')"><span class="nav-icon">⚡</span><span class="nav-label">Power Rankings</span><span class="pro-pip">Pro</span></div>
         <div class="nav-item" id="nav-aitrades" onclick="go('aitrades')"><span class="nav-icon">🤝</span><span class="nav-label">Trade Analysis</span><span class="pro-pip">Pro</span></div>
         <div class="nav-item" id="nav-aidraft" onclick="go('aidraft')"><span class="nav-icon">🎯</span><span class="nav-label">Draft Analysis</span><span class="pro-pip">Pro</span></div>
       </div>
     </nav>
+
     <main class="main">
 
       <!-- OVERVIEW -->
       <div class="tab active" id="tab-overview">
         <div class="sec-hd"><div class="sec-eyebrow">Season Summary</div><div class="sec-title">Season <span class="accent">Overview</span></div></div>
         <div class="stat-strip" id="ov-stats"></div>
-        <div class="card"><div class="card-hd"><div class="card-title" id="ov-wk-title">Current Week Matchups</div><div class="card-meta" id="ov-wk-sub"></div></div><div class="card-body" id="ov-matchups"></div></div>
+        <div class="card"><div class="card-hd"><div class="card-title" id="ov-wk-title">Current Week Matchups</div></div><div class="card-body" id="ov-matchups"></div></div>
       </div>
 
       <!-- STANDINGS -->
@@ -396,19 +472,25 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 
       <!-- DRAFT CAPITAL -->
       <div class="tab" id="tab-capital">
-        <div class="sec-hd"><div class="sec-eyebrow">Traded Pick Holdings</div><div class="sec-title">Draft <span class="accent">Capital</span></div><div class="sec-desc">Every traded pick in the league by team and year.</div></div>
-        <div class="card"><div class="card-hd"><div class="card-title">Pick Holdings by Team</div><div class="card-meta" id="cap-meta"></div></div><div class="card-body" id="capital-content"></div></div>
+        <div class="sec-hd"><div class="sec-eyebrow">Full Pick Holdings</div><div class="sec-title">Draft <span class="accent">Capital</span></div><div class="sec-desc">Complete holdings — own picks plus received picks, minus traded away. Green = own, Orange = received.</div></div>
+        <div class="card"><div class="card-hd"><div class="card-title">Full Holdings by Team</div><div class="card-meta" id="cap-meta"></div></div><div class="card-body" id="capital-content"></div></div>
       </div>
 
       <!-- TRANSACTIONS -->
       <div class="tab" id="tab-transactions">
-        <div class="sec-hd"><div class="sec-eyebrow">Season Activity</div><div class="sec-title">Transaction <span class="accent">Tally</span></div><div class="sec-desc">Who's active on the wire, who's passive, and what's trending.</div></div>
+        <div class="sec-hd"><div class="sec-eyebrow">Season Activity</div><div class="sec-title">Transaction <span class="accent">Tally</span></div></div>
         <div class="stat-strip" id="txn-stats"></div>
-        <div class="card" style="margin-bottom:14px;"><div class="card-hd"><div class="card-title">Total Transactions — Season</div><div class="card-meta">All waiver, FA, and trade activity</div></div><div class="card-body" id="txn-bars"></div></div>
+        <div class="card" style="margin-bottom:14px;"><div class="card-hd"><div class="card-title">Total Transactions — Season</div></div><div class="card-body" id="txn-bars"></div></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
           <div class="card"><div class="card-hd"><div class="card-title">🔥 Most Active</div></div><div class="card-body" id="txn-movers"></div></div>
           <div class="card"><div class="card-hd"><div class="card-title">💤 Least Active</div></div><div class="card-body" id="txn-passive"></div></div>
         </div>
+      </div>
+
+      <!-- LEAGUE HISTORY -->
+      <div class="tab" id="tab-history">
+        <div class="sec-hd"><div class="sec-eyebrow">All-Time Records</div><div class="sec-title">League <span class="accent">History</span></div><div class="sec-desc">Every season — champions, standings, and scoring. Pulled from Sleeper.</div></div>
+        <div id="history-content"><div style="color:var(--muted);font-size:13px;">Loading history…</div></div>
       </div>
 
       <!-- ODDS -->
@@ -418,36 +500,36 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
         <div class="card"><div class="card-hd"><div class="card-title">Historical Line Performance</div><div class="card-meta" id="odds-hist-meta"></div></div><div class="card-body" id="odds-history"></div></div>
       </div>
 
-      <!-- WINNERS & LOSERS -->
+      <!-- WWL -->
       <div class="tab" id="tab-wwl">
-        <div class="sec-hd"><div class="sec-eyebrow">Current Week Breakdown</div><div class="sec-title">Winners <span class="accent">&amp; Losers</span></div><div class="sec-desc">Teams and top player performances from the current week.</div></div>
+        <div class="sec-hd"><div class="sec-eyebrow">Current Week</div><div class="sec-title">Winners <span class="accent">&amp; Losers</span></div></div>
         <div class="wwl-grid" id="wwl-teams"></div>
-        <div class="card"><div class="card-hd"><div class="card-title">Top Player Performances — Current Week</div></div><div class="card-body" id="wwl-players"></div></div>
+        <div class="card"><div class="card-hd"><div class="card-title">Top Player Performances</div></div><div class="card-body" id="wwl-players"></div></div>
       </div>
 
       <!-- TOP PERFORMERS -->
       <div class="tab" id="tab-topplayers">
-        <div class="sec-hd"><div class="sec-eyebrow">Highest Scorers</div><div class="sec-title">Top <span class="accent">Performers</span></div><div class="sec-desc">The highest-scoring player on any roster, week by week.</div></div>
+        <div class="sec-hd"><div class="sec-eyebrow">Highest Scorers</div><div class="sec-title">Top <span class="accent">Performers</span></div></div>
         <div id="topplayers-content"></div>
       </div>
 
       <!-- SCORING TRENDS -->
       <div class="tab" id="tab-trends">
-        <div class="sec-hd"><div class="sec-eyebrow">Weekly Trajectory</div><div class="sec-title">Scoring <span class="accent">Trends</span></div><div class="sec-desc">Each team's weekly score plotted as a line. Spot who's heating up and cooling down.</div></div>
+        <div class="sec-hd"><div class="sec-eyebrow">Weekly Trajectory</div><div class="sec-title">Scoring <span class="accent">Trends</span></div></div>
         <div class="card" style="margin-bottom:14px;"><div class="card-hd"><div class="card-title">Weekly Score Lines</div><div class="card-meta" id="trends-meta"></div></div><div class="card-body"><div class="chart-svg-wrap" id="chart-trends-wrap"></div><div id="trends-legend" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;"></div></div></div>
-        <div class="card"><div class="card-hd"><div class="card-title">Points Per Game — Season Average</div></div><div class="card-body" id="ppg-bars"></div></div>
+        <div class="card"><div class="card-hd"><div class="card-title">Points Per Game</div></div><div class="card-body" id="ppg-bars"></div></div>
       </div>
 
       <!-- LUCK INDEX -->
       <div class="tab" id="tab-luck">
-        <div class="sec-hd"><div class="sec-eyebrow">Schedule Fairness</div><div class="sec-title">Luck <span class="accent">Index</span></div><div class="sec-desc">Expected record vs actual record. Positive = lucky schedule. Negative = deserved better.</div></div>
+        <div class="sec-hd"><div class="sec-eyebrow">Schedule Fairness</div><div class="sec-title">Luck <span class="accent">Index</span></div><div class="sec-desc">Expected record vs actual record. Positive = lucky. Negative = deserved better.</div></div>
         <div class="card" style="margin-bottom:14px;"><div class="card-hd"><div class="card-title">Luck Differential</div><div class="card-meta">Wins above/below expectation</div></div><div class="card-body"><div class="chart-svg-wrap" id="chart-luck-wrap"></div></div></div>
         <div class="card"><div class="card-hd"><div class="card-title">Full Breakdown</div></div><div class="card-body" id="luck-rows"></div></div>
       </div>
 
       <!-- PLAYER TRENDS -->
       <div class="tab" id="tab-playertrends">
-        <div class="sec-hd"><div class="sec-eyebrow">Last 3 Weeks vs Season Avg</div><div class="sec-title">Player <span class="accent">Trends</span></div><div class="sec-desc">Players whose recent production is significantly above or below their season average.</div></div>
+        <div class="sec-hd"><div class="sec-eyebrow">Last 3 Weeks vs Season Avg</div><div class="sec-title">Player <span class="accent">Trends</span></div></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
           <div class="card"><div class="card-hd"><div class="card-title">📈 Trending Up</div></div><div class="card-body" id="trends-up"></div></div>
           <div class="card"><div class="card-hd"><div class="card-title">📉 Trending Down</div></div><div class="card-body" id="trends-down"></div></div>
@@ -456,53 +538,144 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 
       <!-- RECORDS -->
       <div class="tab" id="tab-records">
-        <div class="sec-hd"><div class="sec-eyebrow">Season Milestones</div><div class="sec-title">League <span class="accent">Records</span></div><div class="sec-desc">Auto-calculated from all matchup data.</div></div>
+        <div class="sec-hd"><div class="sec-eyebrow">Season Milestones</div><div class="sec-title">League <span class="accent">Records</span></div></div>
         <div id="records-content"></div>
       </div>
 
       <!-- AWARDS -->
       <div class="tab" id="tab-awards">
-        <div class="sec-hd"><div class="sec-eyebrow">Season Recognition</div><div class="sec-title">League <span class="accent">Awards</span></div><div class="sec-desc">Team, player, and fun awards calculated from real season data.</div></div>
+        <div class="sec-hd"><div class="sec-eyebrow">Season Recognition</div><div class="sec-title">League <span class="accent">Awards</span></div></div>
         <div class="card" style="margin-bottom:14px;"><div class="card-hd"><div class="card-title">🏆 Team Awards</div></div><div class="card-body"><div class="award-grid" id="awards-teams"></div></div></div>
         <div class="card" style="margin-bottom:14px;"><div class="card-hd"><div class="card-title">⭐ Player Awards</div></div><div class="card-body"><div class="award-grid" id="awards-players"></div></div></div>
         <div class="card"><div class="card-hd"><div class="card-title">🎭 Fun Awards</div></div><div class="card-body"><div class="award-grid" id="awards-fun"></div></div></div>
       </div>
 
-      <!-- WEEKLY MVPs -->
+      <!-- MVPs -->
       <div class="tab" id="tab-mvp">
-        <div class="sec-hd"><div class="sec-eyebrow">Week by Week</div><div class="sec-title">Weekly <span class="accent">MVPs</span></div><div class="sec-desc">The top-scoring team each week and their margin of victory.</div></div>
+        <div class="sec-hd"><div class="sec-eyebrow">Week by Week</div><div class="sec-title">Weekly <span class="accent">MVPs</span></div></div>
         <div class="mvp-timeline" id="mvp-timeline"></div>
       </div>
 
       <!-- PLAYOFF -->
       <div class="tab" id="tab-playoff">
-        <div class="sec-hd"><div class="sec-eyebrow">Seedings &amp; Scenarios</div><div class="sec-title">Playoff <span class="accent">Picture</span></div><div class="sec-desc">Current seedings, magic numbers to clinch, and elimination scenarios.</div></div>
+        <div class="sec-hd"><div class="sec-eyebrow">Seedings &amp; Scenarios</div><div class="sec-title">Playoff <span class="accent">Picture</span></div></div>
         <div id="playoff-content"></div>
+      </div>
+
+      <!-- ═══════════════════════════════════
+           PRO: MATCHUP RECAP (NEW)
+      ═══════════════════════════════════ -->
+      <div class="tab" id="tab-recap">
+        <div class="sec-hd">
+          <div class="sec-eyebrow">Pro · Copy &amp; Share</div>
+          <div class="sec-title">Matchup <span class="accent">Recap</span></div>
+          <div class="sec-desc">Funny, shareable post-game breakdown with auto-generated battle cards. Drop it in the group chat.</div>
+        </div>
+        <!-- Battle cards render immediately from data, no AI needed -->
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-hd"><div class="card-title" id="recap-card-title">Week 9 Battle Cards</div><div class="card-meta">Auto-generated from results</div></div>
+          <div class="card-body"><div class="battle-grid" id="battle-cards"></div></div>
+        </div>
+        <!-- AI writes the funny narrative -->
+        <div class="pro-wrap">
+          <div class="pro-hd">
+            <div class="pro-title">🎬 Funny Matchup Recap <span class="pro-chip">Claude Pro</span></div>
+            <div class="pro-btns">
+              <button class="btn-copy-pro hidden" id="cp-recap" onclick="copyPro('recap')">📋 Copy</button>
+              <button class="btn-gen" id="btn-recap" onclick="gen('recap',this)">✦ Generate</button>
+            </div>
+          </div>
+          <div class="pro-body">
+            <div class="pro-ph" id="ph-recap"><div class="pro-ph-icon">🎬</div><div class="pro-ph-txt">Click Generate for the funny post-game breakdown</div></div>
+            <div class="pro-spinning" id="spin-recap"><div class="spin"></div><div class="spin-lbl">Writing the hot takes…</div></div>
+            <div class="pro-out" id="out-recap"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════
+           PRO: MATCHUP PREVIEW (NEW)
+      ═══════════════════════════════════ -->
+      <div class="tab" id="tab-preview">
+        <div class="sec-hd">
+          <div class="sec-eyebrow">Pro · Copy &amp; Share</div>
+          <div class="sec-title">Matchup <span class="accent">Preview</span></div>
+          <div class="sec-desc">Next week's matchups with AI predictions, trash talk angles, and a pick of the week. Built from current standings and odds.</div>
+        </div>
+        <!-- Preview cards render from data -->
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-hd"><div class="card-title" id="preview-card-title">Next Week Preview Lines</div><div class="card-meta">Based on season PPG · Subject to matchup changes</div></div>
+          <div class="card-body"><div class="preview-grid" id="preview-cards"></div></div>
+        </div>
+        <div class="pro-wrap">
+          <div class="pro-hd">
+            <div class="pro-title">🔮 Next Week Preview <span class="pro-chip">Claude Pro</span></div>
+            <div class="pro-btns">
+              <button class="btn-copy-pro hidden" id="cp-preview" onclick="copyPro('preview')">📋 Copy</button>
+              <button class="btn-gen" id="btn-preview" onclick="gen('preview',this)">✦ Generate</button>
+            </div>
+          </div>
+          <div class="pro-body">
+            <div class="pro-ph" id="ph-preview"><div class="pro-ph-icon">🔮</div><div class="pro-ph-txt">Click Generate for next week's preview and predictions</div></div>
+            <div class="pro-spinning" id="spin-preview"><div class="spin"></div><div class="spin-lbl">Scouting next week…</div></div>
+            <div class="pro-out" id="out-preview"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════
+           PRO: WAIVER WIRE (NEW)
+      ═══════════════════════════════════ -->
+      <div class="tab" id="tab-waiver">
+        <div class="sec-hd">
+          <div class="sec-eyebrow">Pro · Copy &amp; Share</div>
+          <div class="sec-title">Waiver Wire <span class="accent">Report</span></div>
+          <div class="sec-desc">This week's waiver activity recap plus AI-generated analysis of the best moves, missed opportunities, and top available targets.</div>
+        </div>
+        <!-- Waiver activity log from transaction data -->
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-hd"><div class="card-title">This Week's Wire Activity</div><div class="card-meta" id="waiver-meta"></div></div>
+          <div class="card-body" id="waiver-log"></div>
+        </div>
+        <div class="pro-wrap">
+          <div class="pro-hd">
+            <div class="pro-title">📋 Waiver Wire Analysis <span class="pro-chip">Claude Pro</span></div>
+            <div class="pro-btns">
+              <button class="btn-copy-pro hidden" id="cp-waiver" onclick="copyPro('waiver')">📋 Copy</button>
+              <button class="btn-gen" id="btn-waiver" onclick="gen('waiver',this)">✦ Generate</button>
+            </div>
+          </div>
+          <div class="pro-body">
+            <div class="pro-ph" id="ph-waiver"><div class="pro-ph-icon">📋</div><div class="pro-ph-txt">Click Generate for waiver wire analysis and recommendations</div></div>
+            <div class="pro-spinning" id="spin-waiver"><div class="spin"></div><div class="spin-lbl">Scanning the wire…</div></div>
+            <div class="pro-out" id="out-waiver"></div>
+          </div>
+        </div>
       </div>
 
       <!-- PRO: WEEKLY DIGEST -->
       <div class="tab" id="tab-weekly">
-        <div class="sec-hd"><div class="sec-eyebrow">Pro · Copy &amp; Share</div><div class="sec-title">Weekly <span class="accent">Digest</span></div><div class="sec-desc">AI-written matchup recaps and storylines ready for your group chat.</div></div>
-        <div class="pro-wrap"><div class="pro-hd"><div class="pro-title">📰 Weekly Digest <span class="pro-chip">Claude Pro</span></div><div class="pro-btns"><button class="btn-copy-pro hidden" id="cp-weekly" onclick="copyPro('weekly')">📋 Copy</button><button class="btn-gen" id="btn-weekly" onclick="generateContent('weekly',this)">✦ Generate</button></div></div><div class="pro-body"><div class="pro-ph" id="ph-weekly"><div class="pro-ph-icon">📰</div><div class="pro-ph-txt">Click Generate to write this week's digest</div></div><div class="pro-spinning" id="spin-weekly"><div class="spin"></div><div class="spin-lbl">Writing digest…</div></div><div class="pro-out" id="out-weekly"></div></div></div>
+        <div class="sec-hd"><div class="sec-eyebrow">Pro · Copy &amp; Share</div><div class="sec-title">Weekly <span class="accent">Digest</span></div></div>
+        <div class="pro-wrap"><div class="pro-hd"><div class="pro-title">📰 Weekly Digest <span class="pro-chip">Claude Pro</span></div><div class="pro-btns"><button class="btn-copy-pro hidden" id="cp-weekly" onclick="copyPro('weekly')">📋 Copy</button><button class="btn-gen" id="btn-weekly" onclick="gen('weekly',this)">✦ Generate</button></div></div><div class="pro-body"><div class="pro-ph" id="ph-weekly"><div class="pro-ph-icon">📰</div><div class="pro-ph-txt">Click Generate to write this week's digest</div></div><div class="pro-spinning" id="spin-weekly"><div class="spin"></div><div class="spin-lbl">Writing digest…</div></div><div class="pro-out" id="out-weekly"></div></div></div>
       </div>
 
       <!-- PRO: POWER RANKINGS -->
       <div class="tab" id="tab-rankings">
-        <div class="sec-hd"><div class="sec-eyebrow">Pro · Copy &amp; Share</div><div class="sec-title">Power <span class="accent">Rankings</span></div><div class="sec-desc">Honest, data-driven rankings with sharp weekly analysis.</div></div>
-        <div class="pro-wrap"><div class="pro-hd"><div class="pro-title">⚡ Power Rankings <span class="pro-chip">Claude Pro</span></div><div class="pro-btns"><button class="btn-copy-pro hidden" id="cp-rankings" onclick="copyPro('rankings')">📋 Copy</button><button class="btn-gen" id="btn-rankings" onclick="generateContent('rankings',this)">✦ Generate</button></div></div><div class="pro-body"><div class="pro-ph" id="ph-rankings"><div class="pro-ph-icon">⚡</div><div class="pro-ph-txt">Click Generate to produce power rankings</div></div><div class="pro-spinning" id="spin-rankings"><div class="spin"></div><div class="spin-lbl">Ranking your league…</div></div><div class="pro-out" id="out-rankings"></div></div></div>
+        <div class="sec-hd"><div class="sec-eyebrow">Pro · Copy &amp; Share</div><div class="sec-title">Power <span class="accent">Rankings</span></div></div>
+        <div class="pro-wrap"><div class="pro-hd"><div class="pro-title">⚡ Power Rankings <span class="pro-chip">Claude Pro</span></div><div class="pro-btns"><button class="btn-copy-pro hidden" id="cp-rankings" onclick="copyPro('rankings')">📋 Copy</button><button class="btn-gen" id="btn-rankings" onclick="gen('rankings',this)">✦ Generate</button></div></div><div class="pro-body"><div class="pro-ph" id="ph-rankings"><div class="pro-ph-icon">⚡</div><div class="pro-ph-txt">Click Generate to produce power rankings</div></div><div class="pro-spinning" id="spin-rankings"><div class="spin"></div><div class="spin-lbl">Ranking your league…</div></div><div class="pro-out" id="out-rankings"></div></div></div>
       </div>
 
       <!-- PRO: TRADE ANALYSIS -->
       <div class="tab" id="tab-aitrades">
-        <div class="sec-hd"><div class="sec-eyebrow">Pro · Copy &amp; Share</div><div class="sec-title">Trade <span class="accent">Analysis</span></div><div class="sec-desc">Season trade log plus AI breakdown of winners, losers, and outlook.</div></div>
+        <div class="sec-hd"><div class="sec-eyebrow">Pro · Copy &amp; Share</div><div class="sec-title">Trade <span class="accent">Analysis</span></div></div>
         <div class="card" style="margin-bottom:14px;"><div class="card-hd"><div class="card-title">Trade Log</div><div class="card-meta" id="trade-ct"></div></div><div class="card-body" id="trade-log"></div></div>
-        <div class="pro-wrap"><div class="pro-hd"><div class="pro-title">🤝 Trade Analysis <span class="pro-chip">Claude Pro</span></div><div class="pro-btns"><button class="btn-copy-pro hidden" id="cp-aitrades" onclick="copyPro('aitrades')">📋 Copy</button><button class="btn-gen" id="btn-aitrades" onclick="generateContent('aitrades',this)">✦ Generate</button></div></div><div class="pro-body"><div class="pro-ph" id="ph-aitrades"><div class="pro-ph-icon">🤝</div><div class="pro-ph-txt">Click Generate to analyze this season's trades</div></div><div class="pro-spinning" id="spin-aitrades"><div class="spin"></div><div class="spin-lbl">Analyzing trades…</div></div><div class="pro-out" id="out-aitrades"></div></div></div>
+        <div class="pro-wrap"><div class="pro-hd"><div class="pro-title">🤝 Trade Analysis <span class="pro-chip">Claude Pro</span></div><div class="pro-btns"><button class="btn-copy-pro hidden" id="cp-aitrades" onclick="copyPro('aitrades')">📋 Copy</button><button class="btn-gen" id="btn-aitrades" onclick="gen('aitrades',this)">✦ Generate</button></div></div><div class="pro-body"><div class="pro-ph" id="ph-aitrades"><div class="pro-ph-icon">🤝</div><div class="pro-ph-txt">Click Generate to analyze this season's trades</div></div><div class="pro-spinning" id="spin-aitrades"><div class="spin"></div><div class="spin-lbl">Analyzing trades…</div></div><div class="pro-out" id="out-aitrades"></div></div></div>
       </div>
 
       <!-- PRO: DRAFT ANALYSIS -->
       <div class="tab" id="tab-aidraft">
-        <div class="sec-hd"><div class="sec-eyebrow">Pro · Copy &amp; Share</div><div class="sec-title">Draft Capital <span class="accent">Analysis</span></div><div class="sec-desc">Who's building, who's contending, and what the pick market looks like.</div></div>
-        <div class="pro-wrap"><div class="pro-hd"><div class="pro-title">🎯 Draft Analysis <span class="pro-chip">Claude Pro</span></div><div class="pro-btns"><button class="btn-copy-pro hidden" id="cp-aidraft" onclick="copyPro('aidraft')">📋 Copy</button><button class="btn-gen" id="btn-aidraft" onclick="generateContent('aidraft',this)">✦ Generate</button></div></div><div class="pro-body"><div class="pro-ph" id="ph-aidraft"><div class="pro-ph-icon">🎯</div><div class="pro-ph-txt">Click Generate to analyze draft capital</div></div><div class="pro-spinning" id="spin-aidraft"><div class="spin"></div><div class="spin-lbl">Evaluating draft capital…</div></div><div class="pro-out" id="out-aidraft"></div></div></div>
+        <div class="sec-hd"><div class="sec-eyebrow">Pro · Copy &amp; Share</div><div class="sec-title">Draft Capital <span class="accent">Analysis</span></div></div>
+        <div class="pro-wrap"><div class="pro-hd"><div class="pro-title">🎯 Draft Analysis <span class="pro-chip">Claude Pro</span></div><div class="pro-btns"><button class="btn-copy-pro hidden" id="cp-aidraft" onclick="copyPro('aidraft')">📋 Copy</button><button class="btn-gen" id="btn-aidraft" onclick="gen('aidraft',this)">✦ Generate</button></div></div><div class="pro-body"><div class="pro-ph" id="ph-aidraft"><div class="pro-ph-icon">🎯</div><div class="pro-ph-txt">Click Generate to analyze draft capital</div></div><div class="pro-spinning" id="spin-aidraft"><div class="spin"></div><div class="spin-lbl">Evaluating draft capital…</div></div><div class="pro-out" id="out-aidraft"></div></div></div>
       </div>
 
     </main>
@@ -510,360 +683,360 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 </div>
 
 <script>
-/* ═══════════ COLORS & STATE ═══════════ */
-var TC = ['#6366f1','#f59e0b','#22c55e','#06b6d4','#8b5cf6','#f97316','#ec4899','#14b8a6','#ef4444','#64748b'];
-var proText = {};
+/* ════════════════════════════
+   STATE & COLORS
+════════════════════════════ */
+var TC=['#6366f1','#f59e0b','#22c55e','#06b6d4','#8b5cf6','#f97316','#ec4899','#14b8a6','#ef4444','#64748b'];
+var proText={};
 
-/* D = live data object, populated by demo or Sleeper API */
-var D = {
-  leagueName:'', season:0, week:1, playoffSpots:6, totalWeeks:14,
-  teams:[], weeklyScores:{}, matchups:{}, rosters:{},
-  transactions:{}, trades:[], picks:{},
-  weeklyTopPlayers:{}, playerTrends:{up:[],down:[]}, wwlPlayers:{topOver:[],topUnder:[]}
+var D={
+  leagueName:'',season:0,week:1,playoffSpots:6,totalWeeks:14,
+  draftRounds:4,futureSeasonsToShow:3,
+  teams:[],weeklyScores:{},matchups:{},rosters:{},
+  fullPickHoldings:{},tradedPicksRaw:[],
+  transactions:{},trades:[],recentWaiverMoves:[],
+  weeklyTopPlayers:{},playerTrends:{up:[],down:[]},
+  wwlPlayers:{topOver:[],topUnder:[]},
+  history:[]
 };
 
-/* ═══════════ HELPERS ═══════════ */
+/* ════════════════════════════
+   HELPERS
+════════════════════════════ */
 function tc(id){return TC[(id-1)%TC.length];}
 function ini(name){return name.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();}
 function av(team,cls){cls=cls||'';return '<div class="avatar '+cls+'" style="background:'+tc(team.id)+'">'+ini(team.name)+'</div>';}
 function fmt(n){return parseFloat(n).toFixed(1);}
 function gt(id){for(var i=0;i<D.teams.length;i++){if(D.teams[i].id===id)return D.teams[i];}return{id:id,name:'Team '+id,owner:''};}
+function pfv(r){var fi=parseInt((r.settings&&r.settings.fpts)||0);var fd=parseInt((r.settings&&r.settings.fpts_decimal)||0);return parseFloat(fi+'.'+String(fd).padStart(2,'0'));}
+function pav(r){var ai=parseInt((r.settings&&r.settings.fpts_against)||0);var ad=parseInt((r.settings&&r.settings.fpts_against_decimal)||0);return parseFloat(ai+'.'+String(ad).padStart(2,'0'));}
 
-/* ═══════════ SLEEPER API ═══════════ */
-var SLEEPER_BASE = 'https://api.sleeper.app/v1';
+/* ════════════════════════════
+   TEAM EMOJI MASCOT SYSTEM
+   Maps team name keywords → emoji
+════════════════════════════ */
+var EMOJI_MAP=[
+  ['ghost','👻'],['ghosts','👻'],['phantom','👻'],
+  ['cmc','🏃'],['run','🏃'],
+  ['mahomes','🏈'],['chiefs','🏈'],
+  ['dragon','🐉'],['dragons','🐉'],
+  ['wizard','🧙'],['magic','🧙'],['witch','🧙'],
+  ['cactus','🌵'],['cacti','🌵'],['desert','🌵'],
+  ['waiver','🔮'],
+  ['shark','🦈'],['sharks','🦈'],
+  ['thunder','⚡'],['lightning','⚡'],
+  ['fire','🔥'],['flame','🔥'],['blaze','🔥'],
+  ['dragon','🐲'],
+  ['gridiron','🏈'],
+  ['hail','🙏'],['mary','🙏'],['prayer','🙏'],
+  ['flatline','💀'],['dead','💀'],['zombie','🧟'],
+  ['comeback','💪'],['rising','📈'],
+  ['morning','☀️'],['sunrise','☀️'],
+  ['tuesday','📅'],['monday','📅'],
+  ['draftpunk','🎸'],['punk','🎸'],
+  ['dynasty','👑'],['king','👑'],['queen','👑'],
+  ['veon','🦁'],['leveon','🦁'],['lion','🦁'],
+  ['mahomes','🎯'],
+  ['fantasy','🌟'],['star','⭐'],
+  ['squad','💥'],['crew','💥'],
+  ['titan','🗿'],['titans','🗿'],
+  ['wolf','🐺'],['wolves','🐺'],
+  ['eagle','🦅'],['eagles','🦅'],
+  ['bear','🐻'],['bears','🐻'],
+  ['bull','🐂'],['bulls','🐂'],
+  ['jet','✈️'],['jets','✈️'],
+  ['ram','🐏'],['rams','🐏'],
+  ['patriot','🇺🇸'],['patriots','🇺🇸'],
+  ['saint','😇'],['saints','😇'],
+  ['viking','⚔️'],['vikings','⚔️'],
+  ['packer','🧀'],['packers','🧀'],
+  ['giant','🏔️'],['giants','🏔️'],
+  ['brown','🤎'],['bronco','🐎'],['broncos','🐎'],
+  ['cowboy','🤠'],['cowboys','🤠'],
+  ['raven','🦅'],['ravens','🦅'],
+  ['dollar','💰'],['money','💰'],['cash','💰'],
+  ['tank','🛡️'],
+  ['rocket','🚀'],['speed','🚀'],
+  ['wr','🏃'],['qb','🎯'],['rb','💨']
+];
 
-function sleeperGet(path) {
-  return fetch(SLEEPER_BASE + path).then(function(r) {
-    if (!r.ok) throw new Error('Sleeper error ' + r.status + ' on ' + path);
-    return r.json();
-  });
+function teamEmoji(name){
+  var lower=name.toLowerCase();
+  for(var i=0;i<EMOJI_MAP.length;i++){if(lower.indexOf(EMOJI_MAP[i][0])>-1)return EMOJI_MAP[i][1];}
+  /* Fallback based on first char */
+  var fallbacks=['🏈','⚡','💪','🔥','🎯','🏆','⭐','💥','🎲','🦁'];
+  return fallbacks[name.charCodeAt(0)%fallbacks.length];
 }
 
-function setStep(id, state) {
-  var el = document.getElementById('step-' + id);
-  if (!el) return;
-  el.className = 'load-step ' + state;
+/* ════════════════════════════
+   SLEEPER API
+════════════════════════════ */
+var SB='https://api.sleeper.app/v1';
+function sGet(path){return fetch(SB+path).then(function(r){if(!r.ok)throw new Error('Sleeper '+r.status+' '+path);return r.json();});}
+function setStep(id,st){var el=document.getElementById('step-'+id);if(el)el.className='load-step '+st;}
+
+/* ════════════════════════════
+   PICK HOLDINGS (FIXED)
+════════════════════════════ */
+function buildFullPickHoldings(tradedPicks,currentSeason,rounds){
+  var holdings={};
+  D.teams.forEach(function(t){holdings[t.id]=[];});
+  for(var s=0;s<D.futureSeasonsToShow;s++){
+    var yr=String(parseInt(currentSeason)+1+s);
+    for(var rd=1;rd<=rounds;rd++){
+      D.teams.forEach(function(team){
+        var tradedEntry=null;
+        for(var ti=0;ti<tradedPicks.length;ti++){
+          var tp=tradedPicks[ti];
+          if(String(tp.season)===yr&&tp.round===rd&&tp.original_roster_id===team.id){tradedEntry=tp;break;}
+        }
+        if(tradedEntry){
+          var cid=tradedEntry.roster_id;
+          if(!holdings[cid])holdings[cid]=[];
+          holdings[cid].push({yr:yr,round:rd,originalRosterId:team.id,isOwn:cid===team.id});
+        } else {
+          if(!holdings[team.id])holdings[team.id]=[];
+          holdings[team.id].push({yr:yr,round:rd,originalRosterId:team.id,isOwn:true});
+        }
+      });
+    }
+  }
+  return holdings;
 }
 
-/* ═══════════ LIVE LAUNCH ═══════════ */
-function launch() {
-  var id = document.getElementById('inp-league').value.trim();
-  var errEl = document.getElementById('land-err');
-  if (!id) { errEl.textContent = 'Please enter your Sleeper League ID.'; errEl.style.display = 'block'; return; }
-  errEl.style.display = 'none';
+/* ════════════════════════════
+   HISTORY FETCH
+════════════════════════════ */
+function fetchHistory(prevId,acc){
+  if(!prevId)return Promise.resolve(acc);
+  return sGet('/league/'+prevId)
+  .then(function(league){
+    return Promise.all([sGet('/league/'+prevId+'/users'),sGet('/league/'+prevId+'/rosters')])
+    .then(function(r){
+      var users=r[0],rosters=r[1];
+      var uMap={};users.forEach(function(u){uMap[u.user_id]=u;});
+      var standings=rosters.map(function(ros){
+        var u=uMap[ros.owner_id]||{};
+        var tName=(u.metadata&&u.metadata.team_name)?u.metadata.team_name:(u.display_name||('Team '+ros.roster_id));
+        return{name:tName,owner:u.display_name||'',wins:parseInt((ros.settings&&ros.settings.wins)||0),losses:parseInt((ros.settings&&ros.settings.losses)||0),pf:pfv(ros)};
+      });
+      standings.sort(function(a,b){return b.wins-a.wins||b.pf-a.pf;});
+      acc.push({season:league.season,champion:standings[0]?standings[0].name:'Unknown',totalWeeks:parseInt((league.settings&&league.settings.playoff_week_start)?league.settings.playoff_week_start-1:14),standings:standings});
+      return fetchHistory(league.previous_league_id,acc);
+    });
+  }).catch(function(){return acc;});
+}
 
-  var btn = document.getElementById('btn-launch');
-  btn.disabled = true; btn.textContent = 'Loading…';
-  document.getElementById('load-steps').style.display = 'flex';
-
-  var leagueData, usersData, rostersData, tradedPicksData;
-  var matchupsByWeek = {}, allTxns = [];
-  var currentWeek, allWeeks;
-
-  /* Step 1 — League */
-  setStep('league', 'active');
-  sleeperGet('/league/' + id)
-  .then(function(league) {
-    leagueData = league;
-    currentWeek = Math.max(1, parseInt((league.settings && league.settings.leg) ? league.settings.leg : 1));
-    allWeeks = [];
-    for (var w = 1; w <= currentWeek; w++) allWeeks.push(w);
-    setStep('league', 'done');
-
-    /* Step 2 — Teams & rosters */
-    setStep('teams', 'active');
+/* ════════════════════════════
+   LIVE LAUNCH
+════════════════════════════ */
+function launch(){
+  var id=document.getElementById('inp-league').value.trim();
+  var errEl=document.getElementById('land-err');
+  if(!id){errEl.textContent='Please enter your Sleeper League ID.';errEl.style.display='block';return;}
+  errEl.style.display='none';
+  var btn=document.getElementById('btn-launch');
+  btn.disabled=true;btn.textContent='Loading…';
+  document.getElementById('load-steps').style.display='flex';
+  var leagueData,usersData,rostersData,tradedPicksData;
+  var mByWeek={},allTxns=[];
+  var currentWeek,allWeeks;
+  setStep('league','active');
+  sGet('/league/'+id)
+  .then(function(league){
+    leagueData=league;
+    currentWeek=Math.max(1,parseInt((league.settings&&league.settings.leg)||1));
+    D.draftRounds=parseInt((league.settings&&league.settings.rounds)||4);
+    allWeeks=[];for(var w=1;w<=currentWeek;w++)allWeeks.push(w);
+    setStep('league','done');setStep('history','active');
+    return fetchHistory(league.previous_league_id,[]);
+  })
+  .then(function(history){
+    D.history=history;setStep('history','done');setStep('teams','active');
+    return Promise.all([sGet('/league/'+id+'/users'),sGet('/league/'+id+'/rosters')]);
+  })
+  .then(function(r){
+    usersData=r[0];rostersData=r[1];setStep('teams','done');setStep('matchups','active');
+    return Promise.all(allWeeks.map(function(w){return sGet('/league/'+id+'/matchups/'+w).then(function(d){mByWeek[w]=d||[];}).catch(function(){mByWeek[w]=[];});}));
+  })
+  .then(function(){
+    setStep('matchups','done');setStep('txns','active');
     return Promise.all([
-      sleeperGet('/league/' + id + '/users'),
-      sleeperGet('/league/' + id + '/rosters'),
-      sleeperGet('/league/' + id + '/traded_picks').catch(function(){return[];})
+      Promise.all(allWeeks.map(function(w){return sGet('/league/'+id+'/transactions/'+w).catch(function(){return[];});})),
+      sGet('/league/'+id+'/traded_picks').catch(function(){return[];})
     ]);
   })
-  .then(function(r) {
-    usersData = r[0]; rostersData = r[1]; tradedPicksData = r[2];
-    setStep('teams', 'done');
-
-    /* Step 3 — Matchups */
-    setStep('matchups', 'active');
-    var mPromises = allWeeks.map(function(w) {
-      return sleeperGet('/league/' + id + '/matchups/' + w)
-        .then(function(data) { matchupsByWeek[w] = data || []; })
-        .catch(function() { matchupsByWeek[w] = []; });
-    });
-    return Promise.all(mPromises);
+  .then(function(r){
+    r[0].forEach(function(wk){if(wk)allTxns=allTxns.concat(wk);});
+    tradedPicksData=r[1]||[];setStep('txns','done');setStep('players','active');
+    return sGet('/players/nfl');
   })
-  .then(function() {
-    setStep('matchups', 'done');
-
-    /* Step 4 — Transactions */
-    setStep('txns', 'active');
-    var tPromises = allWeeks.map(function(w) {
-      return sleeperGet('/league/' + id + '/transactions/' + w).catch(function(){return[];});
-    });
-    return Promise.all(tPromises);
-  })
-  .then(function(txnResults) {
-    txnResults.forEach(function(wkTxns) {
-      if (wkTxns) allTxns = allTxns.concat(wkTxns);
-    });
-    setStep('txns', 'done');
-
-    /* Step 5 — Players */
-    setStep('players', 'active');
-    return sleeperGet('/players/nfl');
-  })
-  .then(function(players) {
-    setStep('players', 'done');
-    btn.textContent = 'Building…';
-
-    /* Process everything */
-    processSleeperData(leagueData, usersData, rostersData, matchupsByWeek, allTxns, tradedPicksData, players, currentWeek, allWeeks);
-
-    /* Show dashboard */
-    document.getElementById('tb-league').textContent = D.leagueName;
-    document.getElementById('tb-week').textContent = 'Season ' + D.season + ' · Week ' + D.week;
+  .then(function(players){
+    setStep('players','done');btn.textContent='Building…';
+    processData(leagueData,usersData,rostersData,mByWeek,allTxns,tradedPicksData,players,currentWeek,allWeeks);
+    document.getElementById('tb-league').textContent=D.leagueName;
+    document.getElementById('tb-week').textContent='Season '+D.season+' · Week '+D.week;
     document.getElementById('tb-demo').classList.add('hidden');
-    showScreen('dashboard');
-    buildAll();
-
-    btn.disabled = false; btn.textContent = '⚡ Load My League';
-    document.getElementById('load-steps').style.display = 'none';
-    ['league','teams','matchups','txns','players'].forEach(function(s){setStep(s,'');});
+    showScreen('dashboard');buildAll();
+    btn.disabled=false;btn.textContent='⚡ Load My League';
+    document.getElementById('load-steps').style.display='none';
+    ['league','history','teams','matchups','txns','players'].forEach(function(s){setStep(s,'');});
   })
-  .catch(function(err) {
-    btn.disabled = false; btn.textContent = '⚡ Load My League';
-    document.getElementById('load-steps').style.display = 'none';
-    ['league','teams','matchups','txns','players'].forEach(function(s){setStep(s,'');});
-    errEl.textContent = 'Could not load league. Check your League ID and try again. (' + err.message + ')';
-    errEl.style.display = 'block';
+  .catch(function(err){
+    btn.disabled=false;btn.textContent='⚡ Load My League';
+    document.getElementById('load-steps').style.display='none';
+    ['league','history','teams','matchups','txns','players'].forEach(function(s){setStep(s,'');});
+    errEl.textContent='Could not load league: '+err.message;errEl.style.display='block';
   });
 }
 
-/* ═══════════ PROCESS SLEEPER DATA ═══════════ */
-function processSleeperData(league, users, rosters, matchupsByWeek, allTxns, tradedPicks, players, currentWeek, allWeeks) {
-  /* League meta */
-  D.leagueName = league.name || 'My League';
-  D.season = parseInt(league.season) || new Date().getFullYear();
-  D.week = currentWeek;
-  D.totalWeeks = parseInt((league.settings && league.settings.playoff_week_start) ? league.settings.playoff_week_start - 1 : 14);
-  D.playoffSpots = parseInt((league.settings && league.settings.playoff_teams) ? league.settings.playoff_teams : 6);
+/* ════════════════════════════
+   PROCESS DATA
+════════════════════════════ */
+function processData(league,users,rosters,mByWeek,allTxns,tradedPicks,players,currentWeek,allWeeks){
+  D.leagueName=league.name||'My League';
+  D.season=parseInt(league.season)||new Date().getFullYear();
+  D.week=currentWeek;
+  D.totalWeeks=parseInt((league.settings&&league.settings.playoff_week_start)?league.settings.playoff_week_start-1:14);
+  D.playoffSpots=parseInt((league.settings&&league.settings.playoff_teams)||6);
+  D.tradedPicksRaw=tradedPicks;
 
-  /* User map */
-  var userMap = {};
-  users.forEach(function(u) { userMap[u.user_id] = u; });
-
-  /* Teams from rosters */
-  D.teams = rosters.map(function(r) {
-    var u = userMap[r.owner_id] || {};
-    var fpts = parseInt((r.settings && r.settings.fpts) ? r.settings.fpts : 0);
-    var fptsDec = parseInt((r.settings && r.settings.fpts_decimal) ? r.settings.fpts_decimal : 0);
-    var fpta = parseInt((r.settings && r.settings.fpts_against) ? r.settings.fpts_against : 0);
-    var fptaDec = parseInt((r.settings && r.settings.fpts_against_decimal) ? r.settings.fpts_against_decimal : 0);
-    var pf = parseFloat(fpts + '.' + String(fptsDec).padStart(2,'0'));
-    var pa = parseFloat(fpta + '.' + String(fptaDec).padStart(2,'0'));
-    var teamName = (u.metadata && u.metadata.team_name) ? u.metadata.team_name : (u.display_name || ('Team ' + r.roster_id));
-    return {
-      id: r.roster_id,
-      name: teamName,
-      owner: u.display_name || 'Unknown',
-      wins: parseInt((r.settings && r.settings.wins) ? r.settings.wins : 0),
-      losses: parseInt((r.settings && r.settings.losses) ? r.settings.losses : 0),
-      pf: pf, pa: pa,
-      streak: 'W1',
-      _pids: r.players || [],
-      _starters: r.starters || []
-    };
+  var uMap={};users.forEach(function(u){uMap[u.user_id]=u;});
+  D.teams=rosters.map(function(r){
+    var u=uMap[r.owner_id]||{};
+    var tName=(u.metadata&&u.metadata.team_name)?u.metadata.team_name:(u.display_name||('Team '+r.roster_id));
+    return{id:r.roster_id,name:tName,owner:u.display_name||'Unknown',
+      wins:parseInt((r.settings&&r.settings.wins)||0),losses:parseInt((r.settings&&r.settings.losses)||0),
+      pf:pfv(r),pa:pav(r),streak:'W1',_pids:r.players||[]};
   });
-
   D.teams.sort(function(a,b){return b.wins-a.wins||b.pf-a.pf;});
 
-  /* Streaks from matchup history */
-  D.teams.forEach(function(t) {
-    var type = '', count = 0, done = false;
-    var wks = Object.keys(matchupsByWeek).map(Number).sort(function(a,b){return b-a;});
-    wks.forEach(function(wk) {
-      if (done) return;
-      var ms = matchupsByWeek[wk] || [];
-      var groups = {};
-      ms.forEach(function(m) { if(!groups[m.matchup_id])groups[m.matchup_id]=[]; groups[m.matchup_id].push(m); });
-      Object.keys(groups).forEach(function(mid) {
-        if (done) return;
-        var pair = groups[mid];
-        if (pair.length < 2) return;
-        var mine = null, opp = null;
-        pair.forEach(function(p) { if(p.roster_id===t.id) mine=p; else opp=p; });
-        if (!mine) return;
-        var won = (mine.points||0) > (opp?opp.points||0:0);
-        var thisType = won ? 'W' : 'L';
-        if (count === 0) { type = thisType; count = 1; }
-        else if (thisType === type) { count++; }
-        else { done = true; }
+  /* Streaks */
+  D.teams.forEach(function(t){
+    var type='',count=0,done=false;
+    var wks=Object.keys(mByWeek).map(Number).sort(function(a,b){return b-a;});
+    wks.forEach(function(wk){
+      if(done)return;
+      var ms=mByWeek[wk]||[];var groups={};
+      ms.forEach(function(m){if(!groups[m.matchup_id])groups[m.matchup_id]=[];groups[m.matchup_id].push(m);});
+      Object.keys(groups).forEach(function(mid){
+        if(done)return;
+        var pair=groups[mid];if(pair.length<2)return;
+        var mine=null,opp=null;pair.forEach(function(p){if(p.roster_id===t.id)mine=p;else opp=p;});
+        if(!mine)return;
+        var won=(mine.points||0)>(opp?opp.points||0:0);var tt=won?'W':'L';
+        if(count===0){type=tt;count=1;}else if(tt===type){count++;}else{done=true;}
       });
     });
-    t.streak = (type||'W') + (count||1);
+    t.streak=(type||'W')+(count||1);
   });
 
   /* Weekly scores */
-  D.weeklyScores = {};
-  D.teams.forEach(function(t) { D.weeklyScores[t.id] = new Array(allWeeks.length).fill(0); });
-  allWeeks.forEach(function(wk, wi) {
-    var ms = matchupsByWeek[wk] || [];
-    ms.forEach(function(m) {
-      if (D.weeklyScores[m.roster_id] !== undefined) {
-        D.weeklyScores[m.roster_id][wi] = m.points || 0;
-      }
-    });
-  });
+  D.weeklyScores={};D.teams.forEach(function(t){D.weeklyScores[t.id]=new Array(allWeeks.length).fill(0);});
+  allWeeks.forEach(function(wk,wi){(mByWeek[wk]||[]).forEach(function(m){if(D.weeklyScores[m.roster_id]!==undefined)D.weeklyScores[m.roster_id][wi]=m.points||0;});});
 
   /* Matchup pairs */
-  D.matchups = {};
-  allWeeks.forEach(function(wk) {
-    var ms = matchupsByWeek[wk] || [];
-    var groups = {};
-    ms.forEach(function(m) { if(!groups[m.matchup_id])groups[m.matchup_id]=[]; groups[m.matchup_id].push(m); });
-    D.matchups[wk] = [];
-    Object.keys(groups).forEach(function(mid) {
-      var pair = groups[mid];
-      if (pair.length === 2) {
-        D.matchups[wk].push([pair[0].roster_id, pair[1].roster_id, pair[0].points||0, pair[1].points||0]);
-      }
-    });
+  D.matchups={};
+  allWeeks.forEach(function(wk){
+    var ms=mByWeek[wk]||[];var groups={};
+    ms.forEach(function(m){if(!groups[m.matchup_id])groups[m.matchup_id]=[];groups[m.matchup_id].push(m);});
+    D.matchups[wk]=[];
+    Object.keys(groups).forEach(function(mid){var pair=groups[mid];if(pair.length===2)D.matchups[wk].push([pair[0].roster_id,pair[1].roster_id,pair[0].points||0,pair[1].points||0]);});
   });
 
-  /* Rosters with player names & positions */
-  var posOrder = ['QB','RB','WR','TE','DEF','K'];
-  D.rosters = {};
-  D.teams.forEach(function(t) {
-    var pg = {QB:[],RB:[],WR:[],TE:[],DEF:[],K:[]};
-    (t._pids||[]).forEach(function(pid) {
-      var pl = players[pid];
-      if (!pl) return;
-      var pos = pl.position || 'OTH';
-      var name = pl.full_name || ((pl.first_name||'') + ' ' + (pl.last_name||'')).trim() || pid;
-      if (pos === 'DEF') pg.DEF.push(name + ' D/ST');
-      else if (pg[pos]) pg[pos].push(name);
+  D.fullPickHoldings=buildFullPickHoldings(tradedPicks,D.season,D.draftRounds);
+
+  /* Rosters */
+  var posOrder=['QB','RB','WR','TE','DEF','K'];
+  D.rosters={};
+  D.teams.forEach(function(t){
+    var pg={QB:[],RB:[],WR:[],TE:[],DEF:[],K:[]};
+    (t._pids||[]).forEach(function(pid){
+      var pl=players[pid];if(!pl)return;
+      var pos=pl.position||'OTH';
+      var name=pl.full_name||((pl.first_name||'')+(pl.last_name?' '+pl.last_name:'')).trim()||pid;
+      if(pos==='DEF'){pg.DEF.push(name+' D/ST');}
+      else if(pg[pos])pg[pos].push(name);
     });
-    var myPicks = (tradedPicks||[]).filter(function(p){return p.roster_id===t.id;});
-    pg.picks = myPicks.map(function(p) {
-      var orig = D.teams.find(function(tm){return tm.id===p.original_roster_id;});
-      return {yr:p.season, rd:p.round, o: orig&&orig.id!==t.id ? orig.name.split(' ')[0] : 'Own'};
-    });
-    D.rosters[t.id] = pg;
+    pg.picks=(D.fullPickHoldings[t.id]||[]).slice();
+    D.rosters[t.id]=pg;
   });
 
-  /* Transactions */
-  D.transactions = {};
-  D.teams.forEach(function(t) { D.transactions[t.name] = 0; });
-  allTxns.forEach(function(txn) {
-    if (txn.status !== 'complete') return;
-    var rids = txn.roster_ids || [];
-    rids.forEach(function(rid) {
-      var team = D.teams.find(function(t){return t.id===rid;});
-      if (team) D.transactions[team.name] = (D.transactions[team.name]||0) + 1;
-    });
+  /* Transactions & waiver moves */
+  D.transactions={};D.teams.forEach(function(t){D.transactions[t.name]=0;});
+  D.recentWaiverMoves=[];
+  allTxns.forEach(function(txn){
+    if(txn.status!=='complete')return;
+    (txn.roster_ids||[]).forEach(function(rid){var team=D.teams.find(function(t){return t.id===rid;});if(team)D.transactions[team.name]=(D.transactions[team.name]||0)+1;});
+    /* Collect recent waiver/FA moves for waiver report */
+    if(txn.type==='waiver'||txn.type==='free_agent'){
+      var addedPids=Object.keys(txn.adds||{});
+      var droppedPids=Object.keys(txn.drops||{});
+      addedPids.forEach(function(pid){
+        var rid=txn.adds[pid];var team=D.teams.find(function(t){return t.id===rid;});var pl=players[pid];
+        D.recentWaiverMoves.push({type:'add',player:pl?(pl.full_name||pid):pid,pos:pl?(pl.position||'?'):'?',team:pl?pl.team:'?',owner:team?team.name:'',date:new Date(txn.created).toLocaleDateString('en-US',{month:'short',day:'numeric'})});
+      });
+      droppedPids.forEach(function(pid){
+        var rid=txn.drops[pid];var team=D.teams.find(function(t){return t.id===rid;});var pl=players[pid];
+        D.recentWaiverMoves.push({type:'drop',player:pl?(pl.full_name||pid):pid,pos:pl?(pl.position||'?'):'?',team:pl?pl.team:'?',owner:team?team.name:'',date:new Date(txn.created).toLocaleDateString('en-US',{month:'short',day:'numeric'})});
+      });
+    }
   });
+  /* Keep only last 30 moves */
+  D.recentWaiverMoves=D.recentWaiverMoves.slice(-30).reverse();
 
   /* Trades */
-  D.trades = [];
-  allTxns.filter(function(t){return t.type==='trade'&&t.status==='complete';}).slice(0,15).forEach(function(txn) {
-    var rids = txn.roster_ids || [];
-    var t1 = D.teams.find(function(t){return t.id===rids[0];}), t2 = D.teams.find(function(t){return t.id===rids[1];});
-    if (!t1||!t2) return;
-    var aGets=[], bGets=[];
-    if (txn.adds) {
-      Object.keys(txn.adds).forEach(function(pid) {
-        var destRid = txn.adds[pid];
-        var pl = players[pid];
-        var name = pl ? (pl.full_name || pid) : pid;
-        if (destRid===rids[0]) aGets.push(name); else bGets.push(name);
-      });
-    }
-    if (txn.draft_picks) {
-      txn.draft_picks.forEach(function(pk) {
-        var label = pk.season + ' R' + pk.round;
-        if (pk.roster_id===rids[0]) aGets.push(label); else bGets.push(label);
-      });
-    }
-    var date = new Date(txn.created).toLocaleDateString('en-US',{month:'short',day:'numeric'});
-    D.trades.push({date:date, teamA:t1.name, teamB:t2.name, aGets:aGets.length?aGets:['—'], bGets:bGets.length?bGets:['—']});
+  D.trades=[];
+  allTxns.filter(function(t){return t.type==='trade'&&t.status==='complete';}).slice(0,20).forEach(function(txn){
+    var rids=txn.roster_ids||[];
+    var t1=D.teams.find(function(t){return t.id===rids[0];}),t2=D.teams.find(function(t){return t.id===rids[1];});
+    if(!t1||!t2)return;
+    var aGets=[],bGets=[];
+    if(txn.adds){Object.keys(txn.adds).forEach(function(pid){var dest=txn.adds[pid];var pl=players[pid];var name=pl?(pl.full_name||pid):pid;if(dest===rids[0])aGets.push(name);else bGets.push(name);});}
+    if(txn.draft_picks){txn.draft_picks.forEach(function(pk){var label=pk.season+' R'+pk.round;if(pk.roster_id===rids[0])aGets.push(label);else bGets.push(label);});}
+    var date=new Date(txn.created).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    D.trades.push({date:date,teamA:t1.name,teamB:t2.name,aGets:aGets.length?aGets:['—'],bGets:bGets.length?bGets:['—']});
   });
 
-  /* Traded picks */
-  D.picks = {};
-  D.teams.forEach(function(t){D.picks[t.name]=[];});
-  (tradedPicks||[]).forEach(function(p) {
-    var owner = D.teams.find(function(t){return t.id===p.roster_id;});
-    var orig = D.teams.find(function(t){return t.id===p.original_roster_id;});
-    if (!owner) return;
-    D.picks[owner.name].push({yr:p.season, rd:p.round, o: orig&&orig.id!==owner.id ? orig.name.split(' ')[0] : 'Own'});
-  });
-
-  /* Weekly top players from matchup player_points */
-  D.weeklyTopPlayers = {};
-  allWeeks.forEach(function(wk) {
-    var ms = matchupsByWeek[wk] || [];
-    var best = {pts:0, name:'', owner:'', pos:'QB', proj:0};
-    ms.forEach(function(m) {
-      var pp = m.players_points || {};
-      var team = D.teams.find(function(t){return t.id===m.roster_id;});
-      Object.keys(pp).forEach(function(pid) {
-        var pts = pp[pid] || 0;
-        if (pts > best.pts) {
-          var pl = players[pid];
-          best = {
-            pts: pts,
-            name: pl ? (pl.full_name || pid) : pid,
-            owner: team ? team.name : '',
-            pos: pl ? (pl.position||'OTH') : 'OTH',
-            proj: 0
-          };
-        }
-      });
+  /* Weekly top players */
+  D.weeklyTopPlayers={};
+  allWeeks.forEach(function(wk){
+    var ms=mByWeek[wk]||[];var best={pts:0,name:'',owner:'',pos:'QB',proj:0};
+    ms.forEach(function(m){
+      var pp=m.players_points||{};var team=D.teams.find(function(t){return t.id===m.roster_id;});
+      Object.keys(pp).forEach(function(pid){var pts=pp[pid]||0;if(pts>best.pts){var pl=players[pid];best={pts:pts,name:pl?(pl.full_name||pid):pid,owner:team?team.name:'',pos:pl?(pl.position||'OTH'):'OTH',proj:0};}});
     });
-    if (best.name) D.weeklyTopPlayers[wk] = best;
+    if(best.name)D.weeklyTopPlayers[wk]=best;
   });
 
-  /* Current week player breakdown for WWL */
-  var currMs = matchupsByWeek[currentWeek] || [];
-  var allPP = [];
-  currMs.forEach(function(m) {
-    var pp = m.players_points || {};
-    var team = D.teams.find(function(t){return t.id===m.roster_id;});
-    Object.keys(pp).forEach(function(pid) {
-      var pl = players[pid];
-      allPP.push({
-        name: pl ? (pl.full_name||pid) : pid,
-        owner: team ? team.name : '',
-        pos: pl ? (pl.position||'OTH') : 'OTH',
-        pts: pp[pid]||0, proj:0
-      });
-    });
-  });
+  /* WWL */
+  var currMs=mByWeek[currentWeek]||[];var allPP=[];
+  currMs.forEach(function(m){var pp=m.players_points||{};var team=D.teams.find(function(t){return t.id===m.roster_id;});Object.keys(pp).forEach(function(pid){var pl=players[pid];allPP.push({name:pl?(pl.full_name||pid):pid,owner:team?team.name:'',pos:pl?(pl.position||'OTH'):'OTH',pts:pp[pid]||0,proj:0});});});
   allPP.sort(function(a,b){return b.pts-a.pts;});
-  D.wwlPlayers = {topOver: allPP.slice(0,5), topUnder: allPP.slice(-5).reverse()};
+  D.wwlPlayers={topOver:allPP.slice(0,5),topUnder:allPP.slice(-5).reverse()};
 
-  /* Player trends — calculate from per-team weekly scores as proxy */
-  /* We compare last 3 weeks avg vs full season avg for each team's total output */
-  D.playerTrends = {up:[], down:[]};
-  var wkCount = allWeeks.length;
-  if (wkCount >= 4) {
-    D.teams.forEach(function(t) {
-      var scores = D.weeklyScores[t.id] || [];
-      var seasonAvg = scores.reduce(function(s,v){return s+v;},0) / (scores.length||1);
-      var recent = scores.slice(-3);
-      var recentAvg = recent.reduce(function(s,v){return s+v;},0) / (recent.length||1);
-      var delta = parseFloat((recentAvg - seasonAvg).toFixed(1));
-      var item = {name: t.name, owner: t.owner, pos: 'Team', seasonAvg: parseFloat(seasonAvg.toFixed(1)), recentAvg: parseFloat(recentAvg.toFixed(1)), delta: delta};
-      if (delta > 5) D.playerTrends.up.push(item);
-      else if (delta < -5) D.playerTrends.down.push(item);
+  /* Player trends */
+  D.playerTrends={up:[],down:[]};
+  if(allWeeks.length>=4){
+    D.teams.forEach(function(t){
+      var scores=D.weeklyScores[t.id]||[];
+      var sAvg=scores.reduce(function(s,v){return s+v;},0)/(scores.length||1);
+      var recent=scores.slice(-3);var rAvg=recent.reduce(function(s,v){return s+v;},0)/(recent.length||1);
+      var delta=parseFloat((rAvg-sAvg).toFixed(1));
+      var item={name:t.name,owner:t.owner,pos:'Team',seasonAvg:parseFloat(sAvg.toFixed(1)),recentAvg:parseFloat(rAvg.toFixed(1)),delta:delta};
+      if(delta>5)D.playerTrends.up.push(item);else if(delta<-5)D.playerTrends.down.push(item);
     });
     D.playerTrends.up.sort(function(a,b){return b.delta-a.delta;}).splice(5);
     D.playerTrends.down.sort(function(a,b){return a.delta-b.delta;}).splice(5);
   }
 }
 
-/* ═══════════ DEMO DATA ═══════════ */
-var DEMO = {
-  leagueName:'Outlaws & Survivors', season:2025, week:9, playoffSpots:6, totalWeeks:14,
+/* ════════════════════════════
+   DEMO DATA
+════════════════════════════ */
+var DEMO={
+  leagueName:'Outlaws & Survivors',season:2025,week:9,
+  playoffSpots:6,totalWeeks:14,draftRounds:4,futureSeasonsToShow:3,
   teams:[
     {id:1,name:'Gridiron Ghosts',    owner:'Wolfgang22',   wins:8,losses:1,pf:2186,pa:1748,streak:'W3'},
     {id:2,name:'Mahomes My Business',owner:'RobertVC',     wins:7,losses:2,pf:2041,pa:1820,streak:'W2'},
@@ -877,34 +1050,93 @@ var DEMO = {
     {id:10,name:'Fantasy Flatline',  owner:'PooPooMcGoo',  wins:1,losses:8,pf:1580,pa:2120,streak:'L5'}
   ],
   weeklyScores:{1:[248,218,238,195,187,168,211,194,149,99],2:[271,229,201,208,213,192,197,201,172,120],3:[238,244,227,195,196,178,208,183,192,131],4:[295,231,186,218,221,199,224,176,183,161],5:[264,238,243,187,202,189,176,208,201,147],6:[252,225,189,211,202,204,198,192,188,169],7:[241,207,231,198,216,215,179,187,183,160],8:[268,219,190,235,201,188,249,207,195,163],9:[287,242,263,218,225,235,198,201,199,158]},
-  matchups:{9:[[1,10,287.4,158.2],[2,9,241.8,198.6],[3,8,263.1,201.4],[4,5,218.3,224.7],[6,7,234.9,198.2]],8:[[1,9,268,195],[2,8,219,207],[3,7,190,249],[4,6,235,188],[5,10,201,163]],7:[[1,8,241,187],[2,7,207,179],[3,6,231,215],[4,10,198,174],[5,9,216,160]],6:[[1,7,252,198],[2,6,225,204],[3,5,189,202],[4,9,211,183],[8,10,192,169]],5:[[1,6,264,181],[2,5,238,202],[3,4,243,187],[7,9,176,171],[8,10,208,147]],4:[[1,5,295,221],[2,4,231,218],[3,6,186,199],[7,8,224,176],[9,10,183,161]],3:[[1,4,238,195],[2,3,244,227],[5,6,196,178],[7,10,208,158],[8,9,183,192]],2:[[1,3,271,201],[2,10,229,120],[4,7,208,197],[5,8,213,201],[6,9,192,172]],1:[[1,2,248,218],[3,10,238,99],[4,9,195,149],[5,6,187,168],[7,8,211,194]]},
-  rosters:{1:{QB:['Josh Allen','Patrick Mahomes'],RB:['Bijan Robinson','Jahmyr Gibbs','Ashton Jeanty'],WR:["Ja'Marr Chase",'Justin Jefferson','Malik Nabers'],TE:['Brock Bowers'],DEF:['Bills D/ST'],picks:[{yr:'2027',rd:1,o:'Hail Mary'},{yr:'2027',rd:1,o:"Le'Veon"},{yr:'2028',rd:1,o:'Wizard'}]},2:{QB:['Caleb Williams','Jaxson Dart'],RB:['Jonathan Taylor','Omarion Hampton'],WR:['Jaxon Smith-Njigba','George Pickens','Emeka Egbuka'],TE:['Trey McBride'],DEF:['Eagles D/ST'],picks:[{yr:'2026',rd:1,o:'Flatline'},{yr:'2027',rd:1,o:'Own'}]},3:{QB:['Lamar Jackson','Dak Prescott'],RB:['Christian McCaffrey','Chase Brown','Derrick Henry'],WR:['Zay Flowers','Terry McLaurin'],TE:['Travis Kelce'],DEF:['Ravens D/ST'],picks:[{yr:'2026',rd:2,o:'Own'},{yr:'2028',rd:1,o:'Own'}]},4:{QB:['Jalen Hurts','Jordan Love'],RB:['Javonte Williams','Rico Dowdle'],WR:['Amon-Ra St. Brown','DK Metcalf','Marvin Harrison Jr.'],TE:['Tyler Warren'],DEF:['Eagles D/ST'],picks:[{yr:'2026',rd:1,o:'Draftpunk'},{yr:'2026',rd:1,o:"Le'Veon"},{yr:'2026',rd:1,o:'Hail Mary'}]},5:{QB:['Drake Maye','Sam Darnold'],RB:["De'Von Achane",'Cam Skattebo'],WR:['Tee Higgins','DeVonta Smith'],TE:['George Kittle'],DEF:['Patriots D/ST'],picks:[{yr:'2026',rd:1,o:'Wizard'},{yr:'2028',rd:1,o:'Own'}]},6:{QB:['Jayden Daniels','Jacoby Brissett'],RB:['Bucky Irving','Rachaad White'],WR:['Nico Collins','Tetairoa McMillan'],TE:['Kyle Pitts'],DEF:['Commanders D/ST'],picks:[{yr:'2026',rd:1,o:'Own'},{yr:'2028',rd:1,o:'Own'}]},7:{QB:['Bo Nix','Trevor Lawrence'],RB:['Breece Hall','Travis Etienne'],WR:['A.J. Brown','Davante Adams'],TE:['Tucker Kraft'],DEF:['Packers D/ST'],picks:[{yr:'2026',rd:1,o:'Run CMC'}]},8:{QB:['Baker Mayfield'],RB:['Saquon Barkley','David Montgomery'],WR:['Deebo Samuel'],TE:['Harold Fannin Jr.'],DEF:['Buccaneers D/ST'],picks:[{yr:'2027',rd:2,o:'Own'}]},9:{QB:['Daniel Jones'],RB:["D'Andre Swift"],WR:['CeeDee Lamb','Garrett Wilson'],TE:['Dallas Goedert'],DEF:['Panthers D/ST'],picks:[{yr:'2028',rd:2,o:'Own'}]},10:{QB:['Justin Herbert'],RB:['James Cook','Josh Jacobs'],WR:['Rashee Rice','Jaylen Waddle'],TE:['Mark Andrews'],DEF:['Chargers D/ST'],picks:[{yr:'2028',rd:1,o:'Own'}]}},
+  matchups:{
+    9:[[1,10,287.4,158.2],[2,9,241.8,198.6],[3,8,263.1,201.4],[4,5,218.3,224.7],[6,7,234.9,198.2]],
+    8:[[1,9,268,195],[2,8,219,207],[3,7,190,249],[4,6,235,188],[5,10,201,163]],
+    7:[[1,8,241,187],[2,7,207,179],[3,6,231,215],[4,10,198,174],[5,9,216,160]],
+    6:[[1,7,252,198],[2,6,225,204],[3,5,189,202],[4,9,211,183],[8,10,192,169]],
+    5:[[1,6,264,181],[2,5,238,202],[3,4,243,187],[7,9,176,171],[8,10,208,147]],
+    4:[[1,5,295,221],[2,4,231,218],[3,6,186,199],[7,8,224,176],[9,10,183,161]],
+    3:[[1,4,238,195],[2,3,244,227],[5,6,196,178],[7,10,208,158],[8,9,183,192]],
+    2:[[1,3,271,201],[2,10,229,120],[4,7,208,197],[5,8,213,201],[6,9,192,172]],
+    1:[[1,2,248,218],[3,10,238,99],[4,9,195,149],[5,6,187,168],[7,8,211,194]]
+  },
+  fullPickHoldings:{
+    1:[{yr:'2026',round:1,originalRosterId:1,isOwn:true},{yr:'2026',round:2,originalRosterId:9,isOwn:false},{yr:'2026',round:3,originalRosterId:1,isOwn:true},{yr:'2026',round:4,originalRosterId:1,isOwn:true},{yr:'2027',round:1,originalRosterId:9,isOwn:false},{yr:'2027',round:1,originalRosterId:7,isOwn:false},{yr:'2027',round:1,originalRosterId:10,isOwn:false},{yr:'2027',round:2,originalRosterId:1,isOwn:true},{yr:'2027',round:3,originalRosterId:1,isOwn:true},{yr:'2027',round:4,originalRosterId:1,isOwn:true},{yr:'2028',round:1,originalRosterId:8,isOwn:false},{yr:'2028',round:2,originalRosterId:1,isOwn:true},{yr:'2028',round:3,originalRosterId:1,isOwn:true},{yr:'2028',round:4,originalRosterId:1,isOwn:true}],
+    2:[{yr:'2026',round:1,originalRosterId:10,isOwn:false},{yr:'2026',round:2,originalRosterId:8,isOwn:false},{yr:'2026',round:3,originalRosterId:2,isOwn:true},{yr:'2026',round:4,originalRosterId:2,isOwn:true},{yr:'2027',round:1,originalRosterId:2,isOwn:true},{yr:'2027',round:2,originalRosterId:2,isOwn:true},{yr:'2027',round:3,originalRosterId:2,isOwn:true},{yr:'2027',round:4,originalRosterId:2,isOwn:true},{yr:'2028',round:1,originalRosterId:2,isOwn:true},{yr:'2028',round:2,originalRosterId:2,isOwn:true},{yr:'2028',round:3,originalRosterId:2,isOwn:true},{yr:'2028',round:4,originalRosterId:2,isOwn:true}],
+    3:[{yr:'2026',round:1,originalRosterId:3,isOwn:true},{yr:'2026',round:2,originalRosterId:3,isOwn:true},{yr:'2026',round:3,originalRosterId:6,isOwn:false},{yr:'2026',round:4,originalRosterId:3,isOwn:true},{yr:'2027',round:1,originalRosterId:3,isOwn:true},{yr:'2027',round:2,originalRosterId:3,isOwn:true},{yr:'2027',round:3,originalRosterId:3,isOwn:true},{yr:'2027',round:4,originalRosterId:3,isOwn:true},{yr:'2028',round:1,originalRosterId:3,isOwn:true},{yr:'2028',round:2,originalRosterId:3,isOwn:true},{yr:'2028',round:3,originalRosterId:3,isOwn:true},{yr:'2028',round:4,originalRosterId:3,isOwn:true}],
+    4:[{yr:'2026',round:1,originalRosterId:5,isOwn:false},{yr:'2026',round:1,originalRosterId:7,isOwn:false},{yr:'2026',round:1,originalRosterId:9,isOwn:false},{yr:'2026',round:2,originalRosterId:4,isOwn:true},{yr:'2026',round:3,originalRosterId:4,isOwn:true},{yr:'2026',round:4,originalRosterId:4,isOwn:true},{yr:'2027',round:1,originalRosterId:4,isOwn:true},{yr:'2027',round:2,originalRosterId:4,isOwn:true},{yr:'2027',round:3,originalRosterId:4,isOwn:true},{yr:'2027',round:4,originalRosterId:4,isOwn:true},{yr:'2028',round:1,originalRosterId:4,isOwn:true},{yr:'2028',round:2,originalRosterId:4,isOwn:true},{yr:'2028',round:3,originalRosterId:4,isOwn:true},{yr:'2028',round:4,originalRosterId:4,isOwn:true}],
+    5:[{yr:'2026',round:1,originalRosterId:8,isOwn:false},{yr:'2026',round:2,originalRosterId:5,isOwn:true},{yr:'2026',round:3,originalRosterId:5,isOwn:true},{yr:'2026',round:4,originalRosterId:5,isOwn:true},{yr:'2027',round:1,originalRosterId:5,isOwn:true},{yr:'2027',round:2,originalRosterId:5,isOwn:true},{yr:'2027',round:3,originalRosterId:5,isOwn:true},{yr:'2027',round:4,originalRosterId:5,isOwn:true},{yr:'2028',round:1,originalRosterId:5,isOwn:true},{yr:'2028',round:2,originalRosterId:5,isOwn:true},{yr:'2028',round:3,originalRosterId:5,isOwn:true},{yr:'2028',round:4,originalRosterId:5,isOwn:true}],
+    6:[{yr:'2026',round:1,originalRosterId:6,isOwn:true},{yr:'2026',round:2,originalRosterId:10,isOwn:false},{yr:'2026',round:3,originalRosterId:6,isOwn:true},{yr:'2026',round:4,originalRosterId:6,isOwn:true},{yr:'2027',round:1,originalRosterId:6,isOwn:true},{yr:'2027',round:2,originalRosterId:6,isOwn:true},{yr:'2027',round:3,originalRosterId:6,isOwn:true},{yr:'2027',round:4,originalRosterId:6,isOwn:true},{yr:'2028',round:1,originalRosterId:6,isOwn:true},{yr:'2028',round:2,originalRosterId:6,isOwn:true},{yr:'2028',round:3,originalRosterId:6,isOwn:true},{yr:'2028',round:4,originalRosterId:6,isOwn:true}],
+    7:[{yr:'2026',round:1,originalRosterId:3,isOwn:false},{yr:'2026',round:2,originalRosterId:7,isOwn:true},{yr:'2026',round:3,originalRosterId:7,isOwn:true},{yr:'2026',round:4,originalRosterId:7,isOwn:true},{yr:'2027',round:1,originalRosterId:7,isOwn:true},{yr:'2027',round:2,originalRosterId:7,isOwn:true},{yr:'2027',round:3,originalRosterId:7,isOwn:true},{yr:'2027',round:4,originalRosterId:7,isOwn:true},{yr:'2028',round:1,originalRosterId:7,isOwn:true},{yr:'2028',round:2,originalRosterId:7,isOwn:true},{yr:'2028',round:3,originalRosterId:7,isOwn:true},{yr:'2028',round:4,originalRosterId:7,isOwn:true}],
+    8:[{yr:'2026',round:1,originalRosterId:9,isOwn:false},{yr:'2026',round:2,originalRosterId:8,isOwn:true},{yr:'2026',round:3,originalRosterId:8,isOwn:true},{yr:'2026',round:4,originalRosterId:8,isOwn:true},{yr:'2027',round:1,originalRosterId:8,isOwn:true},{yr:'2027',round:2,originalRosterId:8,isOwn:true},{yr:'2027',round:3,originalRosterId:8,isOwn:true},{yr:'2027',round:4,originalRosterId:8,isOwn:true},{yr:'2028',round:1,originalRosterId:8,isOwn:true},{yr:'2028',round:2,originalRosterId:8,isOwn:true},{yr:'2028',round:3,originalRosterId:8,isOwn:true},{yr:'2028',round:4,originalRosterId:8,isOwn:true}],
+    9:[{yr:'2026',round:2,originalRosterId:9,isOwn:true},{yr:'2026',round:3,originalRosterId:9,isOwn:true},{yr:'2026',round:4,originalRosterId:9,isOwn:true},{yr:'2027',round:1,originalRosterId:9,isOwn:true},{yr:'2027',round:2,originalRosterId:9,isOwn:true},{yr:'2027',round:3,originalRosterId:9,isOwn:true},{yr:'2027',round:4,originalRosterId:9,isOwn:true},{yr:'2028',round:1,originalRosterId:9,isOwn:true},{yr:'2028',round:2,originalRosterId:4,isOwn:false},{yr:'2028',round:3,originalRosterId:9,isOwn:true},{yr:'2028',round:4,originalRosterId:9,isOwn:true}],
+    10:[{yr:'2026',round:3,originalRosterId:10,isOwn:true},{yr:'2026',round:4,originalRosterId:10,isOwn:true},{yr:'2027',round:1,originalRosterId:10,isOwn:true},{yr:'2027',round:2,originalRosterId:10,isOwn:true},{yr:'2027',round:3,originalRosterId:10,isOwn:true},{yr:'2027',round:4,originalRosterId:10,isOwn:true},{yr:'2028',round:1,originalRosterId:10,isOwn:true},{yr:'2028',round:2,originalRosterId:10,isOwn:true},{yr:'2028',round:3,originalRosterId:10,isOwn:true},{yr:'2028',round:4,originalRosterId:10,isOwn:true}]
+  },
+  rosters:{
+    1:{QB:['Josh Allen','Patrick Mahomes'],RB:['Bijan Robinson','Jahmyr Gibbs'],WR:["Ja'Marr Chase",'Justin Jefferson'],TE:['Brock Bowers'],DEF:['Bills D/ST'],picks:[]},
+    2:{QB:['Caleb Williams'],RB:['Jonathan Taylor','Omarion Hampton'],WR:['Jaxon Smith-Njigba'],TE:['Trey McBride'],DEF:['Eagles D/ST'],picks:[]},
+    3:{QB:['Lamar Jackson'],RB:['Christian McCaffrey','Chase Brown'],WR:['Zay Flowers'],TE:['Travis Kelce'],DEF:['Ravens D/ST'],picks:[]},
+    4:{QB:['Jalen Hurts'],RB:['Javonte Williams'],WR:['Amon-Ra St. Brown','DK Metcalf'],TE:['Tyler Warren'],DEF:['Eagles D/ST'],picks:[]},
+    5:{QB:['Drake Maye'],RB:["De'Von Achane",'Cam Skattebo'],WR:['Tee Higgins','DeVonta Smith'],TE:['George Kittle'],DEF:['Patriots D/ST'],picks:[]},
+    6:{QB:['Jayden Daniels'],RB:['Bucky Irving'],WR:['Nico Collins','Tetairoa McMillan'],TE:['Kyle Pitts'],DEF:['Commanders D/ST'],picks:[]},
+    7:{QB:['Bo Nix'],RB:['Breece Hall'],WR:['A.J. Brown','Davante Adams'],TE:['Tucker Kraft'],DEF:['Packers D/ST'],picks:[]},
+    8:{QB:['Baker Mayfield'],RB:['Saquon Barkley'],WR:['Deebo Samuel'],TE:['Harold Fannin Jr.'],DEF:['Buccaneers D/ST'],picks:[]},
+    9:{QB:['Daniel Jones'],RB:["D'Andre Swift"],WR:['CeeDee Lamb'],TE:['Dallas Goedert'],DEF:['Panthers D/ST'],picks:[]},
+    10:{QB:['Justin Herbert'],RB:['James Cook'],WR:['Rashee Rice'],TE:['Mark Andrews'],DEF:['Chargers D/ST'],picks:[]}
+  },
   transactions:{'Gridiron Ghosts':12,'Mahomes My Business':31,'Run CMC':8,'Comeback Cacti':44,'Draftpunk':28,'Tuesday Morning QBs':52,"Le'Veon a Prayer":67,'Waiver Wire Wizard':19,'Hail Mary Squad':15,'Fantasy Flatline':6},
-  trades:[{date:'Oct 14',teamA:'Gridiron Ghosts',teamB:"Le'Veon a Prayer",aGets:['A.J. Brown','2027 R1'],bGets:['Justin Jefferson','2026 R2']},{date:'Oct 8',teamA:'Comeback Cacti',teamB:'Draftpunk',aGets:['Amon-Ra St. Brown'],bGets:['2026 R1','2027 R2']},{date:'Sep 28',teamA:'Gridiron Ghosts',teamB:'Hail Mary Squad',aGets:['2027 R1','2026 R2'],bGets:['Breece Hall','TJ Hockenson']},{date:'Sep 21',teamA:'Mahomes My Business',teamB:'Waiver Wire Wizard',aGets:['Jonathan Taylor','2026 R1'],bGets:['Josh Allen','2027 R3']},{date:'Sep 14',teamA:'Run CMC',teamB:'Tuesday Morning QBs',aGets:['Jayden Daniels'],bGets:['Travis Kelce','2026 R3']}],
-  picks:{'Gridiron Ghosts':[{yr:'2026',rd:2,o:'Hail Mary'},{yr:'2027',rd:1,o:'Hail Mary'},{yr:'2027',rd:1,o:"Le'Veon"},{yr:'2028',rd:1,o:'Wizard'}],'Mahomes My Business':[{yr:'2026',rd:1,o:'Flatline'},{yr:'2027',rd:1,o:'Own'},{yr:'2028',rd:1,o:'Own'}],'Run CMC':[{yr:'2026',rd:2,o:'Own'},{yr:'2027',rd:2,o:'Own'},{yr:'2028',rd:1,o:'Own'}],'Comeback Cacti':[{yr:'2026',rd:1,o:'Draftpunk'},{yr:'2026',rd:1,o:"Le'Veon"},{yr:'2026',rd:1,o:'Hail Mary'}],'Draftpunk':[{yr:'2026',rd:1,o:'Wizard'},{yr:'2026',rd:2,o:'Own'},{yr:'2028',rd:1,o:'Own'}],'Tuesday Morning QBs':[{yr:'2026',rd:1,o:'Own'},{yr:'2026',rd:2,o:'Flatline'},{yr:'2028',rd:1,o:'Own'}],"Le'Veon a Prayer":[{yr:'2026',rd:1,o:'Run CMC'},{yr:'2028',rd:1,o:'Own'}],'Waiver Wire Wizard':[{yr:'2026',rd:1,o:'Hail Mary'},{yr:'2028',rd:3,o:'Own'}],'Hail Mary Squad':[{yr:'2028',rd:2,o:'Own'},{yr:'2028',rd:3,o:'Own'}],'Fantasy Flatline':[{yr:'2027',rd:2,o:'Own'},{yr:'2028',rd:1,o:'Own'}]},
+  trades:[
+    {date:'Oct 14',teamA:'Gridiron Ghosts',teamB:"Le'Veon a Prayer",aGets:["A.J. Brown","2027 R1"],bGets:['Justin Jefferson','2026 R2']},
+    {date:'Oct 8',teamA:'Comeback Cacti',teamB:'Draftpunk',aGets:['Amon-Ra St. Brown'],bGets:['2026 R1','2027 R2']},
+    {date:'Sep 28',teamA:'Gridiron Ghosts',teamB:'Hail Mary Squad',aGets:['2027 R1','2026 R2'],bGets:['Breece Hall','TJ Hockenson']},
+    {date:'Sep 21',teamA:'Mahomes My Business',teamB:'Waiver Wire Wizard',aGets:['Jonathan Taylor','2026 R1'],bGets:['Josh Allen','2027 R3']},
+    {date:'Sep 14',teamA:'Run CMC',teamB:'Tuesday Morning QBs',aGets:['Jayden Daniels'],bGets:['Travis Kelce','2026 R3']}
+  ],
+  recentWaiverMoves:[
+    {type:'add',player:'Cam Skattebo',pos:'RB',team:'ARI',owner:'Draftpunk',date:'Oct 14'},
+    {type:'drop',player:'Zach Charbonnet',pos:'RB',team:'SEA',owner:'Draftpunk',date:'Oct 14'},
+    {type:'add',player:'Tetairoa McMillan',pos:'WR',team:'CAR',owner:'Tuesday Morning QBs',date:'Oct 14'},
+    {type:'drop',player:'Keenan Allen',pos:'WR',team:'CHI',owner:'Tuesday Morning QBs',date:'Oct 14'},
+    {type:'add',player:'RJ Harvey',pos:'RB',team:'ORL',owner:'Hail Mary Squad',date:'Oct 13'},
+    {type:'add',player:'Chimere Dike',pos:'WR',team:'HOU',owner:'Comeback Cacti',date:'Oct 13'},
+    {type:'drop',player:'Brandin Cooks',pos:'WR',team:'FA',owner:'Comeback Cacti',date:'Oct 13'},
+    {type:'add',player:'Colston Loveland',pos:'TE',team:'CHI',owner:'Mahomes My Business',date:'Oct 12'},
+    {type:'add',player:'Luther Burden III',pos:'WR',team:'CHI',owner:'Fantasy Flatline',date:'Oct 12'},
+    {type:'drop',player:'DeVon Achane',pos:'RB',team:'MIA',owner:'Fantasy Flatline',date:'Oct 12'}
+  ],
   weeklyTopPlayers:{1:{name:'Josh Allen',owner:'Gridiron Ghosts',pos:'QB',pts:48.2,proj:38},2:{name:'Christian McCaffrey',owner:'Run CMC',pos:'RB',pts:44.6,proj:35},3:{name:'Bijan Robinson',owner:'Gridiron Ghosts',pos:'RB',pts:41.8,proj:34},4:{name:'Josh Allen',owner:'Gridiron Ghosts',pos:'QB',pts:52.1,proj:40},5:{name:'Drake Maye',owner:'Draftpunk',pos:'QB',pts:46.3,proj:34},6:{name:"De'Von Achane",owner:'Draftpunk',pos:'RB',pts:43.2,proj:30},7:{name:'Jahmyr Gibbs',owner:'Gridiron Ghosts',pos:'RB',pts:38.8,proj:30},8:{name:'Saquon Barkley',owner:'Waiver Wire Wizard',pos:'RB',pts:47.1,proj:28},9:{name:'Josh Allen',owner:'Gridiron Ghosts',pos:'QB',pts:54.6,proj:42}},
-  playerTrends:{up:[{name:'Drake Maye',owner:'Draftpunk',pos:'QB',seasonAvg:35.8,recentAvg:44.2,delta:8.4},{name:'Jayden Daniels',owner:'Tuesday Morning QBs',pos:'QB',seasonAvg:28.4,recentAvg:36.1,delta:7.7},{name:'Rico Dowdle',owner:'Comeback Cacti',pos:'RB',seasonAvg:22.1,recentAvg:28.8,delta:6.7}],down:[{name:'Justin Jefferson',owner:'Gridiron Ghosts',pos:'WR',seasonAvg:21.4,recentAvg:12.8,delta:-8.6},{name:'Saquon Barkley',owner:'Waiver Wire Wizard',pos:'RB',seasonAvg:22.8,recentAvg:15.2,delta:-7.6},{name:'Travis Kelce',owner:'Run CMC',pos:'TE',seasonAvg:16.2,recentAvg:10.1,delta:-6.1}]},
-  wwlPlayers:{topOver:[{name:'Josh Allen',owner:'Gridiron Ghosts',pos:'QB',pts:54.6,proj:42},{name:'Christian McCaffrey',owner:'Run CMC',pos:'RB',pts:38.1,proj:30},{name:'Jayden Daniels',owner:'Tuesday Morning QBs',pos:'QB',pts:42.1,proj:35}],topUnder:[{name:'Justin Herbert',owner:'Fantasy Flatline',pos:'QB',pts:18.2,proj:34},{name:'Travis Kelce',owner:'Run CMC',pos:'TE',pts:6.4,proj:16},{name:'Saquon Barkley',owner:'Waiver Wire Wizard',pos:'RB',pts:14.8,proj:26}]}
+  playerTrends:{up:[{name:'Drake Maye',owner:'Draftpunk',pos:'QB',seasonAvg:35.8,recentAvg:44.2,delta:8.4},{name:'Jayden Daniels',owner:'Tuesday Morning QBs',pos:'QB',seasonAvg:28.4,recentAvg:36.1,delta:7.7}],down:[{name:'Justin Jefferson',owner:'Gridiron Ghosts',pos:'WR',seasonAvg:21.4,recentAvg:12.8,delta:-8.6},{name:'Saquon Barkley',owner:'Waiver Wire Wizard',pos:'RB',seasonAvg:22.8,recentAvg:15.2,delta:-7.6}]},
+  wwlPlayers:{topOver:[{name:'Josh Allen',owner:'Gridiron Ghosts',pos:'QB',pts:54.6,proj:42},{name:'Christian McCaffrey',owner:'Run CMC',pos:'RB',pts:38.1,proj:30}],topUnder:[{name:'Justin Herbert',owner:'Fantasy Flatline',pos:'QB',pts:18.2,proj:34},{name:'Travis Kelce',owner:'Run CMC',pos:'TE',pts:6.4,proj:16}]},
+  history:[
+    {season:'2024',champion:'Gridiron Ghosts',totalWeeks:14,standings:[{name:'Gridiron Ghosts',owner:'Wolfgang22',wins:11,losses:3,pf:2318},{name:'Run CMC',owner:'Bully56',wins:10,losses:4,pf:2201},{name:"Le'Veon a Prayer",owner:'BenyK',wins:9,losses:5,pf:2188},{name:'Mahomes My Business',owner:'RobertVC',wins:8,losses:6,pf:2044},{name:'Draftpunk',owner:'DraketheMaye',wins:7,losses:7,pf:1988},{name:'Tuesday Morning QBs',owner:'Coooter',wins:6,losses:8,pf:1921},{name:'Waiver Wire Wizard',owner:'JamesVanCuyck',wins:6,losses:8,pf:1876},{name:'Hail Mary Squad',owner:'Skolsplitter',wins:4,losses:10,pf:1742},{name:'Fantasy Flatline',owner:'PooPooMcGoo',wins:3,losses:11,pf:1688}]},
+    {season:'2023',champion:"Le'Veon a Prayer",totalWeeks:14,standings:[{name:"Le'Veon a Prayer",owner:'BenyK',wins:12,losses:2,pf:2441},{name:'Gridiron Ghosts',owner:'Wolfgang22',wins:10,losses:4,pf:2290},{name:'Waiver Wire Wizard',owner:'JamesVanCuyck',wins:9,losses:5,pf:2188},{name:'Run CMC',owner:'Bully56',wins:7,losses:7,pf:1998},{name:'Mahomes My Business',owner:'RobertVC',wins:3,losses:11,pf:1688}]}
+  ]
 };
 
-function loadDemo() {
-  Object.assign(D, JSON.parse(JSON.stringify(DEMO)));
-  document.getElementById('tb-league').textContent = D.leagueName;
-  document.getElementById('tb-week').textContent = 'Season ' + D.season + ' · Week ' + D.week;
+function loadDemo(){
+  var keys=['leagueName','season','week','playoffSpots','totalWeeks','draftRounds','futureSeasonsToShow','teams','weeklyScores','matchups','fullPickHoldings','rosters','transactions','trades','recentWaiverMoves','weeklyTopPlayers','playerTrends','wwlPlayers','history'];
+  keys.forEach(function(k){D[k]=JSON.parse(JSON.stringify(DEMO[k]));});
+  document.getElementById('tb-league').textContent=D.leagueName;
+  document.getElementById('tb-week').textContent='Season '+D.season+' · Week '+D.week;
   document.getElementById('tb-demo').classList.remove('hidden');
-  showScreen('dashboard');
-  buildAll();
+  showScreen('dashboard');buildAll();
 }
 
-/* ═══════════ BUILD ALL ═══════════ */
+/* ════════════════════════════
+   BUILD ALL
+════════════════════════════ */
 function buildAll(){
   buildOverview();buildStandings();buildRosters();buildCapital();
-  buildTransactions();buildOdds();buildWWL();buildTopPlayers();
-  buildTrends();buildLuck();buildPlayerTrends();buildRecords();
-  buildAwards();buildMVPs();buildPlayoff();buildTrades();
+  buildTransactions();buildHistory();buildOdds();buildWWL();
+  buildTopPlayers();buildTrends();buildLuck();buildPlayerTrends();
+  buildRecords();buildAwards();buildMVPs();buildPlayoff();buildTrades();
+  buildBattleCards();buildPreviewCards();buildWaiverLog();
 }
 
-/* ═══════════ BUILD OVERVIEW ═══════════ */
+/* ════════════════════════════
+   OVERVIEW
+════════════════════════════ */
 function buildOverview(){
   var topPPG=Math.max.apply(null,D.teams.map(function(t){return t.pf/D.week;}));
   var totalTxn=0;for(var k in D.transactions)totalTxn+=D.transactions[k];
@@ -916,212 +1148,176 @@ function buildOverview(){
     '<div class="stat-card"><div class="stat-num gold">'+totalTxn+'</div><div class="stat-lbl">Transactions</div></div>'+
     '<div class="stat-card"><div class="stat-num orange">'+topPPG.toFixed(0)+'</div><div class="stat-lbl">Top PPG</div></div>';
   document.getElementById('ov-wk-title').textContent='Week '+D.week+' Matchups';
+  var ms=D.matchups[D.week]||[];var html='<div class="matchup-grid">';
+  for(var i=0;i<ms.length;i++){var m=ms[i];var t1=gt(m[0]),t2=gt(m[1]);var w1=m[2]>m[3];
+    html+='<div class="mc"><div class="mc-hd">Matchup '+(i+1)+' · Wk '+D.week+'</div>'+
+      '<div class="mc-row '+(w1?'winner':'loser')+'">'+av(t1,'avatar-sm')+'<span class="mc-name">'+t1.name+'</span><span class="mc-pts">'+fmt(m[2])+'</span></div>'+
+      '<div class="mc-row '+(!w1?'winner':'loser')+'">'+av(t2,'avatar-sm')+'<span class="mc-name">'+t2.name+'</span><span class="mc-pts">'+fmt(m[3])+'</span></div></div>';}
+  document.getElementById('ov-matchups').innerHTML=html+'</div>';
+}
+
+/* ════════════════════════════
+   BATTLE CARDS (Recap graphics)
+════════════════════════════ */
+function buildBattleCards(){
   var ms=D.matchups[D.week]||[];
-  var html='<div class="matchup-grid">';
-  for(var i=0;i<ms.length;i++){var m=ms[i];var t1=gt(m[0]),t2=gt(m[1]);var p1=m[2],p2=m[3];var w1=p1>p2;html+='<div class="mc"><div class="mc-hd">Matchup '+(i+1)+' · Wk '+D.week+'</div><div class="mc-row '+(w1?'winner':'loser')+'">'+av(t1,'avatar-sm')+'<span class="mc-name">'+t1.name+'</span><span class="mc-pts">'+fmt(p1)+'</span></div><div class="mc-row '+(!w1?'winner':'loser')+'">'+av(t2,'avatar-sm')+'<span class="mc-name">'+t2.name+'</span><span class="mc-pts">'+fmt(p2)+'</span></div></div>';}
-  html+='</div>';document.getElementById('ov-matchups').innerHTML=html;
-}
-
-/* ═══════════ BUILD STANDINGS ═══════════ */
-function buildStandings(){
-  var sorted=D.teams.slice().sort(function(a,b){return b.wins-a.wins||b.pf-a.pf;});
-  var maxPF=Math.max.apply(null,sorted.map(function(t){return t.pf;}));
-  var rows='';
-  for(var i=0;i<sorted.length;i++){var t=sorted[i];var playoff=i<D.playoffSpots;var sw=t.streak[0]==='W';var pct=(t.pf/maxPF*100).toFixed(0);
-    rows+='<tr><td class="rank-col '+(i<3?'top':'')+'"> '+(i+1)+'</td><td><div class="team-cell">'+av(t)+'<div><div style="font-weight:500;font-size:13px;">'+t.name+'</div><div style="font-size:11px;color:var(--muted);">'+t.owner+'</div></div></div></td><td><span class="rec"><span class="w">'+t.wins+'</span>–<span class="l">'+t.losses+'</span></span></td><td><div class="mono-sm">'+t.pf.toLocaleString()+'</div><div class="prog-wrap"><div class="prog-bar" style="width:'+pct+'%"></div></div></td><td><span class="mono-dim">'+t.pa.toLocaleString()+'</span></td><td><span class="streak-badge '+(sw?'streak-w':'streak-l')+'">'+t.streak+'</span></td><td><span class="pill '+(playoff?'pill-in':'pill-out')+'">'+(playoff?'IN':'OUT')+'</span></td></tr>';}
-  document.getElementById('standings-tbl').innerHTML='<thead><tr><th>#</th><th>Team</th><th>Record</th><th>Pts For</th><th>Pts Against</th><th>Streak</th><th>Playoff</th></tr></thead><tbody>'+rows+'</tbody>';
-}
-
-/* ═══════════ BUILD ROSTERS ═══════════ */
-function buildRosters(){
-  var pos=['QB','RB','WR','TE','DEF'];var html='';
-  for(var i=0;i<D.teams.length;i++){var t=D.teams[i];var r=D.rosters[t.id]||{};var players='';
-    for(var p=0;p<pos.length;p++){var pp=pos[p];var pl=r[pp]||[];for(var j=0;j<pl.length;j++){players+='<div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04);"><span style="font-size:12px;color:var(--text2);">'+pl[j]+'</span><span class="pos-tag pos-'+pp+'">'+pp+'</span></div>';}}
-    var picks=r.picks||[];if(picks.length){players+='<div style="margin-top:8px;font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--dim);padding:4px 0;">Draft Picks</div>';for(var pi=0;pi<picks.length;pi++){var pk=picks[pi];var cls=pk.rd===1?'pc-1':pk.rd===2?'pc-2':'pc-3';players+='<span class="pc '+cls+'">'+pk.yr+' R'+pk.rd+(pk.o!=='Own'?' · '+pk.o:'')+'</span>';}}
-    html+='<div class="card"><div class="card-hd"><div style="display:flex;align-items:center;gap:10px;">'+av(t)+'<div><div style="font-family:\'Barlow Condensed\',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--orange);">'+t.name+'</div><div style="font-size:11px;color:var(--muted);font-family:\'IBM Plex Mono\',monospace;">'+t.wins+'–'+t.losses+' · '+t.pf.toLocaleString()+' pts</div></div></div></div><div class="card-body" style="padding:10px 14px;">'+(players||'<span style="color:var(--muted);font-size:12px;">No player data</span>')+'</div></div>';}
-  document.getElementById('rosters-content').innerHTML=html;
-}
-
-/* ═══════════ BUILD CAPITAL ═══════════ */
-function buildCapital(){
-  var sorted=D.teams.slice().sort(function(a,b){return(D.picks[b.name]||[]).length-(D.picks[a.name]||[]).length;});
-  var total=0;for(var k in D.picks)total+=(D.picks[k]||[]).length;
-  document.getElementById('cap-meta').textContent=total+' total traded picks';
+  document.getElementById('recap-card-title').textContent='Week '+D.week+' Battle Cards';
   var html='';
-  for(var i=0;i<sorted.length;i++){var t=sorted[i];var picks=D.picks[t.name]||[];var byYr={};for(var pi=0;pi<picks.length;pi++){var p=picks[pi];if(!byYr[p.yr])byYr[p.yr]=[];byYr[p.yr].push(p);}
-    var chips='';var yrs=Object.keys(byYr).sort();for(var yi=0;yi<yrs.length;yi++){var yr=yrs[yi];chips+='<span style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;color:var(--dim);margin-right:4px;">'+yr+':</span>';for(var ci=0;ci<byYr[yr].length;ci++){var pk=byYr[yr][ci];var cls=pk.rd===1?'pc-1':pk.rd===2?'pc-2':'pc-3';chips+='<span class="pc '+cls+'">R'+pk.rd+(pk.o!=='Own'?' · '+pk.o:'')+'</span>';}}
-    html+='<div style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04);"><div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">'+av(t,'avatar-sm')+'<span style="flex:1;font-size:13px;font-weight:500;">'+t.name+'</span><span style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--muted);">'+picks.length+' pick'+(picks.length!==1?'s':'')+'</span></div><div style="padding-left:34px;display:flex;flex-wrap:wrap;gap:3px;">'+(chips||'<span style="font-size:11px;color:var(--dim);">No traded picks</span>')+'</div></div>';}
-  document.getElementById('capital-content').innerHTML=html;
+  for(var i=0;i<ms.length;i++){
+    var m=ms[i];var t1=gt(m[0]),t2=gt(m[1]);var p1=m[2],p2=m[3];
+    var w1=p1>p2;var winner=w1?t1:t2,loser=w1?t2:t1,wPts=w1?p1:p2,lPts=w1?p2:p1;
+    var margin=parseFloat(Math.abs(p1-p2).toFixed(1));
+    var e1=teamEmoji(t1.name),e2=teamEmoji(t2.name);
+    var winE=w1?e1:e2,loseE=w1?e2:e1;
+    /* Outcome tag */
+    var tag=margin>50?'💀 Obliteration':margin>30?'🔥 Blowout':margin>15?'⚡ Comfortable':margin>5?'😬 Close Call':'🫀 Heart Stopper';
+    html+='<div class="battle-card">'+
+      '<div class="battle-winner-bar"></div>'+
+      '<div class="battle-header">Week '+D.week+' · Matchup '+(i+1)+'</div>'+
+      '<span class="battle-result-badge">'+tag+'</span>'+
+      '<div class="battle-arena">'+
+        '<div class="battle-team winner">'+
+          '<div class="battle-emoji">'+winE+'</div>'+
+          '<div class="battle-name">'+winner.name+'</div>'+
+          '<div class="battle-score" style="color:var(--win)">'+fmt(wPts)+'</div>'+
+          '<div class="battle-record" style="color:var(--muted);font-size:10px;">'+winner.owner+'</div>'+
+        '</div>'+
+        '<div class="battle-vs">VS</div>'+
+        '<div class="battle-team loser">'+
+          '<div class="battle-emoji" style="opacity:0.5">'+loseE+'</div>'+
+          '<div class="battle-name">'+loser.name+'</div>'+
+          '<div class="battle-score">'+fmt(lPts)+'</div>'+
+          '<div class="battle-record">'+loser.owner+'</div>'+
+        '</div>'+
+      '</div>'+
+      '<div style="padding:0 14px 12px;display:flex;justify-content:space-between;align-items:center;">'+
+        '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:var(--dim);">Margin</span>'+
+        '<span style="font-family:\'Bebas Neue\',sans-serif;font-size:20px;color:var(--orange);">+'+fmt(margin)+'</span>'+
+      '</div>'+
+    '</div>';
+  }
+  document.getElementById('battle-cards').innerHTML=html||'<span style="color:var(--muted);font-size:13px;">No matchup results for current week</span>';
 }
 
-/* ═══════════ BUILD TRANSACTIONS ═══════════ */
-function buildTransactions(){
-  var entries=[];for(var k in D.transactions)entries.push({name:k,total:D.transactions[k]});
-  entries.sort(function(a,b){return b.total-a.total;});
-  var maxT=entries.length?entries[0].total:1;
-  var totalAll=entries.reduce(function(s,e){return s+e.total;},0);
-  document.getElementById('txn-stats').innerHTML='<div class="stat-card"><div class="stat-num orange">'+totalAll+'</div><div class="stat-lbl">Total Transactions</div></div><div class="stat-card"><div class="stat-num">'+(entries.length?entries[0].name.split(' ')[0]:'—')+'</div><div class="stat-lbl">Most Active</div></div><div class="stat-card"><div class="stat-num">'+(D.teams.length?Math.round(totalAll/D.teams.length):0)+'</div><div class="stat-lbl">Avg Per Team</div></div><div class="stat-card"><div class="stat-num green">'+D.trades.length+'</div><div class="stat-lbl">Trades</div></div>';
-  var bars='';
-  for(var bi=0;bi<entries.length;bi++){var e=entries[bi];var pct=(e.total/maxT*100).toFixed(0);var t=null;for(var ti=0;ti<D.teams.length;ti++){if(D.teams[ti].name===e.name){t=D.teams[ti];break;}}var col=t?tc(t.id):'var(--orange)';
-    bars+='<div class="txn-bar-row">'+(t?av(t,'avatar-sm'):'<div class="avatar avatar-sm" style="background:var(--dim)">?</div>')+'<span style="font-size:13px;flex:0 0 140px;">'+e.name+'</span><div class="txn-bar-track"><div class="txn-bar-fill" style="width:'+pct+'%;background:'+col+';"><span class="txn-bar-label">'+e.total+'</span></div></div><span class="txn-num">'+e.total+'</span></div>';}
-  document.getElementById('txn-bars').innerHTML=bars;
-  var mvHtml='',pvHtml='';
-  entries.slice(0,3).forEach(function(e){var t=null;for(var i=0;i<D.teams.length;i++){if(D.teams[i].name===e.name){t=D.teams[i];break;}}mvHtml+='<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);">'+(t?av(t,'avatar-sm'):'')+'<span style="flex:1;font-size:13px;">'+e.name+'</span><span style="font-family:\'IBM Plex Mono\',monospace;font-size:14px;color:var(--orange);">'+e.total+'</span></div>';});
-  entries.slice(-3).reverse().forEach(function(e){var t=null;for(var i=0;i<D.teams.length;i++){if(D.teams[i].name===e.name){t=D.teams[i];break;}}pvHtml+='<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);">'+(t?av(t,'avatar-sm'):'')+'<span style="flex:1;font-size:13px;">'+e.name+'</span><span style="font-family:\'IBM Plex Mono\',monospace;font-size:14px;color:var(--muted);">'+e.total+'</span></div>';});
-  document.getElementById('txn-movers').innerHTML=mvHtml;document.getElementById('txn-passive').innerHTML=pvHtml;
+/* ════════════════════════════
+   PREVIEW CARDS (next week)
+════════════════════════════ */
+function calcOdds(t1,t2){
+  var ppg1=t1.pf/D.week,ppg2=t2.pf/D.week;
+  var t1fav=ppg1>=ppg2;var spread=parseFloat(Math.abs(ppg1-ppg2).toFixed(1));var ou=parseFloat((ppg1+ppg2).toFixed(1));
+  var ml=spread<3?[-125,105]:spread<7?[-175,150]:spread<14?[-240,200]:[-320,265];
+  return{spread:spread,ou:ou,favML:ml[0],dogML:'+'+ml[1],t1fav:t1fav};
 }
 
-/* ═══════════ BUILD ODDS ═══════════ */
-function calcOdds(t1,t2){var ppg1=t1.pf/D.week,ppg2=t2.pf/D.week;var fav=ppg1>ppg2?t1:t2;var t1fav=fav.id===t1.id;var favPPG=t1fav?ppg1:ppg2,dogPPG=t1fav?ppg2:ppg1;var spread=parseFloat((favPPG-dogPPG).toFixed(1));var ou=parseFloat((ppg1+ppg2).toFixed(1));var ml=spread<3?[-125,105]:spread<7?[-175,150]:spread<14?[-240,200]:[-320,265];return{spread:spread,ou:ou,favML:ml[0],dogML:'+'+ml[1],t1fav:t1fav};}
-function buildOdds(){
-  document.getElementById('odds-wk-title').textContent='Week '+D.week+' Lines';
-  var ms=D.matchups[D.week]||[];var html='';
-  for(var i=0;i<ms.length;i++){var m=ms[i];var t1=gt(m[0]),t2=gt(m[1]);var o=calcOdds(t1,t2);
-    html+='<div class="odds-card"><div class="odds-hd"><span class="odds-hd-title">'+t1.name+' vs '+t2.name+'</span><span style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:var(--dim);">Week '+D.week+'</span></div><div class="odds-body"><div class="odds-team away"><div class="odds-team-name">'+t1.name+'</div><div class="odds-team-ppg">'+t1.pf.toLocaleString()+' pts · '+(t1.pf/D.week).toFixed(1)+' PPG</div><div class="odds-team-spread">'+(o.t1fav?'-'+o.spread:'+'+o.spread)+'</div><div class="odds-ml">ML: '+(o.t1fav?o.favML:o.dogML)+'</div></div><div class="odds-center"><div class="odds-ou-lbl">O/U</div><div class="odds-ou">'+o.ou+'</div><div class="odds-ml" style="margin-top:4px;">-110 each</div></div><div class="odds-team"><div class="odds-team-name">'+t2.name+'</div><div class="odds-team-ppg">'+t2.pf.toLocaleString()+' pts · '+(t2.pf/D.week).toFixed(1)+' PPG</div><div class="odds-team-spread">'+(o.t1fav?'+'+o.spread:'-'+o.spread)+'</div><div class="odds-ml">ML: '+(o.t1fav?o.dogML:o.favML)+'</div></div></div></div>';}
-  document.getElementById('odds-current').innerHTML=html||'<span style="color:var(--muted);font-size:12px;">No matchups for current week</span>';
-  var hWks=Object.keys(D.matchups).map(Number).filter(function(w){return w<D.week;}).sort(function(a,b){return b-a;}).slice(0,4);
-  var ats=0,total=0,ouOver=0,ouTotal=0,hist='';
-  for(var hi=0;hi<hWks.length;hi++){var wk=hWks[hi];var ms2=D.matchups[wk]||[];hist+='<div style="margin-bottom:8px;"><div style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--dim);margin-bottom:6px;">Week '+wk+'</div>';
-    for(var mj=0;mj<ms2.length;mj++){var m2=ms2[mj];var ht1=gt(m2[0]),ht2=gt(m2[1]);var hp1=m2[2],hp2=m2[3];var ho=calcOdds(ht1,ht2);var mg=Math.abs(hp1-hp2);var covered=mg<ho.spread;var actualOU=hp1+hp2;var over=actualOU>ho.ou;ats+=covered?1:0;total++;ouOver+=over?1:0;ouTotal++;
-      hist+='<div style="display:flex;align-items:center;gap:10px;padding:5px 0;font-size:12px;"><span style="flex:2;">'+ht1.name+' '+fmt(hp1)+' · '+ht2.name+' '+fmt(hp2)+'</span><span style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--dim);">Spread '+ho.spread+'</span><span class="'+(covered?'odds-result-miss':'odds-result-hit')+'" style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;">'+(covered?'COVER':'PUSH')+'</span><span style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--dim);">O/U '+ho.ou+'</span><span class="'+(over?'odds-result-hit':'odds-result-miss')+'" style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;">'+(over?'OVER':'UNDER')+'</span></div>';}
-    hist+='</div>';}
-  document.getElementById('odds-hist-meta').textContent='Spread covered: '+ats+'/'+total+' · Over: '+ouOver+'/'+ouTotal;
-  document.getElementById('odds-history').innerHTML=hist||'<span style="color:var(--muted);font-size:12px;">No historical data yet</span>';
-}
-
-/* ═══════════ BUILD WWL ═══════════ */
-function buildWWL(){
-  var ms=D.matchups[D.week]||[];var winners=[],losers=[];
-  for(var i=0;i<ms.length;i++){var m=ms[i];var t1=gt(m[0]),t2=gt(m[1]);if(m[2]>m[3]){winners.push({team:t1,pts:m[2]});losers.push({team:t2,pts:m[3]});}else{winners.push({team:t2,pts:m[3]});losers.push({team:t1,pts:m[2]});}}
-  winners.sort(function(a,b){return b.pts-a.pts;});losers.sort(function(a,b){return a.pts-b.pts;});
-  var wH='<div class="wwl-card"><div class="wwl-label win-lbl">🏆 Winners — Week '+D.week+'</div>';winners.forEach(function(w){wH+='<div class="wwl-item">'+av(w.team,'avatar-sm')+'<span class="wwl-name">'+w.team.name+'</span><span class="wwl-val pos">'+fmt(w.pts)+'</span></div>';});wH+='</div>';
-  var lH='<div class="wwl-card"><div class="wwl-label loss-lbl">💀 Losers — Week '+D.week+'</div>';losers.forEach(function(l){lH+='<div class="wwl-item">'+av(l.team,'avatar-sm')+'<span class="wwl-name">'+l.team.name+'</span><span class="wwl-val neg">'+fmt(l.pts)+'</span></div>';});lH+='</div>';
-  document.getElementById('wwl-teams').innerHTML=wH+lH;
-  var over=D.wwlPlayers.topOver||[];var under=D.wwlPlayers.topUnder||[];
-  var ph='<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;"><div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--win);margin-bottom:8px;">📈 Top Scorers</div>';
-  over.forEach(function(op){ph+='<div class="wwl-item"><span class="pos-tag pos-'+op.pos+'">'+op.pos+'</span><div style="flex:1;margin-left:8px;"><div style="font-size:12px;">'+op.name+'</div><div style="font-size:11px;color:var(--muted);">'+op.owner+'</div></div><span class="wwl-val pos">'+fmt(op.pts)+'</span></div>';});
-  ph+='</div><div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">📉 Lowest Scorers</div>';
-  under.forEach(function(up){ph+='<div class="wwl-item"><span class="pos-tag pos-'+up.pos+'">'+up.pos+'</span><div style="flex:1;margin-left:8px;"><div style="font-size:12px;">'+up.name+'</div><div style="font-size:11px;color:var(--muted);">'+up.owner+'</div></div><span class="wwl-val neg">'+fmt(up.pts)+'</span></div>';});
-  ph+='</div></div>';document.getElementById('wwl-players').innerHTML=ph;
-}
-
-/* ═══════════ BUILD TOP PLAYERS ═══════════ */
-function buildTopPlayers(){
-  var wks=Object.keys(D.weeklyTopPlayers).map(Number).sort(function(a,b){return a-b;});
-  var html='<div class="top-players-grid">';
-  for(var i=0;i<wks.length;i++){var wk=wks[i];var pl=D.weeklyTopPlayers[wk];var t=null;for(var ti=0;ti<D.teams.length;ti++){if(D.teams[ti].name===pl.owner){t=D.teams[ti];break;}}
-    html+='<div class="tp-card"><div class="tp-week">Week '+wk+' Best</div><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">'+(t?av(t,'avatar-sm'):'')+'<span class="pos-tag pos-'+pl.pos+'">'+pl.pos+'</span></div><div class="tp-name">'+pl.name+'</div><div class="tp-team">'+pl.owner+'</div><div class="tp-score">'+fmt(pl.pts)+'</div><div class="tp-proj">'+pl.owner+'</div></div>';}
-  html+='</div>';document.getElementById('topplayers-content').innerHTML=html;
-}
-
-/* ═══════════ BUILD TRENDS (Line Chart) ═══════════ */
-function buildTrends(){
-  var weeks=[];for(var w=1;w<=D.week;w++)weeks.push(w);
-  document.getElementById('trends-meta').textContent='Weeks 1–'+D.week+' · '+D.teams.length+' Teams';
-  var W=700,H=300,padL=40,padB=36,padT=20,padR=16,innerW=W-padL-padR,innerH=H-padB-padT;
-  var allPts=[];for(var ti=0;ti<D.teams.length;ti++){for(var wi=0;wi<weeks.length;wi++){allPts.push((D.weeklyScores[D.teams[ti].id]||[])[wi]||0);}}
-  var minPt=Math.min.apply(null,allPts)-20,maxPt=Math.max.apply(null,allPts)+20;
-  var grid='',xlabels='',lines='';
-  for(var gi=0;gi<=5;gi++){var gv=minPt+(maxPt-minPt)*gi/5;var gy=padT+innerH-innerH*gi/5;grid+='<line x1="'+padL+'" y1="'+gy.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+gy.toFixed(1)+'" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>';grid+='<text x="'+(padL-5)+'" y="'+(gy+4).toFixed(1)+'" text-anchor="end" fill="#5a5878" font-size="9" font-family="IBM Plex Mono">'+gv.toFixed(0)+'</text>';}
-  for(var wii=0;wii<weeks.length;wii++){var lx=padL+(weeks.length>1?wii/(weeks.length-1)*innerW:0);xlabels+='<text x="'+lx.toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle" fill="#5a5878" font-size="9" font-family="IBM Plex Mono">'+weeks[wii]+'</text>';grid+='<line x1="'+lx.toFixed(1)+'" y1="'+padT+'" x2="'+lx.toFixed(1)+'" y2="'+(H-padB)+'" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>';}
-  var legend='';
-  for(var tli=0;tli<D.teams.length;tli++){var t=D.teams[tli];var pts='';for(var pti=0;pti<weeks.length;pti++){var s=(D.weeklyScores[t.id]||[])[pti]||0;var px2=padL+(weeks.length>1?pti/(weeks.length-1)*innerW:0);var py=(1-(s-minPt)/(maxPt-minPt))*innerH+padT;pts+=px2.toFixed(1)+','+py.toFixed(1)+' ';}lines+='<polyline points="'+pts.trim()+'" fill="none" stroke="'+tc(t.id)+'" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"/>';legend+='<div style="display:flex;align-items:center;gap:5px;"><div style="width:12px;height:3px;background:'+tc(t.id)+';border-radius:2px;"></div><span style="font-size:10px;color:var(--muted);">'+t.name+'</span></div>';}
-  document.getElementById('chart-trends-wrap').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block;">'+grid+lines+xlabels+'</svg>';
-  document.getElementById('trends-legend').innerHTML=legend;
-  var ppgData=D.teams.slice().map(function(t){return{team:t,ppg:t.pf/D.week};});ppgData.sort(function(a,b){return b.ppg-a.ppg;});var maxPPG=ppgData[0]?ppgData[0].ppg:1;var ppgHtml='';
-  for(var pi=0;pi<ppgData.length;pi++){var pd=ppgData[pi];ppgHtml+='<div style="display:flex;align-items:center;gap:12px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.04);">'+av(pd.team,'avatar-sm')+'<span style="flex:1;font-size:13px;">'+pd.team.name+'</span><div style="flex:2;height:6px;background:var(--s3);border-radius:3px;overflow:hidden;"><div style="height:100%;width:'+(pd.ppg/maxPPG*100).toFixed(0)+'%;background:'+tc(pd.team.id)+';border-radius:3px;"></div></div><span style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;color:var(--orange);min-width:44px;text-align:right;">'+pd.ppg.toFixed(1)+'</span></div>';}
-  document.getElementById('ppg-bars').innerHTML=ppgHtml;
-}
-
-/* ═══════════ BUILD LUCK ═══════════ */
-function buildLuck(){
-  var weeks=[];for(var w=1;w<=D.week;w++)weeks.push(w);
-  var expWins={};D.teams.forEach(function(t){expWins[t.id]=0;});
-  for(var wi=0;wi<weeks.length;wi++){var wkS=D.teams.map(function(t){return{id:t.id,pts:(D.weeklyScores[t.id]||[])[wi]||0};});var ss=wkS.slice().sort(function(a,b){return a.pts-b.pts;});for(var si=0;si<wkS.length;si++){var rk=0;for(var ri=0;ri<ss.length;ri++){if(ss[ri].id===wkS[si].id){rk=ri;break;}}expWins[wkS[si].id]+=rk/(D.teams.length-1);}}
-  var data=D.teams.map(function(t){return{team:t,actual:t.wins,expected:parseFloat(expWins[t.id].toFixed(1)),diff:parseFloat((t.wins-expWins[t.id]).toFixed(1))};});data.sort(function(a,b){return b.diff-a.diff;});
-  var maxAbs=Math.max.apply(null,data.map(function(d){return Math.abs(d.diff);}));maxAbs=Math.max(maxAbs,1);
-  var W=660,rowH=30,padL=140,padR=80,padT=10,centerX=padL+((W-padL-padR)/2),innerW=W-padL-padR,H=data.length*rowH+padT*2;
-  var svg='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block;">';svg+='<line x1="'+centerX+'" y1="0" x2="'+centerX+'" y2="'+H+'" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="4,4"/>';
-  for(var di=0;di<data.length;di++){var d=data[di];var cy=padT+di*rowH+rowH/2;var bh=rowH*0.55;var bw=(Math.abs(d.diff)/maxAbs)*(innerW/2);var bx=d.diff>=0?centerX:centerX-bw;var col=d.diff>=0?'#22c55e':'#ef4444';svg+='<rect x="'+bx.toFixed(1)+'" y="'+(cy-bh/2).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+bh.toFixed(1)+'" fill="'+col+'" opacity="0.8" rx="3"/>';svg+='<text x="'+(padL-8)+'" y="'+(cy+4).toFixed(1)+'" text-anchor="end" fill="#c8c6d8" font-size="11" font-family="IBM Plex Sans">'+d.team.name.split(' ').slice(0,2).join(' ')+'</text>';var valX=d.diff>=0?centerX+bw+5:centerX-bw-5;svg+='<text x="'+valX.toFixed(1)+'" y="'+(cy+4).toFixed(1)+'" text-anchor="'+(d.diff>=0?'start':'end')+'" fill="'+col+'" font-size="11" font-family="IBM Plex Mono" font-weight="500">'+(d.diff>0?'+':'')+d.diff.toFixed(1)+'</text>';}
-  svg+='</svg>';document.getElementById('chart-luck-wrap').innerHTML=svg;
-  var lHtml='';for(var li=0;li<data.length;li++){var ld=data[li];var pos=ld.diff>0,neg=ld.diff<0;lHtml+='<div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.04);">'+av(ld.team,'avatar-sm')+'<span style="flex:1;font-size:13px;">'+ld.team.name+'</span><span style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--muted);">'+ld.actual+'–'+(D.week-ld.actual)+'</span><span style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--dim);">exp '+ld.expected+'</span><span style="font-family:\'IBM Plex Mono\',monospace;font-size:13px;font-weight:500;min-width:52px;text-align:right;color:'+(pos?'var(--win)':neg?'var(--loss)':'var(--muted)')+';">'+(ld.diff>0?'+':'')+ld.diff.toFixed(1)+'</span></div>';}
-  document.getElementById('luck-rows').innerHTML=lHtml;
-}
-
-/* ═══════════ BUILD PLAYER TRENDS ═══════════ */
-function buildPlayerTrends(){
-  var up=D.playerTrends.up||[];var down=D.playerTrends.down||[];
-  var uH='';up.forEach(function(p){uH+='<div class="trend-row"><span style="font-size:16px;color:var(--win);width:20px;text-align:center;">▲</span><span class="pos-tag pos-'+(p.pos==='Team'?'QB':p.pos)+'">'+p.pos+'</span><div class="trend-info" style="margin-left:8px;"><div class="trend-name">'+p.name+'</div><div class="trend-detail">'+(p.pos==='Team'?'Team avg · ':'')+''+p.seasonAvg.toFixed(1)+' → '+p.recentAvg.toFixed(1)+'</div></div><div class="trend-delta up">+'+p.delta.toFixed(1)+'</div></div>';});
-  if(!uH)uH='<div style="color:var(--muted);font-size:12px;">Need 4+ weeks of data</div>';
-  document.getElementById('trends-up').innerHTML=uH;
-  var dH='';down.forEach(function(p){dH+='<div class="trend-row"><span style="font-size:16px;color:var(--loss);width:20px;text-align:center;">▼</span><span class="pos-tag pos-'+(p.pos==='Team'?'QB':p.pos)+'">'+p.pos+'</span><div class="trend-info" style="margin-left:8px;"><div class="trend-name">'+p.name+'</div><div class="trend-detail">'+(p.pos==='Team'?'Team avg · ':'')+''+p.seasonAvg.toFixed(1)+' → '+p.recentAvg.toFixed(1)+'</div></div><div class="trend-delta down">'+p.delta.toFixed(1)+'</div></div>';});
-  if(!dH)dH='<div style="color:var(--muted);font-size:12px;">Need 4+ weeks of data</div>';
-  document.getElementById('trends-down').innerHTML=dH;
-}
-
-/* ═══════════ BUILD RECORDS ═══════════ */
-function buildRecords(){
-  var highGame={pts:0,team:null,wk:0},lowGame={pts:9999,team:null,wk:0},bigWin={margin:0,winner:null,loser:null,wk:0},closeGame={margin:9999,w:null,l:null,wk:0},highTotal={total:0,t1:null,t2:null,wk:0};
-  var wks=Object.keys(D.matchups).map(Number);
-  for(var wi=0;wi<wks.length;wi++){var wk=wks[wi];var ms=D.matchups[wk];for(var mi=0;mi<ms.length;mi++){var m=ms[mi];var t1=gt(m[0]),t2=gt(m[1]);var p1=m[2],p2=m[3];var mg=Math.abs(p1-p2);var winner=p1>p2?t1:t2,loser=p1>p2?t2:t1;var total=p1+p2;if(p1>highGame.pts)highGame={pts:p1,team:t1,wk:wk};if(p2>highGame.pts)highGame={pts:p2,team:t2,wk:wk};if(p1<lowGame.pts)lowGame={pts:p1,team:t1,wk:wk};if(p2<lowGame.pts)lowGame={pts:p2,team:t2,wk:wk};if(mg>bigWin.margin)bigWin={margin:parseFloat(mg.toFixed(1)),winner:winner,loser:loser,wk:wk};if(mg<closeGame.margin)closeGame={margin:parseFloat(mg.toFixed(1)),w:winner,l:loser,wk:wk};if(total>highTotal.total)highTotal={total:parseFloat(total.toFixed(1)),t1:t1,t2:t2,wk:wk};}}
-  var maxPF=Math.max.apply(null,D.teams.map(function(t){return t.pf;})),minPF=Math.min.apply(null,D.teams.map(function(t){return t.pf;}));
-  var topTeam=D.teams.reduce(function(a,b){return a.pf>b.pf?a:b;},D.teams[0]||{name:'',pf:0});
-  var botTeam=D.teams.reduce(function(a,b){return a.pf<b.pf?a:b;},D.teams[0]||{name:'',pf:0});
-  var longestStreak=D.teams.reduce(function(a,b){return parseInt(b.streak.slice(1))>parseInt(a.streak.slice(1))?b:a;},D.teams[0]||{name:'',streak:'W0'});
-  var cards=[{icon:'🏆',lbl:'Highest Single Score',val:fmt(highGame.pts),team:highGame.team?highGame.team.name:'',ctx:'Week '+highGame.wk},{icon:'📉',lbl:'Lowest Single Score',val:fmt(lowGame.pts),team:lowGame.team?lowGame.team.name:'',ctx:'Week '+lowGame.wk},{icon:'💥',lbl:'Biggest Blowout',val:'+'+fmt(bigWin.margin),team:bigWin.winner?bigWin.winner.name:'',ctx:'vs '+(bigWin.loser?bigWin.loser.name:'')+' · Wk '+bigWin.wk},{icon:'😰',lbl:'Closest Game',val:'+'+fmt(closeGame.margin),team:closeGame.w?closeGame.w.name:'',ctx:'vs '+(closeGame.l?closeGame.l.name:'')+' · Wk '+closeGame.wk},{icon:'🔥',lbl:'Highest Scoring Matchup',val:fmt(highTotal.total),team:(highTotal.t1?highTotal.t1.name:'')+' vs '+(highTotal.t2?highTotal.t2.name:''),ctx:'Week '+highTotal.wk},{icon:'⚡',lbl:'Longest Current Streak',val:longestStreak.streak,team:longestStreak.name,ctx:parseInt(longestStreak.streak.slice(1))+'-game streak'},{icon:'📊',lbl:'Most Pts Scored',val:maxPF.toLocaleString(),team:topTeam.name,ctx:'Season total'},{icon:'🥶',lbl:'Fewest Pts Scored',val:minPF.toLocaleString(),team:botTeam.name,ctx:'Season total'}];
-  var html='<div class="records-grid">';cards.forEach(function(c){html+='<div class="record-card"><span class="record-icon">'+c.icon+'</span><div class="record-lbl">'+c.lbl+'</div><div class="record-val">'+c.val+'</div><div class="record-team">'+c.team+'</div><div class="record-ctx">'+c.ctx+'</div></div>';});html+='</div>';
-  document.getElementById('records-content').innerHTML=html;
-}
-
-/* ═══════════ BUILD AWARDS ═══════════ */
-function buildAwards(){
-  if(!D.teams.length)return;
-  var sorted=D.teams.slice().sort(function(a,b){return b.wins-a.wins||b.pf-a.pf;});
-  var ppgS=D.teams.slice().sort(function(a,b){return b.pf-a.pf;});
-  var weeks=[];for(var w=1;w<=D.week;w++)weeks.push(w);
-  var expW={};D.teams.forEach(function(t){expW[t.id]=0;});
-  for(var wi=0;wi<weeks.length;wi++){var wkS=D.teams.map(function(t){return{id:t.id,pts:(D.weeklyScores[t.id]||[])[wi]||0};});var ss=wkS.slice().sort(function(a,b){return a.pts-b.pts;});for(var si=0;si<wkS.length;si++){var rk=0;for(var ri=0;ri<ss.length;ri++){if(ss[ri].id===wkS[si].id){rk=ri;break;}}expW[wkS[si].id]+=rk/(D.teams.length-1);}}
-  var luckD=D.teams.map(function(t){return{team:t,diff:parseFloat((t.wins-expW[t.id]).toFixed(1))};});luckD.sort(function(a,b){return b.diff-a.diff;});
-  var txnS=[];for(var k in D.transactions)txnS.push({name:k,total:D.transactions[k]});txnS.sort(function(a,b){return b.total-a.total;});
-  var closeLosses={};D.teams.forEach(function(t){closeLosses[t.id]=0;});
-  Object.keys(D.matchups).map(Number).forEach(function(wk){D.matchups[wk].forEach(function(m){if(Math.abs(m[2]-m[3])<10){var lid=m[2]>m[3]?m[1]:m[0];closeLosses[lid]=(closeLosses[lid]||0)+1;}});});
-  var heartbreak=D.teams.reduce(function(a,b){return(closeLosses[b.id]||0)>(closeLosses[a.id]||0)?b:a;},D.teams[0]);
-  var topWkPl=Object.values(D.weeklyTopPlayers);topWkPl.sort(function(a,b){return b.pts-a.pts;});
-  var teamAwds=[{icon:'🥇',title:'Best Record',winner:sorted[0].name,val:sorted[0].wins+'-'+sorted[0].losses,ctx:'League leader through Wk '+D.week,cls:'gold-card'},{icon:'🎯',title:'Points King',winner:ppgS[0].name,val:ppgS[0].pf.toLocaleString(),ctx:'Most total pts scored',cls:'gold-card'},{icon:'💪',title:'Iron Fortress',winner:D.teams.reduce(function(a,b){return a.pa<b.pa?a:b;}).name,val:D.teams.reduce(function(a,b){return a.pa<b.pa?a:b;}).pa.toLocaleString(),ctx:'Fewest pts allowed',cls:'green-card'},{icon:'🔥',title:'On Fire',winner:D.teams.reduce(function(a,b){return parseInt(b.streak.slice(1))>parseInt(a.streak.slice(1))?b:a;}).name,val:D.teams.reduce(function(a,b){return parseInt(b.streak.slice(1))>parseInt(a.streak.slice(1))?b:a;}).streak,ctx:'Longest active streak',cls:''}];
-  var plyrAwds=topWkPl.length?[{icon:'⭐',title:'Season Top Scorer',winner:topWkPl[0].name,val:fmt(topWkPl[0].pts),ctx:topWkPl[0].owner,cls:'gold-card'},{icon:'📈',title:'Trending Up',winner:(D.playerTrends.up[0]||{name:'N/A'}).name,val:(D.playerTrends.up[0]?'+'+D.playerTrends.up[0].delta.toFixed(1):'—'),ctx:(D.playerTrends.up[0]?'Last 3 wks vs season avg':'Need more data'),cls:'green-card'},{icon:'📉',title:'Trending Down',winner:(D.playerTrends.down[0]||{name:'N/A'}).name,val:(D.playerTrends.down[0]?D.playerTrends.down[0].delta.toFixed(1):'—'),ctx:(D.playerTrends.down[0]?'Last 3 wks vs season avg':'Need more data'),cls:'red-card'}]:[{icon:'⭐',title:'Top Scorer',winner:'No data yet',val:'—',ctx:'Need matchup player data',cls:'gold-card'}];
-  var funAwds=[{icon:'🍀',title:'Luckiest Team',winner:luckD[0].team.name,val:'+'+luckD[0].diff.toFixed(1),ctx:'Wins above expected record',cls:'green-card'},{icon:'😤',title:'Most Robbed',winner:luckD[luckD.length-1].team.name,val:luckD[luckD.length-1].diff.toFixed(1),ctx:'Wins below expected record',cls:'red-card'},{icon:'🔄',title:'Transaction King',winner:txnS[0]?txnS[0].name:'—',val:txnS[0]?txnS[0].total+'':'—',ctx:'Total moves this season',cls:'violet-card'},{icon:'💀',title:'Heartbreak Award',winner:heartbreak?heartbreak.name:'—',val:heartbreak?(closeLosses[heartbreak.id]||0)+'':'—',ctx:'Losses by fewer than 10 pts',cls:'red-card'},{icon:'😴',title:'Couch Coach',winner:txnS[txnS.length-1]?txnS[txnS.length-1].name:'—',val:txnS[txnS.length-1]?txnS[txnS.length-1].total+'':'—',ctx:'Fewest transactions all year',cls:''},{icon:'📺',title:'Style Points',winner:ppgS[0].name,val:(ppgS[0].pf/D.week).toFixed(1)+' PPG',ctx:'Highest scoring average',cls:'gold-card'}];
-  function ra(arr){var h='';arr.forEach(function(a){h+='<div class="award-card '+(a.cls||'')+'"><span class="award-icon">'+a.icon+'</span><div class="award-title">'+a.title+'</div><div class="award-winner">'+a.winner+'</div><div class="award-val">'+a.val+'</div><div class="award-ctx">'+a.ctx+'</div></div>';});return h;}
-  document.getElementById('awards-teams').innerHTML=ra(teamAwds);document.getElementById('awards-players').innerHTML=ra(plyrAwds);document.getElementById('awards-fun').innerHTML=ra(funAwds);
-}
-
-/* ═══════════ BUILD MVPs ═══════════ */
-function buildMVPs(){
-  var wks=Object.keys(D.matchups).map(Number).sort(function(a,b){return a-b;});var html='';
-  for(var wi=0;wi<wks.length;wi++){var wk=wks[wi];var ms=D.matchups[wk];var best={pts:0,team:null,margin:0};for(var mi=0;mi<ms.length;mi++){var m=ms[mi];if(m[2]>best.pts){best={pts:m[2],team:gt(m[0]),margin:parseFloat((m[2]-m[3]).toFixed(1))};}if(m[3]>best.pts){best={pts:m[3],team:gt(m[1]),margin:parseFloat((m[3]-m[2]).toFixed(1))};}}if(best.team){html+='<div class="mvp-row"><div class="mvp-wk">WK '+wk+'</div>'+av(best.team)+'<div class="mvp-info"><div class="mvp-name">'+best.team.name+'</div><div class="mvp-owner">'+best.team.owner+'</div></div><div><div class="mvp-score">'+fmt(best.pts)+'</div><div class="mvp-margin">+'+fmt(best.margin)+' margin</div></div></div>';}}
-  document.getElementById('mvp-timeline').innerHTML=html||'<div style="color:var(--muted);font-size:12px;">No matchup data yet</div>';
-}
-
-/* ═══════════ BUILD PLAYOFF ═══════════ */
-function buildPlayoff(){
-  var sorted=D.teams.slice().sort(function(a,b){return b.wins-a.wins||b.pf-a.pf;});
-  var weeksLeft=D.totalWeeks-D.week;var cutlineWins=sorted[D.playoffSpots]?sorted[D.playoffSpots].wins:0;
-  var inHTML='',outHTML='';
-  for(var i=0;i<Math.min(D.playoffSpots,sorted.length);i++){var t=sorted[i];var magic=Math.max(0,cutlineWins+1-t.wins);var clinched=magic===0||(t.wins-cutlineWins)>weeksLeft;inHTML+='<div class="pf-row"><div class="pf-num">'+(i+1)+'</div>'+av(t)+'<div class="pf-info"><div class="pf-name">'+t.name+'</div><div class="pf-record">'+t.wins+'–'+t.losses+' · '+t.pf.toLocaleString()+'</div></div><div class="pf-magic">'+(clinched?'<span class="clinch-badge">CLINCHED</span>':'<div class="magic-num">'+magic+'</div><div class="magic-lbl">Magic #</div>')+'</div></div>';}
-  for(var j=D.playoffSpots;j<sorted.length;j++){var ot=sorted[j];var behind=cutlineWins-ot.wins;var elim=behind>weeksLeft;outHTML+='<div class="pf-row"><div class="pf-num" style="color:var(--muted);">'+(j+1)+'</div>'+av(ot)+'<div class="pf-info"><div class="pf-name" style="color:var(--muted);">'+ot.name+'</div><div class="pf-record">'+ot.wins+'–'+ot.losses+'</div></div><div class="pf-magic">'+(elim?'<span class="elim-badge">ELIMINATED</span>':'<div style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;color:var(--loss);">GB: '+behind+'</div>')+'</div></div>';}
-  var cut=sorted[D.playoffSpots-1],nextOut=sorted[D.playoffSpots],gap=cut&&nextOut?cut.wins-nextOut.wins:0;
-  document.getElementById('playoff-content').innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;"><div class="card" style="margin:0;"><div class="card-hd"><div class="card-title" style="color:var(--win);">▲ Playoff Field</div></div><div class="card-body" style="padding:8px 14px;">'+inHTML+'</div></div><div class="card" style="margin:0;"><div class="card-hd"><div class="card-title" style="color:var(--loss);">▼ On the Outside</div></div><div class="card-body" style="padding:8px 14px;">'+outHTML+'</div></div></div><div class="card"><div class="card-hd"><div class="card-title">Scenarios</div></div><div class="card-body"><div style="font-size:13px;color:var(--text2);line-height:1.9;"><p>📌 <strong style="color:var(--orange);">Cutline:</strong> '+(cut?cut.name:'')+' last team <span class="pill pill-in">IN</span> · '+(nextOut?nextOut.name:'')+' first <span class="pill pill-out">OUT</span> — gap of <strong>'+gap+'</strong> win'+(gap!==1?'s':'')+'.</p><p>📅 <strong style="color:var(--orange);">'+weeksLeft+' weeks</strong> remaining.</p><p>🔮 <strong style="color:var(--orange);">Magic #</strong> = wins needed to clinch.</p></div></div></div>';
-}
-
-/* ═══════════ BUILD TRADES ═══════════ */
-function buildTrades(){
-  document.getElementById('trade-ct').textContent=D.trades.length+' trades this season';
+function buildPreviewCards(){
+  /* Next week matchups — use current week schedule rotated, or same matchups as proxy */
+  var nextWeek=D.week+1;
+  document.getElementById('preview-card-title').textContent='Week '+nextWeek+' Preview Lines';
+  /* Use current week matchup pairings as next week preview (real app will have actual schedule) */
+  var ms=D.matchups[D.week]||[];
   var html='';
-  D.trades.forEach(function(t){var aA=t.aGets.map(function(a){return'<div class="trade-asset '+(a.match(/\d{4}/)?'pick':'')+'">'+ a+'</div>';}).join('');var bA=t.bGets.map(function(a){return'<div class="trade-asset '+(a.match(/\d{4}/)?'pick':'')+'">'+ a+'</div>';}).join('');html+='<div class="trade-item"><div class="trade-hd"><span class="trade-date">'+t.date+', '+D.season+'</span><span class="trade-badge">Trade</span></div><div class="trade-body"><div class="trade-side"><div class="trade-side-lbl">'+t.teamA+' Gets</div>'+aA+'</div><div class="trade-side"><div class="trade-side-lbl">'+t.teamB+' Gets</div>'+bA+'</div></div></div>';});
-  document.getElementById('trade-log').innerHTML=html||'<span style="color:var(--muted);font-size:12px;">No trades found this season</span>';
+  ms.forEach(function(m){
+    var t1=gt(m[0]),t2=gt(m[1]);var o=calcOdds(t1,t2);
+    var e1=teamEmoji(t1.name),e2=teamEmoji(t2.name);
+    var fav=o.t1fav?t1:t2,dog=o.t1fav?t2:t1;
+    html+='<div class="preview-card">'+
+      '<div class="preview-hd">'+
+        '<span class="preview-label">Week '+nextWeek+' Preview</span>'+
+        '<span class="preview-ou">O/U: '+o.ou+'</span>'+
+      '</div>'+
+      '<div class="preview-matchup">'+
+        '<div class="preview-side away">'+
+          '<div class="preview-emoji">'+e1+'</div>'+
+          '<div class="preview-team-name">'+t1.name+'</div>'+
+          '<div class="preview-ppg">'+(t1.pf/D.week).toFixed(1)+' PPG</div>'+
+          '<div class="preview-spread">'+(o.t1fav?'-'+o.spread:'+'+o.spread)+'</div>'+
+        '</div>'+
+        '<div class="preview-vs-block"><div class="preview-vs">@</div><div class="preview-week">Wk '+nextWeek+'</div></div>'+
+        '<div class="preview-side home">'+
+          '<div class="preview-emoji">'+e2+'</div>'+
+          '<div class="preview-team-name">'+t2.name+'</div>'+
+          '<div class="preview-ppg">'+(t2.pf/D.week).toFixed(1)+' PPG</div>'+
+          '<div class="preview-spread">'+(o.t1fav?'+'+o.spread:'-'+o.spread)+'</div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="pick-banner">🎯 Lean: '+fav.name+' (-'+o.spread+') · ML: '+o.favML+'</div>'+
+    '</div>';
+  });
+  document.getElementById('preview-cards').innerHTML=html||'<span style="color:var(--muted);font-size:13px;">Schedule not yet available</span>';
 }
 
-/* ═══════════ PRO CONTENT (Claude AI) ═══════════ */
-function generateContent(section,btn){
+/* ════════════════════════════
+   WAIVER LOG
+════════════════════════════ */
+function buildWaiverLog(){
+  var moves=D.recentWaiverMoves||[];
+  document.getElementById('waiver-meta').textContent=moves.length+' recent moves';
+  if(!moves.length){document.getElementById('waiver-log').innerHTML='<div style="color:var(--muted);font-size:13px;">No waiver activity found for this week</div>';return;}
+  var adds=moves.filter(function(m){return m.type==='add';});
+  var drops=moves.filter(function(m){return m.type==='drop';});
+  var html='';
+  if(adds.length){
+    html+='<span class="waiver-section-lbl">✅ Added This Week</span>';
+    adds.slice(0,8).forEach(function(m){
+      html+='<div class="waiver-row">'+
+        '<span class="waiver-emoji">➕</span>'+
+        '<div class="waiver-info"><div class="waiver-player">'+m.player+'</div><div class="waiver-detail">'+m.pos+' · '+m.team+'</div></div>'+
+        '<div style="text-align:right;"><div class="waiver-owner" style="color:var(--muted);font-size:11px;">'+m.owner+'</div><div class="waiver-detail">'+m.date+'</div></div>'+
+        '<span class="waiver-type wt-add">ADD</span>'+
+      '</div>';
+    });
+  }
+  if(drops.length){
+    html+='<span class="waiver-section-lbl" style="margin-top:16px;display:block;">❌ Dropped This Week</span>';
+    drops.slice(0,6).forEach(function(m){
+      html+='<div class="waiver-row">'+
+        '<span class="waiver-emoji">➖</span>'+
+        '<div class="waiver-info"><div class="waiver-player">'+m.player+'</div><div class="waiver-detail">'+m.pos+' · '+m.team+'</div></div>'+
+        '<div style="text-align:right;"><div class="waiver-owner" style="color:var(--muted);font-size:11px;">'+m.owner+'</div><div class="waiver-detail">'+m.date+'</div></div>'+
+        '<span class="waiver-type wt-drop">DROP</span>'+
+      '</div>';
+    });
+  }
+  document.getElementById('waiver-log').innerHTML=html;
+}
+
+/* ════════════════════════════
+   ALL OTHER BUILDERS (same as v6)
+════════════════════════════ */
+function buildStandings(){var sorted=D.teams.slice().sort(function(a,b){return b.wins-a.wins||b.pf-a.pf;});var maxPF=Math.max.apply(null,sorted.map(function(t){return t.pf;}));var rows='';sorted.forEach(function(t,i){var po=i<D.playoffSpots;var sw=t.streak[0]==='W';var pct=(t.pf/maxPF*100).toFixed(0);rows+='<tr><td class="rank-col '+(i<3?'top':'')+'"> '+(i+1)+'</td><td><div class="team-cell">'+av(t)+'<div><div style="font-weight:500;font-size:13px;">'+t.name+'</div><div style="font-size:11px;color:var(--muted);">'+t.owner+'</div></div></div></td><td><span class="rec"><span class="w">'+t.wins+'</span>–<span class="l">'+t.losses+'</span></span></td><td><div class="mono-sm">'+t.pf.toLocaleString()+'</div><div class="prog-wrap"><div class="prog-bar" style="width:'+pct+'%"></div></div></td><td><span class="mono-dim">'+t.pa.toLocaleString()+'</span></td><td><span class="streak-badge '+(sw?'streak-w':'streak-l')+'">'+t.streak+'</span></td><td><span class="pill '+(po?'pill-in':'pill-out')+'">'+(po?'IN':'OUT')+'</span></td></tr>';});document.getElementById('standings-tbl').innerHTML='<thead><tr><th>#</th><th>Team</th><th>Record</th><th>Pts For</th><th>Pts Against</th><th>Streak</th><th>Playoff</th></tr></thead><tbody>'+rows+'</tbody>';}
+function buildRosters(){var pos=['QB','RB','WR','TE','DEF'];var html='';D.teams.forEach(function(t){var r=D.rosters[t.id]||{};var players='';pos.forEach(function(pp){(r[pp]||[]).forEach(function(name){players+='<div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04);"><span style="font-size:12px;color:var(--text2);">'+name+'</span><span class="pos-tag pos-'+pp+'">'+pp+'</span></div>';});});var myPicks=D.fullPickHoldings[t.id]||[];if(myPicks.length){players+='<div style="margin-top:8px;font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--dim);padding:4px 0;">Draft Picks ('+myPicks.length+')</div>';myPicks.forEach(function(pk){var cls=pk.isOwn?'pc-own':'pc-recv';var origTeam=pk.isOwn?null:gt(pk.originalRosterId);var label=pk.yr+' R'+pk.round+(origTeam&&origTeam.name?'  ('+origTeam.name.split(' ')[0]+')':'');players+='<span class="pc '+cls+'">'+label+'</span>';});}html+='<div class="card"><div class="card-hd"><div style="display:flex;align-items:center;gap:10px;">'+av(t)+'<div><div style="font-family:\'Barlow Condensed\',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--orange);">'+t.name+'</div><div style="font-size:11px;color:var(--muted);font-family:\'IBM Plex Mono\',monospace;">'+t.wins+'–'+t.losses+' · '+t.pf.toLocaleString()+' pts</div></div></div></div><div class="card-body" style="padding:10px 14px;">'+(players||'<span style="color:var(--muted);font-size:12px;">No data</span>')+'</div></div>';});document.getElementById('rosters-content').innerHTML=html;}
+function buildCapital(){var sorted=D.teams.slice().sort(function(a,b){return(D.fullPickHoldings[b.id]||[]).length-(D.fullPickHoldings[a.id]||[]).length;});var total=0;sorted.forEach(function(t){total+=(D.fullPickHoldings[t.id]||[]).length;});document.getElementById('cap-meta').textContent='Total picks held: '+total;var html='';sorted.forEach(function(t){var picks=(D.fullPickHoldings[t.id]||[]).slice().sort(function(a,b){return a.yr.localeCompare(b.yr)||a.round-b.round;});var r1count=picks.filter(function(p){return p.round===1;}).length;var byYr={};picks.forEach(function(p){if(!byYr[p.yr])byYr[p.yr]=[];byYr[p.yr].push(p);});var chips='';var yrs=Object.keys(byYr).sort();yrs.forEach(function(yr){chips+='<div style="margin-bottom:6px;"><span style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;color:var(--dim);display:inline-block;width:34px;">'+yr+'</span>';byYr[yr].forEach(function(pk){var cls=pk.isOwn?'pc-own':'pc-recv';var origTeam=pk.isOwn?null:gt(pk.originalRosterId);var lbl='R'+pk.round+(origTeam&&origTeam.name?' · '+origTeam.name.split(' ')[0]:'');chips+='<span class="pc '+cls+'">'+lbl+'</span>';});chips+='</div>';});html+='<div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">'+av(t,'avatar-sm')+'<span style="flex:1;font-size:13px;font-weight:500;">'+t.name+'</span><div style="text-align:right;"><span style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--orange);">'+picks.length+' picks</span><span style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:var(--dim);margin-left:8px;">'+r1count+' R1s</span></div></div><div style="padding-left:34px;"><div style="margin-bottom:4px;"><span class="pc pc-own">■ Own</span><span class="pc pc-recv">■ Received</span></div>'+(chips||'<span style="font-size:11px;color:var(--dim);">No picks held</span>')+'</div></div>';});document.getElementById('capital-content').innerHTML=html;}
+function buildTransactions(){var entries=[];for(var k in D.transactions)entries.push({name:k,total:D.transactions[k]});entries.sort(function(a,b){return b.total-a.total;});var maxT=entries.length?entries[0].total:1;var totalAll=entries.reduce(function(s,e){return s+e.total;},0);document.getElementById('txn-stats').innerHTML='<div class="stat-card"><div class="stat-num orange">'+totalAll+'</div><div class="stat-lbl">Total Transactions</div></div><div class="stat-card"><div class="stat-num">'+(entries.length?entries[0].name.split(' ')[0]:'—')+'</div><div class="stat-lbl">Most Active</div></div><div class="stat-card"><div class="stat-num">'+(D.teams.length?Math.round(totalAll/D.teams.length):0)+'</div><div class="stat-lbl">Avg Per Team</div></div><div class="stat-card"><div class="stat-num green">'+D.trades.length+'</div><div class="stat-lbl">Trades</div></div>';var bars='';entries.forEach(function(e){var pct=(e.total/maxT*100).toFixed(0);var t=D.teams.find(function(tm){return tm.name===e.name;});var col=t?tc(t.id):'var(--orange)';bars+='<div class="txn-bar-row">'+(t?av(t,'avatar-sm'):'<div class="avatar avatar-sm" style="background:var(--dim)">?</div>')+'<span style="font-size:13px;flex:0 0 140px;">'+e.name+'</span><div class="txn-bar-track"><div class="txn-bar-fill" style="width:'+pct+'%;background:'+col+'"><span class="txn-bar-label">'+e.total+'</span></div></div><span class="txn-num">'+e.total+'</span></div>';});document.getElementById('txn-bars').innerHTML=bars;var mvH='',pvH='';entries.slice(0,3).forEach(function(e){var t=D.teams.find(function(tm){return tm.name===e.name;});mvH+='<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);">'+(t?av(t,'avatar-sm'):'')+'<span style="flex:1;font-size:13px;">'+e.name+'</span><span style="font-family:\'IBM Plex Mono\',monospace;font-size:14px;color:var(--orange);">'+e.total+'</span></div>';});entries.slice(-3).reverse().forEach(function(e){var t=D.teams.find(function(tm){return tm.name===e.name;});pvH+='<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);">'+(t?av(t,'avatar-sm'):'')+'<span style="flex:1;font-size:13px;">'+e.name+'</span><span style="font-family:\'IBM Plex Mono\',monospace;font-size:14px;color:var(--muted);">'+e.total+'</span></div>';});document.getElementById('txn-movers').innerHTML=mvH;document.getElementById('txn-passive').innerHTML=pvH;}
+function buildHistory(){if(!D.history||!D.history.length){document.getElementById('history-content').innerHTML='<div style="color:var(--muted);font-size:13px;padding:20px 0;">No previous seasons found. History will appear next season.</div>';return;}var html='';D.history.forEach(function(season){html+='<div class="hist-season"><div class="hist-season-hd"><div class="hist-yr">'+season.season+'</div><div><div class="hist-champion-lbl">Champion</div><div class="hist-champion-name">🏆 '+season.champion+'</div></div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:var(--dim);">'+season.totalWeeks+' weeks</div></div><div>';season.standings.forEach(function(s,i){if(!s.wins&&!s.pf&&i>0)return;var curTeam=D.teams.find(function(t){return t.name===s.name||t.owner===s.owner;});html+='<div class="hist-row"><div class="hist-pos '+(i<3?'top':'')+'"> '+(i+1)+'</div><div style="width:24px;height:24px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:\'Bebas Neue\',sans-serif;font-size:11px;color:#fff;background:'+(curTeam?tc(curTeam.id):'#444')+';">'+ini(s.name)+'</div><div style="flex:1;"><div style="font-size:13px;">'+s.name+'</div><div style="font-size:11px;color:var(--muted);">'+s.owner+'</div></div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;"><span style="color:var(--win);">'+s.wins+'</span>–<span style="color:var(--loss);">'+s.losses+'</span></div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;color:var(--muted);margin-left:12px;">'+s.pf.toLocaleString()+'</div></div>';});html+='</div></div>';});document.getElementById('history-content').innerHTML=html;}
+function buildOdds(){document.getElementById('odds-wk-title').textContent='Week '+D.week+' Lines';var ms=D.matchups[D.week]||[];var html='';ms.forEach(function(m){var t1=gt(m[0]),t2=gt(m[1]);var o=calcOdds(t1,t2);html+='<div class="odds-card"><div class="odds-hd"><span class="odds-hd-title">'+t1.name+' vs '+t2.name+'</span></div><div class="odds-body"><div class="odds-team away"><div class="odds-team-name">'+t1.name+'</div><div class="odds-team-ppg">PPG: '+(t1.pf/D.week).toFixed(1)+'</div><div class="odds-team-spread">'+(o.t1fav?'-'+o.spread:'+'+o.spread)+'</div><div class="odds-ml">ML: '+(o.t1fav?o.favML:o.dogML)+'</div></div><div class="odds-center"><div class="odds-ou-lbl">O/U</div><div class="odds-ou">'+o.ou+'</div><div class="odds-ml">-110 each</div></div><div class="odds-team"><div class="odds-team-name">'+t2.name+'</div><div class="odds-team-ppg">PPG: '+(t2.pf/D.week).toFixed(1)+'</div><div class="odds-team-spread">'+(o.t1fav?'+'+o.spread:'-'+o.spread)+'</div><div class="odds-ml">ML: '+(o.t1fav?o.dogML:o.favML)+'</div></div></div></div>';});document.getElementById('odds-current').innerHTML=html||'<span style="color:var(--muted);font-size:12px;">No matchups for current week</span>';var hWks=Object.keys(D.matchups).map(Number).filter(function(w){return w<D.week;}).sort(function(a,b){return b-a;}).slice(0,4);var ats=0,tot=0,ouO=0,ouT=0,hist='';hWks.forEach(function(wk){var ms2=D.matchups[wk]||[];hist+='<div style="margin-bottom:8px;"><div style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--dim);margin-bottom:6px;">Week '+wk+'</div>';ms2.forEach(function(m2){var ht1=gt(m2[0]),ht2=gt(m2[1]);var ho=calcOdds(ht1,ht2);var mg=Math.abs(m2[2]-m2[3]);var covered=mg<ho.spread;var over=(m2[2]+m2[3])>ho.ou;ats+=covered?1:0;tot++;ouO+=over?1:0;ouT++;hist+='<div style="display:flex;align-items:center;gap:10px;padding:5px 0;font-size:12px;"><span style="flex:2;">'+ht1.name+' '+fmt(m2[2])+' · '+ht2.name+' '+fmt(m2[3])+'</span><span class="'+(covered?'odds-miss':'odds-hit')+'" style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;">'+(covered?'COVER':'PUSH')+'</span><span class="'+(over?'odds-hit':'odds-miss')+'" style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;">'+(over?'OVER':'UNDER')+'</span></div>';});hist+='</div>';});document.getElementById('odds-hist-meta').textContent='Covered: '+ats+'/'+tot+' · Over: '+ouO+'/'+ouT;document.getElementById('odds-history').innerHTML=hist||'<span style="color:var(--muted);font-size:12px;">No historical data yet</span>';}
+function buildWWL(){var ms=D.matchups[D.week]||[];var winners=[],losers=[];ms.forEach(function(m){var t1=gt(m[0]),t2=gt(m[1]);if(m[2]>m[3]){winners.push({team:t1,pts:m[2]});losers.push({team:t2,pts:m[3]});}else{winners.push({team:t2,pts:m[3]});losers.push({team:t1,pts:m[2]});}});winners.sort(function(a,b){return b.pts-a.pts;});losers.sort(function(a,b){return a.pts-b.pts;});var wH='<div class="wwl-card"><div class="wwl-label win-lbl">🏆 Winners — Week '+D.week+'</div>';winners.forEach(function(w){wH+='<div class="wwl-item">'+av(w.team,'avatar-sm')+'<span class="wwl-name">'+w.team.name+'</span><span class="wwl-val pos">'+fmt(w.pts)+'</span></div>';});wH+='</div>';var lH='<div class="wwl-card"><div class="wwl-label loss-lbl">💀 Losers — Week '+D.week+'</div>';losers.forEach(function(l){lH+='<div class="wwl-item">'+av(l.team,'avatar-sm')+'<span class="wwl-name">'+l.team.name+'</span><span class="wwl-val neg">'+fmt(l.pts)+'</span></div>';});lH+='</div>';document.getElementById('wwl-teams').innerHTML=wH+lH;var over=D.wwlPlayers.topOver||[];var under=D.wwlPlayers.topUnder||[];var ph='<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;"><div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--win);margin-bottom:8px;">📈 Top Scorers</div>';over.forEach(function(p){ph+='<div class="wwl-item"><span class="pos-tag pos-'+p.pos+'">'+p.pos+'</span><div style="flex:1;margin-left:8px;"><div style="font-size:12px;">'+p.name+'</div><div style="font-size:11px;color:var(--muted);">'+p.owner+'</div></div><span class="wwl-val pos">'+fmt(p.pts)+'</span></div>';});ph+='</div><div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">📉 Lowest Scorers</div>';under.forEach(function(p){ph+='<div class="wwl-item"><span class="pos-tag pos-'+p.pos+'">'+p.pos+'</span><div style="flex:1;margin-left:8px;"><div style="font-size:12px;">'+p.name+'</div><div style="font-size:11px;color:var(--muted);">'+p.owner+'</div></div><span class="wwl-val neg">'+fmt(p.pts)+'</span></div>';});ph+='</div></div>';document.getElementById('wwl-players').innerHTML=ph;}
+function buildTopPlayers(){var wks=Object.keys(D.weeklyTopPlayers).map(Number).sort(function(a,b){return a-b;});var html='<div class="top-players-grid">';wks.forEach(function(wk){var pl=D.weeklyTopPlayers[wk];var t=D.teams.find(function(tm){return tm.name===pl.owner;});html+='<div class="tp-card"><div class="tp-week">Week '+wk+' Best</div><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">'+(t?av(t,'avatar-sm'):'')+'<span class="pos-tag pos-'+pl.pos+'">'+pl.pos+'</span></div><div class="tp-name">'+pl.name+'</div><div class="tp-team">'+pl.owner+'</div><div class="tp-score">'+fmt(pl.pts)+'</div></div>';});document.getElementById('topplayers-content').innerHTML=html+'</div>';}
+function buildTrends(){var weeks=[];for(var w=1;w<=D.week;w++)weeks.push(w);document.getElementById('trends-meta').textContent='Weeks 1–'+D.week+' · '+D.teams.length+' Teams';var W=700,H=300,pL=40,pB=36,pT=20,pR=16,iW=W-pL-pR,iH=H-pB-pT;var allPts=[];D.teams.forEach(function(t){for(var wi=0;wi<weeks.length;wi++)allPts.push((D.weeklyScores[t.id]||[])[wi]||0);});var minP=Math.min.apply(null,allPts)-20,maxP=Math.max.apply(null,allPts)+20;var grid='',xl='',lines='';for(var gi=0;gi<=5;gi++){var gv=minP+(maxP-minP)*gi/5;var gy=pT+iH-iH*gi/5;grid+='<line x1="'+pL+'" y1="'+gy.toFixed(1)+'" x2="'+(W-pR)+'" y2="'+gy.toFixed(1)+'" stroke="rgba(255,255,255,0.05)" stroke-width="1"/><text x="'+(pL-5)+'" y="'+(gy+4).toFixed(1)+'" text-anchor="end" fill="#5a5878" font-size="9" font-family="IBM Plex Mono">'+gv.toFixed(0)+'</text>';}for(var wii=0;wii<weeks.length;wii++){var lx=pL+(weeks.length>1?wii/(weeks.length-1)*iW:0);xl+='<text x="'+lx.toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle" fill="#5a5878" font-size="9" font-family="IBM Plex Mono">'+weeks[wii]+'</text>';grid+='<line x1="'+lx.toFixed(1)+'" y1="'+pT+'" x2="'+lx.toFixed(1)+'" y2="'+(H-pB)+'" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>';}var legend='';D.teams.forEach(function(t){var pts='';for(var pti=0;pti<weeks.length;pti++){var s=(D.weeklyScores[t.id]||[])[pti]||0;var px=pL+(weeks.length>1?pti/(weeks.length-1)*iW:0);var py=(1-(s-minP)/(maxP-minP))*iH+pT;pts+=px.toFixed(1)+','+py.toFixed(1)+' ';}lines+='<polyline points="'+pts.trim()+'" fill="none" stroke="'+tc(t.id)+'" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"/>';legend+='<div style="display:flex;align-items:center;gap:5px;"><div style="width:12px;height:3px;background:'+tc(t.id)+';border-radius:2px;"></div><span style="font-size:10px;color:var(--muted);">'+t.name+'</span></div>';});document.getElementById('chart-trends-wrap').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block;">'+grid+lines+xl+'</svg>';document.getElementById('trends-legend').innerHTML=legend;var ppgData=D.teams.slice().map(function(t){return{team:t,ppg:t.pf/D.week};});ppgData.sort(function(a,b){return b.ppg-a.ppg;});var maxPPG=ppgData[0]?ppgData[0].ppg:1;var ppgH='';ppgData.forEach(function(pd){ppgH+='<div style="display:flex;align-items:center;gap:12px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.04);">'+av(pd.team,'avatar-sm')+'<span style="flex:1;font-size:13px;">'+pd.team.name+'</span><div style="flex:2;height:6px;background:var(--s3);border-radius:3px;overflow:hidden;"><div style="height:100%;width:'+(pd.ppg/maxPPG*100).toFixed(0)+'%;background:'+tc(pd.team.id)+';border-radius:3px;"></div></div><span style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;color:var(--orange);min-width:44px;text-align:right;">'+pd.ppg.toFixed(1)+'</span></div>';});document.getElementById('ppg-bars').innerHTML=ppgH;}
+function buildLuck(){var weeks=[];for(var w=1;w<=D.week;w++)weeks.push(w);var expW={};D.teams.forEach(function(t){expW[t.id]=0;});for(var wi=0;wi<weeks.length;wi++){var wkS=D.teams.map(function(t){return{id:t.id,pts:(D.weeklyScores[t.id]||[])[wi]||0};});var ss=wkS.slice().sort(function(a,b){return a.pts-b.pts;});for(var si=0;si<wkS.length;si++){var rk=0;for(var ri=0;ri<ss.length;ri++){if(ss[ri].id===wkS[si].id){rk=ri;break;}}expW[wkS[si].id]+=rk/(D.teams.length-1);}}var data=D.teams.map(function(t){return{team:t,actual:t.wins,expected:parseFloat(expW[t.id].toFixed(1)),diff:parseFloat((t.wins-expW[t.id]).toFixed(1))};});data.sort(function(a,b){return b.diff-a.diff;});var maxAbs=Math.max.apply(null,data.map(function(d){return Math.abs(d.diff);}));maxAbs=Math.max(maxAbs,1);var W=660,rowH=30,padL=140,padR=80,padT=10,cX=padL+((W-padL-padR)/2),iW2=W-padL-padR,H=data.length*rowH+padT*2;var svg='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block;"><line x1="'+cX+'" y1="0" x2="'+cX+'" y2="'+H+'" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="4,4"/>';data.forEach(function(d,di){var cy=padT+di*rowH+rowH/2;var bh=rowH*0.55;var bw=(Math.abs(d.diff)/maxAbs)*(iW2/2);var bx=d.diff>=0?cX:cX-bw;var col=d.diff>=0?'#22c55e':'#ef4444';svg+='<rect x="'+bx.toFixed(1)+'" y="'+(cy-bh/2).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+bh.toFixed(1)+'" fill="'+col+'" opacity="0.8" rx="3"/><text x="'+(padL-8)+'" y="'+(cy+4).toFixed(1)+'" text-anchor="end" fill="#c8c6d8" font-size="11" font-family="IBM Plex Sans">'+d.team.name.split(' ').slice(0,2).join(' ')+'</text>';var valX=d.diff>=0?cX+bw+5:cX-bw-5;svg+='<text x="'+valX.toFixed(1)+'" y="'+(cy+4).toFixed(1)+'" text-anchor="'+(d.diff>=0?'start':'end')+'" fill="'+col+'" font-size="11" font-family="IBM Plex Mono" font-weight="500">'+(d.diff>0?'+':'')+d.diff.toFixed(1)+'</text>';});svg+='</svg>';document.getElementById('chart-luck-wrap').innerHTML=svg;var lH='';data.forEach(function(ld){var pos=ld.diff>0,neg=ld.diff<0;lH+='<div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.04);">'+av(ld.team,'avatar-sm')+'<span style="flex:1;font-size:13px;">'+ld.team.name+'</span><span style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--muted);">'+ld.actual+'–'+(D.week-ld.actual)+'</span><span style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--dim);margin-left:8px;">exp '+ld.expected+'</span><span style="font-family:\'IBM Plex Mono\',monospace;font-size:13px;font-weight:500;min-width:52px;text-align:right;color:'+(pos?'var(--win)':neg?'var(--loss)':'var(--muted)')+';">'+(ld.diff>0?'+':'')+ld.diff.toFixed(1)+'</span></div>';});document.getElementById('luck-rows').innerHTML=lH;}
+function buildPlayerTrends(){var up=D.playerTrends.up||[];var down=D.playerTrends.down||[];var uH='';up.forEach(function(p){uH+='<div class="trend-row"><span style="font-size:16px;color:var(--win);width:20px;text-align:center;">▲</span><span class="pos-tag pos-QB">'+p.pos+'</span><div class="trend-info" style="margin-left:8px;"><div class="trend-name">'+p.name+'</div><div class="trend-detail">'+p.seasonAvg.toFixed(1)+' → '+p.recentAvg.toFixed(1)+' pts avg</div></div><div class="trend-delta up">+'+p.delta.toFixed(1)+'</div></div>';});if(!uH)uH='<div style="color:var(--muted);font-size:12px;">Need 4+ weeks of data</div>';var dH='';down.forEach(function(p){dH+='<div class="trend-row"><span style="font-size:16px;color:var(--loss);width:20px;text-align:center;">▼</span><span class="pos-tag pos-TE">'+p.pos+'</span><div class="trend-info" style="margin-left:8px;"><div class="trend-name">'+p.name+'</div><div class="trend-detail">'+p.seasonAvg.toFixed(1)+' → '+p.recentAvg.toFixed(1)+' pts avg</div></div><div class="trend-delta down">'+p.delta.toFixed(1)+'</div></div>';});if(!dH)dH='<div style="color:var(--muted);font-size:12px;">Need 4+ weeks of data</div>';document.getElementById('trends-up').innerHTML=uH;document.getElementById('trends-down').innerHTML=dH;}
+function buildRecords(){var hG={pts:0,team:null,wk:0},lG={pts:9999,team:null,wk:0},bW={margin:0,w:null,l:null,wk:0},cG={margin:9999,w:null,l:null,wk:0},hT={total:0,t1:null,t2:null,wk:0};var wks=Object.keys(D.matchups).map(Number);wks.forEach(function(wk){D.matchups[wk].forEach(function(m){var t1=gt(m[0]),t2=gt(m[1]);var mg=Math.abs(m[2]-m[3]);var w=m[2]>m[3]?t1:t2,l=m[2]>m[3]?t2:t1;var tot=m[2]+m[3];if(m[2]>hG.pts)hG={pts:m[2],team:t1,wk:wk};if(m[3]>hG.pts)hG={pts:m[3],team:t2,wk:wk};if(m[2]<lG.pts)lG={pts:m[2],team:t1,wk:wk};if(m[3]<lG.pts)lG={pts:m[3],team:t2,wk:wk};if(mg>bW.margin)bW={margin:parseFloat(mg.toFixed(1)),w:w,l:l,wk:wk};if(mg<cG.margin)cG={margin:parseFloat(mg.toFixed(1)),w:w,l:l,wk:wk};if(tot>hT.total)hT={total:parseFloat(tot.toFixed(1)),t1:t1,t2:t2,wk:wk};});});var maxPF=Math.max.apply(null,D.teams.map(function(t){return t.pf;})),minPF=Math.min.apply(null,D.teams.map(function(t){return t.pf;}));var topT=D.teams.reduce(function(a,b){return a.pf>b.pf?a:b;},D.teams[0]||{name:'',pf:0});var botT=D.teams.reduce(function(a,b){return a.pf<b.pf?a:b;},D.teams[0]||{name:'',pf:0});var lS=D.teams.reduce(function(a,b){return parseInt(b.streak.slice(1))>parseInt(a.streak.slice(1))?b:a;},D.teams[0]||{name:'',streak:'W0'});var cards=[{icon:'🏆',lbl:'Highest Single Score',val:fmt(hG.pts),team:hG.team?hG.team.name:'',ctx:'Week '+hG.wk},{icon:'📉',lbl:'Lowest Single Score',val:fmt(lG.pts),team:lG.team?lG.team.name:'',ctx:'Week '+lG.wk},{icon:'💥',lbl:'Biggest Blowout',val:'+'+fmt(bW.margin),team:bW.w?bW.w.name:'',ctx:'vs '+(bW.l?bW.l.name:'')+' · Wk '+bW.wk},{icon:'😰',lbl:'Closest Game',val:'+'+fmt(cG.margin),team:cG.w?cG.w.name:'',ctx:'vs '+(cG.l?cG.l.name:'')+' · Wk '+cG.wk},{icon:'🔥',lbl:'Highest Scoring Matchup',val:fmt(hT.total),team:(hT.t1?hT.t1.name:'')+' vs '+(hT.t2?hT.t2.name:''),ctx:'Week '+hT.wk},{icon:'⚡',lbl:'Longest Streak',val:lS.streak,team:lS.name,ctx:parseInt(lS.streak.slice(1))+'-game'},{icon:'📊',lbl:'Most Pts Scored',val:maxPF.toLocaleString(),team:topT.name,ctx:'Season total'},{icon:'🥶',lbl:'Fewest Pts Scored',val:minPF.toLocaleString(),team:botT.name,ctx:'Season total'}];var html='<div class="records-grid">';cards.forEach(function(c){html+='<div class="record-card"><span class="record-icon">'+c.icon+'</span><div class="record-lbl">'+c.lbl+'</div><div class="record-val">'+c.val+'</div><div class="record-team">'+c.team+'</div><div class="record-ctx">'+c.ctx+'</div></div>';});document.getElementById('records-content').innerHTML=html+'</div>';}
+function buildAwards(){if(!D.teams.length)return;var sorted=D.teams.slice().sort(function(a,b){return b.wins-a.wins||b.pf-a.pf;});var ppgS=D.teams.slice().sort(function(a,b){return b.pf-a.pf;});var weeks=[];for(var w=1;w<=D.week;w++)weeks.push(w);var expW2={};D.teams.forEach(function(t){expW2[t.id]=0;});for(var wi=0;wi<weeks.length;wi++){var wkS2=D.teams.map(function(t){return{id:t.id,pts:(D.weeklyScores[t.id]||[])[wi]||0};});var ss2=wkS2.slice().sort(function(a,b){return a.pts-b.pts;});for(var si2=0;si2<wkS2.length;si2++){var rk2=0;for(var ri2=0;ri2<ss2.length;ri2++){if(ss2[ri2].id===wkS2[si2].id){rk2=ri2;break;}}expW2[wkS2[si2].id]+=rk2/(D.teams.length-1);}}var luckD=D.teams.map(function(t){return{team:t,diff:parseFloat((t.wins-expW2[t.id]).toFixed(1))};});luckD.sort(function(a,b){return b.diff-a.diff;});var txnS=[];for(var k in D.transactions)txnS.push({name:k,total:D.transactions[k]});txnS.sort(function(a,b){return b.total-a.total;});var cl={};D.teams.forEach(function(t){cl[t.id]=0;});Object.keys(D.matchups).map(Number).forEach(function(wk){D.matchups[wk].forEach(function(m){if(Math.abs(m[2]-m[3])<10){var lid=m[2]>m[3]?m[1]:m[0];cl[lid]=(cl[lid]||0)+1;}});});var hb=D.teams.reduce(function(a,b){return(cl[b.id]||0)>(cl[a.id]||0)?b:a;},D.teams[0]);var topWk=Object.values(D.weeklyTopPlayers);topWk.sort(function(a,b){return b.pts-a.pts;});var histChamps={};D.history.forEach(function(h){var owner=h.standings[0]?h.standings[0].owner:'';if(owner)histChamps[owner]=(histChamps[owner]||0)+1;});var mostTitles=D.teams.reduce(function(a,b){return(histChamps[b.owner]||0)>(histChamps[a.owner]||0)?b:a;},D.teams[0]);var tA=[{icon:'🥇',title:'Best Record',winner:sorted[0].name,val:sorted[0].wins+'-'+sorted[0].losses,ctx:'League leader Wk '+D.week,cls:'gold-card'},{icon:'🎯',title:'Points King',winner:ppgS[0].name,val:ppgS[0].pf.toLocaleString(),ctx:'Most total pts scored',cls:'gold-card'},{icon:'💪',title:'Iron Fortress',winner:D.teams.reduce(function(a,b){return a.pa<b.pa?a:b;}).name,val:D.teams.reduce(function(a,b){return a.pa<b.pa?a:b;}).pa.toLocaleString(),ctx:'Fewest pts allowed',cls:'green-card'},{icon:'🔥',title:'On Fire',winner:D.teams.reduce(function(a,b){return parseInt(b.streak.slice(1))>parseInt(a.streak.slice(1))?b:a;}).name,val:D.teams.reduce(function(a,b){return parseInt(b.streak.slice(1))>parseInt(a.streak.slice(1))?b:a;}).streak,ctx:'Longest active streak',cls:''}];var pA=topWk.length?[{icon:'⭐',title:'Season Top Scorer',winner:topWk[0].name,val:fmt(topWk[0].pts),ctx:topWk[0].owner,cls:'gold-card'},{icon:'📈',title:'Trending Up',winner:(D.playerTrends.up[0]||{name:'N/A'}).name,val:(D.playerTrends.up[0]?'+'+D.playerTrends.up[0].delta.toFixed(1):'—'),ctx:'Last 3 wks vs season avg',cls:'green-card'},{icon:'📉',title:'Trending Down',winner:(D.playerTrends.down[0]||{name:'N/A'}).name,val:(D.playerTrends.down[0]?D.playerTrends.down[0].delta.toFixed(1):'—'),ctx:'Last 3 wks vs season avg',cls:'red-card'}]:[{icon:'⭐',title:'Top Scorer',winner:'No data yet',val:'—',ctx:'Need matchup player data',cls:'gold-card'}];var fA=[{icon:'🍀',title:'Luckiest Team',winner:luckD[0].team.name,val:'+'+luckD[0].diff.toFixed(1),ctx:'Wins above expected record',cls:'green-card'},{icon:'😤',title:'Most Robbed',winner:luckD[luckD.length-1].team.name,val:luckD[luckD.length-1].diff.toFixed(1),ctx:'Wins below expected record',cls:'red-card'},{icon:'🔄',title:'Transaction King',winner:txnS[0]?txnS[0].name:'—',val:txnS[0]?''+txnS[0].total:'—',ctx:'Total moves this season',cls:'violet-card'},{icon:'💀',title:'Heartbreak Award',winner:hb?hb.name:'—',val:hb?(cl[hb.id]||0)+'':'—',ctx:'Losses by fewer than 10 pts',cls:'red-card'},{icon:'😴',title:'Couch Coach',winner:txnS[txnS.length-1]?txnS[txnS.length-1].name:'—',val:txnS[txnS.length-1]?''+txnS[txnS.length-1].total:'—',ctx:'Fewest transactions all year',cls:''},{icon:'👑',title:'Dynasty King',winner:mostTitles&&(histChamps[mostTitles.owner]||0)>0?mostTitles.name:'First season',val:(histChamps[mostTitles&&mostTitles.owner]||0)>0?(histChamps[mostTitles.owner]||0)+'':'—',ctx:'Championships in league history',cls:'gold-card'}];function ra(arr){var h='';arr.forEach(function(a){h+='<div class="award-card '+(a.cls||'')+'"><span class="award-icon">'+a.icon+'</span><div class="award-title">'+a.title+'</div><div class="award-winner">'+a.winner+'</div><div class="award-val">'+a.val+'</div><div class="award-ctx">'+a.ctx+'</div></div>';});return h;}document.getElementById('awards-teams').innerHTML=ra(tA);document.getElementById('awards-players').innerHTML=ra(pA);document.getElementById('awards-fun').innerHTML=ra(fA);}
+function buildMVPs(){var wks=Object.keys(D.matchups).map(Number).sort(function(a,b){return a-b;});var html='';wks.forEach(function(wk){var ms=D.matchups[wk];var best={pts:0,team:null,margin:0};ms.forEach(function(m){if(m[2]>best.pts){best={pts:m[2],team:gt(m[0]),margin:parseFloat((m[2]-m[3]).toFixed(1))};}if(m[3]>best.pts){best={pts:m[3],team:gt(m[1]),margin:parseFloat((m[3]-m[2]).toFixed(1))};}});if(best.team)html+='<div class="mvp-row"><div class="mvp-wk">WK '+wk+'</div>'+av(best.team)+'<div class="mvp-info"><div class="mvp-name">'+best.team.name+'</div><div class="mvp-owner">'+best.team.owner+'</div></div><div><div class="mvp-score">'+fmt(best.pts)+'</div><div class="mvp-margin">+'+fmt(best.margin)+' margin</div></div></div>';});document.getElementById('mvp-timeline').innerHTML=html||'<div style="color:var(--muted);font-size:12px;">No matchup data</div>';}
+function buildPlayoff(){var sorted=D.teams.slice().sort(function(a,b){return b.wins-a.wins||b.pf-a.pf;});var wL=D.totalWeeks-D.week;var cW=sorted[D.playoffSpots]?sorted[D.playoffSpots].wins:0;var inH='',outH='';for(var i=0;i<Math.min(D.playoffSpots,sorted.length);i++){var t=sorted[i];var magic=Math.max(0,cW+1-t.wins);var clinched=magic===0||(t.wins-cW)>wL;inH+='<div class="pf-row"><div class="pf-num">'+(i+1)+'</div>'+av(t)+'<div class="pf-info"><div class="pf-name">'+t.name+'</div><div class="pf-record">'+t.wins+'–'+t.losses+' · '+t.pf.toLocaleString()+'</div></div><div class="pf-magic">'+(clinched?'<span class="clinch-badge">CLINCHED</span>':'<div class="magic-num">'+magic+'</div><div class="magic-lbl">Magic #</div>')+'</div></div>';}for(var j=D.playoffSpots;j<sorted.length;j++){var ot=sorted[j];var behind=cW-ot.wins;var elim=behind>wL;outH+='<div class="pf-row"><div class="pf-num" style="color:var(--muted);">'+(j+1)+'</div>'+av(ot)+'<div class="pf-info"><div class="pf-name" style="color:var(--muted);">'+ot.name+'</div><div class="pf-record">'+ot.wins+'–'+ot.losses+'</div></div><div class="pf-magic">'+(elim?'<span class="elim-badge">ELIMINATED</span>':'<div style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;color:var(--loss);">GB: '+behind+'</div>')+'</div></div>';}var cut=sorted[D.playoffSpots-1],nxt=sorted[D.playoffSpots],gap=cut&&nxt?cut.wins-nxt.wins:0;document.getElementById('playoff-content').innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;"><div class="card" style="margin:0;"><div class="card-hd"><div class="card-title" style="color:var(--win);">▲ Playoff Field</div></div><div class="card-body" style="padding:8px 14px;">'+inH+'</div></div><div class="card" style="margin:0;"><div class="card-hd"><div class="card-title" style="color:var(--loss);">▼ On the Outside</div></div><div class="card-body" style="padding:8px 14px;">'+outH+'</div></div></div><div class="card"><div class="card-hd"><div class="card-title">Scenarios</div></div><div class="card-body"><p style="font-size:13px;color:var(--text2);line-height:1.9;">📌 <strong style="color:var(--orange);">Cutline:</strong> '+(cut?cut.name:'')+' last <span class="pill pill-in">IN</span> · '+(nxt?nxt.name:'')+' first <span class="pill pill-out">OUT</span> — gap of <strong>'+gap+'</strong> win'+(gap!==1?'s':'')+'.</p><p style="font-size:13px;color:var(--text2);">📅 <strong style="color:var(--orange);">'+wL+' weeks</strong> remaining.</p></div></div>';}
+function buildTrades(){document.getElementById('trade-ct').textContent=D.trades.length+' trades this season';var html='';D.trades.forEach(function(t){var aA=t.aGets.map(function(a){return'<div class="trade-asset '+(a.match(/\d{4}/)?'pick':'')+'">'+ a+'</div>';}).join('');var bA=t.bGets.map(function(a){return'<div class="trade-asset '+(a.match(/\d{4}/)?'pick':'')+'">'+ a+'</div>';}).join('');html+='<div class="trade-item"><div class="trade-hd"><span class="trade-date">'+t.date+', '+D.season+'</span><span class="trade-badge">Trade</span></div><div class="trade-body"><div class="trade-side"><div class="trade-side-lbl">'+t.teamA+' Gets</div>'+aA+'</div><div class="trade-side"><div class="trade-side-lbl">'+t.teamB+' Gets</div>'+bA+'</div></div></div>';});document.getElementById('trade-log').innerHTML=html||'<span style="color:var(--muted);font-size:12px;">No trades found</span>';}
+
+/* ════════════════════════════
+   HISTORICAL CONTEXT FOR AI
+════════════════════════════ */
+function buildHistCtx(){
+  if(!D.history||!D.history.length)return '';
+  var ctx='\n\nLEAGUE HISTORY:\n';
+  D.history.forEach(function(h){ctx+='--- '+h.season+' Champion: '+h.champion+' --- ';ctx+=h.standings.slice(0,5).map(function(s,i){return(i+1)+'. '+s.name+' ('+s.wins+'-'+s.losses+')';}).join(' | ');ctx+='\n';});
+  ctx+='\nOwner Multi-Year Records:\n';
+  var ownerHist={};D.history.forEach(function(h){h.standings.forEach(function(s,i){if(!ownerHist[s.owner])ownerHist[s.owner]=[];ownerHist[s.owner].push({season:h.season,finish:i+1});});});
+  D.teams.forEach(function(t){var hist=ownerHist[t.owner];if(hist&&hist.length){ctx+=t.owner+' ('+t.name+'): '+hist.map(function(h){return h.season+': #'+h.finish;}).join(', ')+'\n';}});
+  return ctx;
+}
+
+/* ════════════════════════════
+   PRO GENERATION
+════════════════════════════ */
+function gen(section,btn){
   btn.disabled=true;btn.textContent='…';
   document.getElementById('ph-'+section).style.display='none';
   document.getElementById('spin-'+section).classList.add('on');
@@ -1133,21 +1329,38 @@ function generateContent(section,btn){
 }
 
 function buildPrompt(section){
-  var standings=D.teams.map(function(t,i){return(i+1)+'. '+t.name+' ('+t.wins+'-'+t.losses+') — '+t.pf+' pts';}).join('\n');
+  var histCtx=buildHistCtx();
+  var standings=D.teams.map(function(t,i){return(i+1)+'. '+t.name+' ('+t.wins+'-'+t.losses+', '+t.pf.toFixed(0)+'pts, streak:'+t.streak+')';}).join('\n');
   var ms=D.matchups[D.week]||[];
-  var lines=ms.map(function(m){var t1=gt(m[0]),t2=gt(m[1]),p1=m[2],p2=m[3];var w=p1>p2?t1:t2,l=p1>p2?t2:t1;return w.name+' def. '+l.name+' '+Math.max(p1,p2).toFixed(1)+'–'+Math.min(p1,p2).toFixed(1);}).join('\n');
-  if(section==='weekly')return'You are an entertaining fantasy football analyst writing a weekly digest for a dynasty league commissioner.\n\nLEAGUE: '+D.leagueName+' | Week '+D.week+' | '+D.season+'\n\nRESULTS:\n'+lines+'\n\nSTANDINGS:\n'+standings+'\n\nWrite an engaging Weekly Digest with a creative headline, recap of every game (1-2 sentences each), Performance of the Week, and 2 storylines to watch. Sports journalism style. Bold key team names.';
-  if(section==='rankings'){var td=D.teams.map(function(t,i){return(i+1)+'. '+t.name+' ('+t.wins+'-'+t.losses+') '+t.pf+' pts streak:'+t.streak;}).join('\n');return'Dynasty fantasy football power rankings analyst.\n\nLEAGUE: '+D.leagueName+' | After Week '+D.week+'\n\nTEAMS:\n'+td+'\n\nWrite honest rankings 1–'+D.teams.length+'. Each: bold name + all-caps tagline, 2-3 sentences analysis, end with ↑ Rising / ↓ Falling / → Locked In. Add Bottom Line paragraph. Be direct and opinionated.';}
-  if(section==='aitrades'){var tl=D.trades.map(function(t,i){return'Trade '+(i+1)+' ('+t.date+'): '+t.teamA+' got '+t.aGets.join(', ')+' | '+t.teamB+' got '+t.bGets.join(', ');}).join('\n');return'Dynasty trade analyst.\n\nLEAGUE: '+D.leagueName+' | Through Week '+D.week+'\n\nTRADES:\n'+tl+'\n\nSTANDINGS: '+standings+'\n\nWrite trade analysis: Trade of the Year, Biggest Win, Toughest Loss, Most Active Trader, Trade Market Outlook. Be specific and opinionated.';}
-  if(section==='aidraft'){var pl=Object.keys(D.picks).map(function(team){return team+': '+D.picks[team].map(function(p){return p.yr+' R'+p.rd+(p.o!=='Own'?' ('+p.o+')':'');}).join(', ');}).join('\n');return'Dynasty draft capital analyst.\n\nLEAGUE: '+D.leagueName+' | '+D.season+'\n\nPICKS:\n'+pl+'\n\nSTANDINGS:\n'+standings+'\n\nDraft capital report: 3 pick-richest, 2 pick-poorest, most valuable single pick, Rebuilding vs Contending for every team, Draft Strategy Preview.';}
+  var results=ms.map(function(m){var t1=gt(m[0]),t2=gt(m[1]),p1=m[2],p2=m[3];var w=p1>p2?t1:t2,l=p1>p2?t2:t1;return w.name+' ('+teamEmoji(w.name)+') def. '+l.name+' ('+teamEmoji(l.name)+') '+Math.max(p1,p2).toFixed(1)+'–'+Math.min(p1,p2).toFixed(1)+' [margin: '+Math.abs(p1-p2).toFixed(1)+']';}).join('\n');
+
+  if(section==='recap'){
+    return 'You are a hilarious fantasy football analyst writing a FUNNY weekly matchup recap for a dynasty league. Be like a sports comedian — roast the losers, hype the winners, use sports banter.\n\nLEAGUE: '+D.leagueName+' | Week '+D.week+' | '+D.season+'\n\nWEEK '+D.week+' RESULTS:\n'+results+'\n\nSTANDINGS:\n'+standings+histCtx+'\n\nWrite a FUNNY Week '+D.week+' Recap. For EACH matchup write:\n- A creative punny headline (use team names/emojis)\n- 2-3 funny sentences roasting the loser and hyping the winner\n- A short "quote" from the winning manager (made up, funny)\n\nEnd with a "Power Move of the Week" calling out the funniest/best moment.\n\nBe irreverent, use humor, emojis, fantasy football slang. Make it something people will screenshot and share. Bold team names.';}
+
+  if(section==='preview'){
+    var nextWeek=D.week+1;
+    var previews=ms.map(function(m){var t1=gt(m[0]),t2=gt(m[1]);var o=calcOdds(t1,t2);var fav=o.t1fav?t1:t2,dog=o.t1fav?t2:t1;return 'Week '+nextWeek+' - '+t1.name+' vs '+t2.name+' | Spread: '+fav.name+' -'+o.spread+' | O/U: '+o.ou+' | '+fav.name+' is '+t1.pf.toFixed(0)+'pts this season, '+dog.name+' is '+t2.pf.toFixed(0)+'pts';}).join('\n');
+    return 'You are a fantasy football analyst writing a hype Week '+nextWeek+' matchup preview with trash talk potential.\n\nLEAGUE: '+D.leagueName+' | Previewing Week '+nextWeek+'\n\nUPCOMING MATCHUPS WITH LINES:\n'+previews+'\n\nCURRENT STANDINGS:\n'+standings+histCtx+'\n\nWrite a matchup preview for Week '+nextWeek+'. For each matchup:\n- Bold headline naming both teams\n- The story/narrative of the matchup (what\'s at stake, who has momentum)\n- A trash talk angle each manager could use\n- A "Pick" recommendation with reasoning\n\nEnd with "Game of the Week" calling out the most important matchup.\n\nUse sports preview style — confident picks, big narratives. Reference streaks and history where relevant. Bold team names.';}
+
+  if(section==='waiver'){
+    var adds=D.recentWaiverMoves.filter(function(m){return m.type==='add';});var drops=D.recentWaiverMoves.filter(function(m){return m.type==='drop';});
+    var addLines=adds.slice(0,10).map(function(m){return m.owner+' added '+m.player+' ('+m.pos+', '+m.team+') on '+m.date;}).join('\n');
+    var dropLines=drops.slice(0,8).map(function(m){return m.owner+' dropped '+m.player+' ('+m.pos+', '+m.team+') on '+m.date;}).join('\n');
+    return 'You are a dynasty fantasy football waiver wire analyst.\n\nLEAGUE: '+D.leagueName+' | Week '+D.week+' | '+D.season+'\n\nWAIVER ADDS THIS WEEK:\n'+(addLines||'No adds recorded')+'\n\nDROPS THIS WEEK:\n'+(dropLines||'No drops recorded')+'\n\nCURRENT STANDINGS:\n'+standings+histCtx+'\n\nWrite a Waiver Wire Report covering:\n\n**BEST PICKUP OF THE WEEK** — Who made the smartest add and why?\n\n**RISKIEST DROP** — Was anything dropped that could haunt a team?\n\n**MOST ACTIVE MANAGER** — Who\'s been wheeling and dealing on the wire?\n\n**TOP AVAILABLE TARGETS** — Based on trends and rosters, who should teams be targeting right now? (3-4 specific recommendations by position)\n\n**WAIVER STRATEGY** — 2-3 sentences on what the wire looks like heading into next week and what positions to prioritize.\n\nBe specific and actionable. Reference manager names and actual player names from the moves.';}
+
+  if(section==='weekly'){return 'You are an entertaining fantasy football analyst writing a weekly digest for a dynasty league commissioner.\n\nLEAGUE: '+D.leagueName+' | Week '+D.week+' | '+D.season+'\n\nRESULTS:\n'+results+'\n\nSTANDINGS:\n'+standings+histCtx+'\n\nWrite an engaging Weekly Digest with a creative headline, recap every game (1-2 sentences each), Performance of the Week, and 2 storylines to watch. Sports journalism style. Bold key team names.';}
+  if(section==='rankings'){var td=D.teams.map(function(t,i){return(i+1)+'. '+t.name+' ('+t.wins+'-'+t.losses+') '+t.pf.toFixed(0)+'pts streak:'+t.streak;}).join('\n');return 'Dynasty fantasy football power rankings analyst.\n\nLEAGUE: '+D.leagueName+' | After Week '+D.week+'\n\nTEAMS:\n'+td+histCtx+'\n\nWrite honest rankings 1–'+D.teams.length+'. Each: bold name + all-caps tagline, 2-3 sentences analysis (reference historical context where revealing), end with ↑ Rising / ↓ Falling / → Locked In. Add Bottom Line paragraph. Be direct and opinionated.';}
+  if(section==='aitrades'){var tl=D.trades.map(function(t,i){return'Trade '+(i+1)+' ('+t.date+'): '+t.teamA+' got '+t.aGets.join(', ')+' | '+t.teamB+' got '+t.bGets.join(', ');}).join('\n');return 'Dynasty trade analyst.\n\nLEAGUE: '+D.leagueName+' | Through Week '+D.week+'\n\nTRADES:\n'+tl+'\n\nSTANDINGS: '+standings+histCtx+'\n\nTrade analysis: Trade of the Year, Biggest Win, Toughest Loss, Most Active Trader, Trade Market Outlook. Be specific and opinionated.';}
+  if(section==='aidraft'){var picksSummary=D.teams.map(function(t){var picks=(D.fullPickHoldings[t.id]||[]);var r1s=picks.filter(function(p){return p.round===1;});var recv=picks.filter(function(p){return !p.isOwn;});return t.name+': '+picks.length+' total, '+r1s.length+' R1s, '+recv.length+' received ('+recv.map(function(p){return p.yr+' R'+p.round+' from '+gt(p.originalRosterId).name;}).join(', ')+')';}).join('\n');return 'Dynasty draft capital analyst.\n\nFULL PICK HOLDINGS:\n'+picksSummary+'\n\nSTANDINGS:\n'+standings+histCtx+'\n\nDraft capital report: 3 pick-richest teams, 2 pick-poorest, most valuable single pick, Rebuilding vs Contending for every team, Draft Strategy Preview.';}
   return '';
 }
 
 function mdToHtml(md){return md.replace(/^## (.+)$/gm,'<h2>$1</h2>').replace(/^### (.+)$/gm,'<h3>$1</h3>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/^↑ (.+)$/gm,'<span class="rising">↑ $1</span>').replace(/^↓ (.+)$/gm,'<span class="falling">↓ $1</span>').replace(/^→ (.+)$/gm,'<span class="steady">→ $1</span>').replace(/^---$/gm,'<hr>').replace(/^- (.+)$/gm,'<li>$1</li>').replace(/(<li>[^]*?<\/li>\n?)+/g,function(m){return'<ul>'+m+'</ul>';}).replace(/^(?!<[h234pulsi]|<hr)(.+)$/gm,'<p>$1</p>').replace(/<p><\/p>/g,'');}
-
 function copyPro(section){var text=proText[section];if(!text)return;navigator.clipboard.writeText(text).then(function(){var btn=document.getElementById('cp-'+section);btn.textContent='✓ Copied!';btn.classList.add('copied');setTimeout(function(){btn.textContent='📋 Copy';btn.classList.remove('copied');},2000);}).catch(function(){alert('Please copy manually.');});}
 
-/* ═══════════ NAV & SCREENS ═══════════ */
+/* ════════════════════════════
+   NAV & SCREENS
+════════════════════════════ */
 function go(tab){var tabs=document.querySelectorAll('.tab');for(var i=0;i<tabs.length;i++)tabs[i].classList.remove('active');var navs=document.querySelectorAll('.nav-item');for(var j=0;j<navs.length;j++)navs[j].classList.remove('active');var t=document.getElementById('tab-'+tab);if(t)t.classList.add('active');var n=document.getElementById('nav-'+tab);if(n)n.classList.add('active');}
 function showScreen(id){document.getElementById('screen-landing').style.display='none';document.getElementById('screen-dashboard').style.display=id==='dashboard'?'flex':'none';}
 function resetApp(){document.getElementById('screen-landing').style.display='flex';document.getElementById('screen-dashboard').style.display='none';document.getElementById('tb-demo').classList.add('hidden');go('overview');}
