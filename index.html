@@ -781,22 +781,68 @@ function setStep(id,st){var el=document.getElementById('step-'+id);if(el)el.clas
 function buildFullPickHoldings(tradedPicks,currentSeason,rounds){
   var holdings={};
   D.teams.forEach(function(t){holdings[t.id]=[];});
-  for(var s=0;s<D.futureSeasonsToShow;s++){
-    var yr=String(parseInt(currentSeason)+1+s);
+
+  /* Determine year range from traded picks + default future window */
+  var maxYr=parseInt(currentSeason)+2; /* at minimum show 2 future years */
+  tradedPicks.forEach(function(tp){
+    var y=parseInt(tp.season)||0;
+    if(y>maxYr)maxYr=y;
+  });
+  /* Cap at current+3 years ahead to avoid runaway future picks */
+  var capYr=parseInt(currentSeason)+3;
+  if(maxYr>capYr)maxYr=capYr;
+
+  /* Build lookup: for each (season, round), which picks have been traded */
+  /* Sleeper returns previous_owner_id (not original_roster_id) — handle both */
+  var tradedMap={};
+  tradedPicks.forEach(function(tp){
+    var yr=String(tp.season);var rd=tp.round;
+    var key=yr+'_'+rd;
+    if(!tradedMap[key])tradedMap[key]=[];
+    /* Use original_roster_id if present, else previous_owner_id */
+    var origId=tp.original_roster_id||tp.previous_owner_id||null;
+    tradedMap[key].push({
+      currentOwnerId:parseInt(tp.roster_id),
+      originalOwnerId:origId?parseInt(origId):null
+    });
+  });
+
+  /* Build full holdings year by year */
+  for(var yr=parseInt(currentSeason)+1;yr<=maxYr;yr++){
+    var yrStr=String(yr);
     for(var rd=1;rd<=rounds;rd++){
+      var key=yrStr+'_'+rd;
+      var trades=tradedMap[key]||[];
+
       D.teams.forEach(function(team){
-        var tradedEntry=null;
-        for(var ti=0;ti<tradedPicks.length;ti++){
-          var tp=tradedPicks[ti];
-          if(String(tp.season)===yr&&tp.round===rd&&tp.original_roster_id===team.id){tradedEntry=tp;break;}
+        /* Was this team's pick traded away? */
+        var tradedAway=false;
+        for(var ti=0;ti<trades.length;ti++){
+          if(trades[ti].originalOwnerId===team.id){tradedAway=true;break;}
         }
-        if(tradedEntry){
-          var cid=tradedEntry.roster_id;
-          if(!holdings[cid])holdings[cid]=[];
-          holdings[cid].push({yr:yr,round:rd,originalRosterId:team.id,isOwn:cid===team.id});
-        } else {
-          if(!holdings[team.id])holdings[team.id]=[];
-          holdings[team.id].push({yr:yr,round:rd,originalRosterId:team.id,isOwn:true});
+
+        /* Did this team receive picks for this slot? */
+        var received=[];
+        for(var ri=0;ri<trades.length;ri++){
+          if(trades[ri].currentOwnerId===team.id&&trades[ri].originalOwnerId!==team.id){
+            received.push(trades[ri]);
+          }
+        }
+
+        /* Own pick — still held */
+        if(!tradedAway){
+          holdings[team.id].push({
+            yr:yrStr,round:rd,originalRosterId:team.id,isOwn:true
+          });
+        }
+
+        /* Received picks from other teams */
+        for(var rci=0;rci<received.length;rci++){
+          holdings[team.id].push({
+            yr:yrStr,round:rd,
+            originalRosterId:received[rci].originalOwnerId||0,
+            isOwn:false
+          });
         }
       });
     }
@@ -846,7 +892,7 @@ function launch(){
   .then(function(league){
     leagueData=league;
     currentWeek=Math.max(1,parseInt((league.settings&&league.settings.leg)||1));
-    D.draftRounds=parseInt((league.settings&&league.settings.rounds)||4);
+    D.draftRounds = parseInt((league.settings&&league.settings.rounds)||3);
     allWeeks=[];for(var w=1;w<=currentWeek;w++)allWeeks.push(w);
     setStep('league','done');setStep('history','active');
     return fetchHistory(league.previous_league_id,[]);
