@@ -632,7 +632,7 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
         <div class="sec-hd">
           <div class="sec-eyebrow">Pro · Copy &amp; Share</div>
           <div class="sec-title">Waiver Wire <span class="accent">Report</span></div>
-          <div class="sec-desc">This week's waiver activity recap plus AI-generated analysis of the best moves, missed opportunities, and top available targets.</div>
+          <div class="sec-desc">Recent waiver and free agent activity plus AI-generated analysis of the best moves, missed opportunities, and offseason targets.</div>
         </div>
         <!-- Waiver activity log from transaction data -->
         <div class="card" style="margin-bottom:16px;">
@@ -1502,7 +1502,9 @@ function buildPreviewCards(){
 ════════════════════════════ */
 function buildWaiverLog(){
   var moves=D.recentWaiverMoves||[];
-  document.getElementById('waiver-meta').textContent=moves.length+' recent moves';
+  var isOffseason=D.gamesPlayed===0||D.gamesPlayed===1&&!Object.keys(D.weeklyTopPlayers).length;
+  var waiverLabel=isOffseason?'Recent offseason activity ('+moves.length+' moves)':'Week '+D.week+' activity ('+moves.length+' moves)';
+  document.getElementById('waiver-meta').textContent=waiverLabel;
   if(!moves.length){document.getElementById('waiver-log').innerHTML='<div style="color:var(--muted);font-size:13px;">No waiver activity found for this week</div>';return;}
   var adds=moves.filter(function(m){return m.type==='add';});
   var drops=moves.filter(function(m){return m.type==='drop';});
@@ -1756,8 +1758,8 @@ function buildPrompt(section){
     var drops=D.recentWaiverMoves.filter(function(m){return m.type==='drop';});
     var addLines=adds.slice(0,10).map(function(m){return m.owner+' added '+m.player+' ('+m.pos+', '+m.team+') on '+m.date;}).join('\n');
     var dropLines=drops.slice(0,8).map(function(m){return m.owner+' dropped '+m.player+' ('+m.pos+', '+m.team+') on '+m.date;}).join('\n');
-    return 'You are a dynasty fantasy football waiver wire analyst.\n\nLEAGUE: '+D.leagueName+' | Week '+D.week+baseCtx+'\n\nWAIVER ADDS:\n'+(addLines||'None')+'\n\nDROPS:\n'+(dropLines||'None')+'\n\nSTANDINGS:\n'+standings+rosterCtx+'\n\nWrite a Waiver Wire Report:\n**BEST PICKUP OF THE WEEK** — smartest add and why\n**RISKIEST DROP** — anything dropped that could backfire\n**MOST ACTIVE MANAGER** — who\'s working the wire hardest\n**TOP AVAILABLE TARGETS** — 3-4 specific recommendations by position considering each team\'s roster needs\n**WAIVER STRATEGY** — what positions to prioritize next week\n\nBe specific and actionable. Reference actual player stats and roster needs.';}
-
+    var waiverTimeCtx=D.gamesPlayed<=1?'OFFSEASON — analyzing recent offseason moves and roster construction':'Week '+D.week+' in-season wire';
+    return 'You are a dynasty fantasy football waiver wire analyst.\n\nLEAGUE: '+D.leagueName+' | '+waiverTimeCtx+baseCtx+'\n\nWAIVER ADDS:\n'
   if(section==='weekly'){
     return 'You are an entertaining fantasy football analyst writing a weekly digest for a dynasty league commissioner.\n\nLEAGUE: '+D.leagueName+' | Week '+D.week+' | '+D.season+baseCtx+'\n\nRESULTS:\n'+results+'\n\nSTANDINGS:\n'+standings+'\n\nWrite an engaging Weekly Digest with a creative headline, recap every game (1-2 sentences each referencing key player performances), Performance of the Week, and 2 storylines to watch. Sports journalism style. Bold key team names.';}
 
