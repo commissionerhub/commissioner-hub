@@ -1112,7 +1112,23 @@ function processData(league,users,rosters,mByWeek,allTxns,tradedPicks,players,cu
       if(pos==='DEF'){pg.DEF.push(name+' D/ST');}
       else if(pg[pos])pg[pos].push(name);
     });
-    pg.picks=(D.fullPickHoldings[t.id]||[]).slice();
+   pg.picks=(D.fullPickHoldings[t.id]||[]).slice();
+    /* Store pid→stats lookup for this roster */
+    pg._statsByPid={};
+    (t._pids||[]).forEach(function(pid){
+      if(playerSeasonStats&&playerSeasonStats[pid]){
+        pg._statsByPid[pid]=playerSeasonStats[pid];
+      }
+    });
+    /* Store pid→name for display */
+    pg._pidNames={};
+    (t._pids||[]).forEach(function(pid){
+      var pl=players[pid];
+      if(pl){
+        var name=pl.full_name||((pl.first_name||'')+(pl.last_name?' '+pl.last_name:'')).trim()||pid;
+        pg._pidNames[pid]=name;
+      }
+    });
     D.rosters[t.id]=pg;
   });
 
@@ -1489,27 +1505,26 @@ function buildScoringCtx(){
 
 /* ── FULL ROSTER CONTEXT FOR AI ── */
 function buildRosterCtx(team){
-  var r=D.rosters[team.id];if(!r)return team.name+': No roster data\n';
+  var r=D.rosters[team.id];
+  if(!r)return team.name+': No roster data\n';
   var out=team.name+' ('+team.owner+') '+team.wins+'-'+team.losses+':\n';
   var posOrder=['QB','RB','WR','TE','DEF'];
-  /* Get all player IDs with stats */
-  var allPids=[];
-  posOrder.forEach(function(pos){
-    (r[pos]||[]).forEach(function(name){
-      /* Find pid by matching name in players */
-      allPids.push({name:name,pos:pos});
-    });
+  var pidNames=r._pidNames||{};
+  var statsByPid=r._statsByPid||{};
+
+  /* Build reverse lookup name→pid */
+  var nameToPid={};
+  Object.keys(pidNames).forEach(function(pid){
+    nameToPid[pidNames[pid]]=pid;
   });
-  /* We stored player names in rosters — need pid lookup */
-  /* Use rosters._pids if available, else use names only */
+
   posOrder.forEach(function(pos){
     var pl=r[pos]||[];
     if(!pl.length)return;
     out+='  '+pos+': ';
     var playerStrs=pl.map(function(name){
-      /* Find stats by matching stored pid */
-      var pid=r._pidByName&&r._pidByName[name];
-      var stats=pid?D.playerSeasonStats[pid]:null;
+      var pid=nameToPid[name];
+      var stats=pid?statsByPid[pid]:null;
       if(stats&&stats.pts>0){
         return name+' ('+stats.pts+'pts, '+stats.avg+'/gm)';
       }
