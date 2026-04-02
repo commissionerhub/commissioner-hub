@@ -783,9 +783,20 @@ function buildFullPickHoldings(tradedPicks, currentSeason, rounds) {
   var holdings = {};
   D.teams.forEach(function(t) { holdings[t.id] = []; });
 
-  /* Step 1 — Determine which years to show.
-     Only show years that appear in traded_picks data,
-     plus the current season (upcoming rookie draft). */
+  /* KEY INSIGHT from raw Sleeper data:
+     roster_id = original team who owned the pick
+     owner_id  = current owner of the pick */
+
+  /* Build lookup keyed by season_round_rosterId → currentOwnerId */
+  var tradedLookup = {};
+  tradedPicks.forEach(function(tp) {
+    if (!tp.season || !tp.round || !tp.roster_id || !tp.owner_id) return;
+    var key = String(tp.season) + '_' + tp.round + '_' + parseInt(tp.roster_id);
+    tradedLookup[key] = parseInt(tp.owner_id);
+  });
+
+  /* Determine which years to show —
+     only years that appear in traded_picks, plus current season */
   var yearSet = {};
   yearSet[String(currentSeason)] = true;
   tradedPicks.forEach(function(tp) {
@@ -793,48 +804,37 @@ function buildFullPickHoldings(tradedPicks, currentSeason, rounds) {
   });
   var years = Object.keys(yearSet).sort();
 
-  /* Step 2 — Build a lookup of which picks were traded.
-     Key = season_round_originalRosterId (uniquely identifies every pick).
-     Value = current owner roster_id. */
-  var tradedLookup = {};
-  tradedPicks.forEach(function(tp) {
-    var origId = parseInt(tp.owner_id || tp.original_roster_id || tp.previous_owner_id || 0);
-    if (!origId || !tp.season || !tp.round) return;
-    var key = String(tp.season) + '_' + tp.round + '_' + origId;
-    tradedLookup[key] = parseInt(tp.roster_id);
-  });
-
-  /* Step 3 — Process each year and round.
-     For each team's pick in that slot:
-     - If it appears in tradedLookup, the original owner traded it away.
-       Add it to the CURRENT owner's holdings only.
-     - If it does NOT appear in tradedLookup, the original owner still has it.
-       Add it to their holdings as an own pick. */
-  var processed = {}; /* prevent double-adding received picks */
-
+  /* For every year × round × team:
+     - If team's pick appears in tradedLookup → it was traded away.
+       Add it ONLY to the current owner's holdings as a received pick.
+     - If NOT in tradedLookup → team still owns it. Add as own pick. */
   years.forEach(function(yr) {
     for (var rd = 1; rd <= rounds; rd++) {
       D.teams.forEach(function(team) {
         var key = yr + '_' + rd + '_' + team.id;
         if (tradedLookup.hasOwnProperty(key)) {
-          /* This team's pick was traded away */
           var currentOwnerId = tradedLookup[key];
-          var processedKey = key + '_' + currentOwnerId;
-          if (!processed[processedKey]) {
-            processed[processedKey] = true;
+          if (currentOwnerId !== team.id) {
+            /* Traded to someone else — add to current owner only */
             if (!holdings[currentOwnerId]) holdings[currentOwnerId] = [];
             holdings[currentOwnerId].push({
-              yr: yr,
-              round: rd,
+              yr: yr, round: rd,
               originalRosterId: team.id,
               isOwn: false
             });
+            /* Original team gets nothing — pick is gone */
+          } else {
+            /* Traded but back to same team */
+            holdings[team.id].push({
+              yr: yr, round: rd,
+              originalRosterId: team.id,
+              isOwn: true
+            });
           }
         } else {
-          /* Team still owns their own pick */
+          /* Never traded — team still owns their own pick */
           holdings[team.id].push({
-            yr: yr,
-            round: rd,
+            yr: yr, round: rd,
             originalRosterId: team.id,
             isOwn: true
           });
@@ -842,7 +842,7 @@ function buildFullPickHoldings(tradedPicks, currentSeason, rounds) {
       });
     }
   });
-  
+
   return holdings;
 }
 /* ════════════════════════════
