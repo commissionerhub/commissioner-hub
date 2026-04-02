@@ -1230,26 +1230,37 @@ function loadDemo(){
    BUILD ALL
 ════════════════════════════ */
 function debugPicks() {
-  var out = 'TRADED PICKS RAW DATA:\n\n';
-  var picks = D.tradedPicksRaw || [];
-  out += 'Total traded picks found: ' + picks.length + '\n\n';
-  if (picks.length === 0) {
-    out += 'NO TRADED PICKS RETURNED FROM SLEEPER\n';
-  }
-  picks.slice(0, 20).forEach(function(p, i) {
-    out += 'Pick ' + (i+1) + ':\n';
-    Object.keys(p).forEach(function(k) {
-      out += '  ' + k + ': ' + p[k] + '\n';
-    });
-    out += '\n';
-  });
+  var existing = document.getElementById('debug-panel');
+  if (existing) { existing.remove(); return; }
 
-  out += '\nTEAM ROSTER IDs:\n';
+  var panel = document.createElement('div');
+  panel.id = 'debug-panel';
+  panel.style.cssText = 'position:fixed;top:52px;right:0;width:500px;height:calc(100vh - 52px);background:#0a0a14;border-left:2px solid #ff6b2b;overflow-y:auto;z-index:9999;padding:16px;font-family:IBM Plex Mono,monospace;font-size:11px;color:#f0eef8;';
+
+  var out = '<div style="color:#ff6b2b;font-size:14px;margin-bottom:12px;">DEBUG — select all text below and copy</div>';
+  out += '<textarea style="width:100%;height:calc(100vh - 140px);background:#1a1a2e;color:#f0eef8;border:1px solid #3e3e56;padding:10px;font-family:IBM Plex Mono,monospace;font-size:10px;resize:none;" id="debug-text">';
+
+  var lines = '';
+  lines += 'TEAM ROSTER IDs:\n';
   D.teams.forEach(function(t) {
-    out += t.name + ' = roster_id ' + t.id + '\n';
+    lines += 'roster_id=' + t.id + ' → ' + t.name + ' (' + t.owner + ')\n';
   });
 
-  alert(out);
+  lines += '\nTOTAL TRADED PICKS: ' + (D.tradedPicksRaw||[]).length + '\n\n';
+
+  (D.tradedPicksRaw||[]).forEach(function(p, i) {
+    lines += 'Pick ' + (i+1) + ': season=' + p.season + ' round=' + p.round;
+    lines += ' roster_id=' + p.roster_id;
+    lines += ' owner_id=' + p.owner_id;
+    lines += ' previous_owner_id=' + p.previous_owner_id;
+    lines += '\n';
+  });
+
+  out += lines + '</textarea>';
+  out += '<button onclick="document.getElementById(\'debug-panel\').remove()" style="margin-top:8px;background:#ff6b2b;border:none;color:#fff;padding:6px 14px;cursor:pointer;font-family:IBM Plex Mono,monospace;border-radius:4px;">Close</button>';
+
+  panel.innerHTML = out;
+  document.body.appendChild(panel);
 }
   function buildAll(){
   buildOverview();buildStandings();buildRosters();buildCapital();
