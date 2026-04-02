@@ -1122,6 +1122,11 @@ function processData(league,users,rosters,mByWeek,allTxns,tradedPicks,players,cu
       else if(pg[pos])pg[pos].push(name);
     });
    pg.picks=(D.fullPickHoldings[t.id]||[]).slice();
+    /* Store which players are starters vs bench */
+    pg._starters={};
+    (t._starters||[]).forEach(function(pid){
+      if(pid&&pid!=='0')pg._starters[pid]=true;
+    });
     /* Store pid→stats lookup for this roster */
     pg._statsByPid={};
     (t._pids||[]).forEach(function(pid){
