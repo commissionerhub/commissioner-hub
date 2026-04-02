@@ -782,48 +782,57 @@ function buildFullPickHoldings(tradedPicks, currentSeason, rounds) {
   var holdings = {};
   D.teams.forEach(function(t) { holdings[t.id] = []; });
 
-  /* Determine year range from traded picks data */
-  /* Start from current season — upcoming rookie draft picks exist this year */
-  var minYr = parseInt(currentSeason);
-  /* Only extend beyond currentSeason+2 if traded picks actually exist there */
-  var maxYr = parseInt(currentSeason) + 2;
+  /* Step 1 — Determine which years to show.
+     Only show years that appear in traded_picks data,
+     plus the current season (upcoming rookie draft). */
+  var yearSet = {};
+  yearSet[String(currentSeason)] = true;
   tradedPicks.forEach(function(tp) {
-    var y = parseInt(tp.season) || 0;
-    if (y > maxYr && y <= parseInt(currentSeason) + 4) maxYr = y;
+    if (tp.season) yearSet[String(tp.season)] = true;
   });
+  var years = Object.keys(yearSet).sort();
 
-  /* Build ownership map keyed by (season_round_originalRosterId)
-     This uniquely identifies every single pick in the league.
-     Sleeper uses original_roster_id — fall back to previous_owner_id if missing */
-  var ownershipMap = {};
+  /* Step 2 — Build a lookup of which picks were traded.
+     Key = season_round_originalRosterId (uniquely identifies every pick).
+     Value = current owner roster_id. */
+  var tradedLookup = {};
   tradedPicks.forEach(function(tp) {
     var origId = parseInt(tp.original_roster_id || tp.previous_owner_id || 0);
-    if (!origId) return;
-    var key = tp.season + '_' + tp.round + '_' + origId;
-    ownershipMap[key] = parseInt(tp.roster_id);
+    if (!origId || !tp.season || !tp.round) return;
+    var key = String(tp.season) + '_' + tp.round + '_' + origId;
+    tradedLookup[key] = parseInt(tp.roster_id);
   });
 
-  /* For every future year × round × team, determine current ownership */
-  for (var yr = minYr; yr <= maxYr; yr++) {
-    var yrStr = String(yr);
+  /* Step 3 — Process each year and round.
+     For each team's pick in that slot:
+     - If it appears in tradedLookup, the original owner traded it away.
+       Add it to the CURRENT owner's holdings only.
+     - If it does NOT appear in tradedLookup, the original owner still has it.
+       Add it to their holdings as an own pick. */
+  var processed = {}; /* prevent double-adding received picks */
+
+  years.forEach(function(yr) {
     for (var rd = 1; rd <= rounds; rd++) {
       D.teams.forEach(function(team) {
-        var key = yrStr + '_' + rd + '_' + team.id;
-        if (ownershipMap.hasOwnProperty(key)) {
-          /* This team's pick was traded — add it to current owner only */
-          var currentOwnerId = ownershipMap[key];
-          if (!holdings[currentOwnerId]) holdings[currentOwnerId] = [];
-          holdings[currentOwnerId].push({
-            yr: yrStr,
-            round: rd,
-            originalRosterId: team.id,
-            isOwn: currentOwnerId === team.id
-          });
-          /* Original owner gets NOTHING — pick was traded away */
+        var key = yr + '_' + rd + '_' + team.id;
+        if (tradedLookup.hasOwnProperty(key)) {
+          /* This team's pick was traded away */
+          var currentOwnerId = tradedLookup[key];
+          var processedKey = key + '_' + currentOwnerId;
+          if (!processed[processedKey]) {
+            processed[processedKey] = true;
+            if (!holdings[currentOwnerId]) holdings[currentOwnerId] = [];
+            holdings[currentOwnerId].push({
+              yr: yr,
+              round: rd,
+              originalRosterId: team.id,
+              isOwn: false
+            });
+          }
         } else {
-          /* Pick never traded — original owner still holds it */
+          /* Team still owns their own pick */
           holdings[team.id].push({
-            yr: yrStr,
+            yr: yr,
             round: rd,
             originalRosterId: team.id,
             isOwn: true
@@ -831,7 +840,10 @@ function buildFullPickHoldings(tradedPicks, currentSeason, rounds) {
         }
       });
     }
-  }
+  });
+
+  return holdings;
+}}
 
   return holdings;
 }
