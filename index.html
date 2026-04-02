@@ -1044,13 +1044,16 @@ function launch(){
 /* ════════════════════════════
    PROCESS DATA
 ════════════════════════════ */
-function processData(league,users,rosters,mByWeek,allTxns,tradedPicks,players,currentWeek,allWeeks){
+function processData(league,users,rosters,mByWeek,allTxns,tradedPicks,players,currentWeek,allWeeks,scoringSettings,playerSeasonStats,gamesPlayed){
   D.leagueName=league.name||'My League';
   D.season=parseInt(league.season)||new Date().getFullYear();
   D.week=currentWeek;
   D.totalWeeks=parseInt((league.settings&&league.settings.playoff_week_start)?league.settings.playoff_week_start-1:14);
   D.playoffSpots=parseInt((league.settings&&league.settings.playoff_teams)||6);
   D.tradedPicksRaw=tradedPicks;
+  D.scoringSettings=scoringSettings||{};
+  D.playerSeasonStats=playerSeasonStats||{};
+  D.gamesPlayed=gamesPlayed||currentWeek;
 
   var uMap={};users.forEach(function(u){uMap[u.user_id]=u;});
   D.teams=rosters.map(function(r){
