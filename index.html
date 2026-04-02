@@ -1521,31 +1521,68 @@ function buildScoringCtx(){
 function buildRosterCtx(team){
   var r=D.rosters[team.id];
   if(!r)return team.name+': No roster data\n';
-  var out=team.name+' ('+team.owner+') '+team.wins+'-'+team.losses+':\n';
-  var posOrder=['QB','RB','WR','TE','DEF'];
+
+  var slots=D.starterSlots||{};
+  var posOrder=['QB','RB','WR','TE','DEF','K'];
+
+  /* Build lineup format description */
+  var lineupDesc='Lineup format: ';
+  var lineupParts=[];
+  D.rosterPositions.forEach(function(pos){
+    if(pos!=='BN'&&pos!=='IR'&&pos!=='TAXI')lineupParts.push(pos);
+  });
+  lineupDesc+=lineupParts.join(', ');
+
+  var out=team.name+' ('+team.owner+') '+team.wins+'-'+team.losses+' | '+lineupDesc+'\n';
+
   var pidNames=r._pidNames||{};
   var statsByPid=r._statsByPid||{};
+  var starterPids=r._starters||{};
 
   /* Build reverse lookup name→pid */
   var nameToPid={};
-  Object.keys(pidNames).forEach(function(pid){
-    nameToPid[pidNames[pid]]=pid;
-  });
+  Object.keys(pidNames).forEach(function(pid){nameToPid[pidNames[pid]]=pid;});
 
+  /* For each position group, sort starters first then bench */
   posOrder.forEach(function(pos){
     var pl=r[pos]||[];
     if(!pl.length)return;
-    out+='  '+pos+': ';
-    var playerStrs=pl.map(function(name){
+
+    var starters=[];var bench=[];
+    pl.forEach(function(name){
       var pid=nameToPid[name];
-      var stats=pid?statsByPid[pid]:null;
-      if(stats&&stats.pts>0){
-        return name+' ('+stats.pts+'pts, '+stats.avg+'/gm)';
-      }
-      return name;
+      if(pid&&starterPids[pid]){starters.push({name:name,pid:pid});}
+      else{bench.push({name:name,pid:pid});}
     });
-    out+=playerStrs.join(', ')+'\n';
+
+    var numSlots=slots[pos]||0;
+
+    /* Starters */
+    if(starters.length){
+      out+='  '+pos+' STARTERS ('+starters.length+'/'+numSlots+' slot'+(numSlots!==1?'s':'')+'):\n';
+      starters.forEach(function(p){
+        var stats=p.pid?statsByPid[p.pid]:null;
+        var statStr=stats&&stats.pts>0?' — '+stats.pts+'pts, '+stats.avg+'/gm':'';
+        out+='    ✓ '+p.name+statStr+'\n';
+      });
+    }
+
+    /* Bench depth */
+    if(bench.length){
+      out+='  '+pos+' DEPTH/BENCH:\n';
+      bench.forEach(function(p){
+        var stats=p.pid?statsByPid[p.pid]:null;
+        var statStr=stats&&stats.pts>0?' — '+stats.pts+'pts, '+stats.avg+'/gm (bench)':'';
+        out+='    — '+p.name+statStr+'\n';
+      });
+    }
   });
+
+  /* FLEX and SUPER_FLEX note */
+  if(slots['FLEX']||slots['SUPER_FLEX']){
+    out+='  FLEX slots: '+(slots['FLEX']||0)+' FLEX'+(slots['SUPER_FLEX']?' + '+(slots['SUPER_FLEX']||0)+' SUPER_FLEX':'')+'\n';
+  }
+
   return out;
 }
 
