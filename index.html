@@ -1590,63 +1590,85 @@ function buildRosterCtx(team){
   var slots=D.starterSlots||{};
   var posOrder=['QB','RB','WR','TE','DEF','K'];
 
-  /* Build lineup format description */
-  var lineupDesc='Lineup format: ';
+  /* Lineup format summary */
   var lineupParts=[];
-  D.rosterPositions.forEach(function(pos){
+  (D.rosterPositions||[]).forEach(function(pos){
     if(pos!=='BN'&&pos!=='IR'&&pos!=='TAXI')lineupParts.push(pos);
   });
-  lineupDesc+=lineupParts.join(', ');
+  var lineupDesc=lineupParts.length?'Lineup: '+lineupParts.join(', '):'';
 
-  var out=team.name+' ('+team.owner+') '+team.wins+'-'+team.losses+' | '+lineupDesc+'\n';
+  var out='\n'+team.name+' ('+team.owner+') | '+team.wins+'-'+team.losses+' | '+lineupDesc+'\n';
 
   var pidNames=r._pidNames||{};
   var statsByPid=r._statsByPid||{};
   var starterPids=r._starters||{};
 
-  /* Build reverse lookup name→pid */
+  /* Reverse lookup name→pid */
   var nameToPid={};
   Object.keys(pidNames).forEach(function(pid){nameToPid[pidNames[pid]]=pid;});
 
-  /* For each position group, sort starters first then bench */
   posOrder.forEach(function(pos){
     var pl=r[pos]||[];
     if(!pl.length)return;
 
-    var starters=[];var bench=[];
+    var starters=[],bench=[];
     pl.forEach(function(name){
       var pid=nameToPid[name];
-      if(pid&&starterPids[pid]){starters.push({name:name,pid:pid});}
-      else{bench.push({name:name,pid:pid});}
+      if(pid&&starterPids[pid])starters.push({name:name,pid:pid});
+      else bench.push({name:name,pid:pid});
     });
 
     var numSlots=slots[pos]||0;
 
-    /* Starters */
-    if(starters.length){
-      out+='  '+pos+' STARTERS ('+starters.length+'/'+numSlots+' slot'+(numSlots!==1?'s':'')+'):\n';
-      starters.forEach(function(p){
-        var stats=p.pid?statsByPid[p.pid]:null;
-        var statStr=stats&&stats.pts>0?' — '+stats.pts+'pts, '+stats.avg+'/gm':'';
-        out+='    ✓ '+p.name+statStr+'\n';
+    function playerLine(p,isStarter){
+      var stats=p.pid?statsByPid[p.pid]:null;
+      var prefix=isStarter?'  ✓ ':'  — ';
+      if(!stats||!stats.history||!stats.history.length){
+        return prefix+p.name+' (no stats available)\n';
+      }
+
+      var line=prefix+p.name;
+
+      /* Add age if available */
+      var playerObj=null;
+      /* age stored in players object — look up by pid */
+      line+='\n';
+
+      /* Multi-year history */
+      stats.history.forEach(function(h){
+        var missedStr=h.missed>0?' ⚠️ missed '+h.missed+' games':'';
+        var gpStr=h.gp+'/'+h.maxGames+' games';
+        line+='      '+h.year+': '+h.pts+'pts ('+h.avg+'/gm, '+gpStr+missedStr+')\n';
       });
+
+      /* Trend and durability */
+      var trendStr='';
+      if(stats.trend==='rising')trendStr='↑ Rising';
+      else if(stats.trend==='declining')trendStr='↓ Declining';
+      else if(stats.trend==='stable')trendStr='→ Stable';
+      else trendStr='Insufficient data';
+
+      var durStr=stats.durabilityFlag?'⚠️ Durability concern (missed 4+ games in a prior season)':'✓ Reliable';
+      line+='      Trend: '+trendStr+' | Durability: '+durStr+'\n';
+
+      if(!isStarter)line=line.replace('  — ','  — [BENCH] ');
+      return line;
     }
 
-    /* Bench depth */
+    if(starters.length){
+      out+=' '+pos+' STARTERS ('+starters.length+'/'+numSlots+' slot'+(numSlots!==1?'s':'')+'):\n';
+      starters.forEach(function(p){out+=playerLine(p,true);});
+    }
     if(bench.length){
-      out+='  '+pos+' DEPTH/BENCH:\n';
-      bench.forEach(function(p){
-        var stats=p.pid?statsByPid[p.pid]:null;
-        var statStr=stats&&stats.pts>0?' — '+stats.pts+'pts, '+stats.avg+'/gm (bench)':'';
-        out+='    — '+p.name+statStr+'\n';
-      });
+      out+=' '+pos+' BENCH DEPTH:\n';
+      bench.forEach(function(p){out+=playerLine(p,false);});
     }
   });
 
-  /* FLEX and SUPER_FLEX note */
-  if(slots['FLEX']||slots['SUPER_FLEX']){
-    out+='  FLEX slots: '+(slots['FLEX']||0)+' FLEX'+(slots['SUPER_FLEX']?' + '+(slots['SUPER_FLEX']||0)+' SUPER_FLEX':'')+'\n';
-  }
+  /* Pick summary for this team */
+  var myPicks=D.fullPickHoldings[team.id]||[];
+  var r1s=myPicks.filter(function(p){return p.round===1;});
+  out+=' DRAFT CAPITAL: '+myPicks.length+' total picks, '+r1s.length+' R1s\n';
 
   return out;
 }
