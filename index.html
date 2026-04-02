@@ -1462,51 +1462,161 @@ function buildTrades(){document.getElementById('trade-ct').textContent=D.trades.
 function buildHistCtx(){
   if(!D.history||!D.history.length)return '';
   var ctx='\n\nLEAGUE HISTORY:\n';
-  D.history.forEach(function(h){ctx+='--- '+h.season+' Champion: '+h.champion+' --- ';ctx+=h.standings.slice(0,5).map(function(s,i){return(i+1)+'. '+s.name+' ('+s.wins+'-'+s.losses+')';}).join(' | ');ctx+='\n';});
+  D.history.forEach(function(h){
+    ctx+='--- '+h.season+' Champion: '+h.champion+' --- ';
+    ctx+=h.standings.slice(0,5).map(function(s,i){return(i+1)+'. '+s.name+' ('+s.wins+'-'+s.losses+')';}).join(' | ');
+    ctx+='\n';
+  });
   ctx+='\nOwner Multi-Year Records:\n';
-  var ownerHist={};D.history.forEach(function(h){h.standings.forEach(function(s,i){if(!ownerHist[s.owner])ownerHist[s.owner]=[];ownerHist[s.owner].push({season:h.season,finish:i+1});});});
+  var ownerHist={};
+  D.history.forEach(function(h){h.standings.forEach(function(s,i){if(!ownerHist[s.owner])ownerHist[s.owner]=[];ownerHist[s.owner].push({season:h.season,finish:i+1});});});
   D.teams.forEach(function(t){var hist=ownerHist[t.owner];if(hist&&hist.length){ctx+=t.owner+' ('+t.name+'): '+hist.map(function(h){return h.season+': #'+h.finish;}).join(', ')+'\n';}});
   return ctx;
 }
 
-/* ════════════════════════════
-   PRO GENERATION
-════════════════════════════ */
-function gen(section,btn){
-  btn.disabled=true;btn.textContent='…';
-  document.getElementById('ph-'+section).style.display='none';
-  document.getElementById('spin-'+section).classList.add('on');
-  document.getElementById('out-'+section).classList.remove('on');
-  fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:buildPrompt(section)})})
-  .then(function(r){return r.json();})
-  .then(function(data){if(data.error)throw new Error(data.error);var outEl=document.getElementById('out-'+section);outEl.innerHTML=mdToHtml(data.text);outEl.classList.add('on');document.getElementById('spin-'+section).classList.remove('on');document.getElementById('cp-'+section).classList.remove('hidden');proText[section]=data.text;btn.textContent='↺ Regenerate';btn.disabled=false;})
-  .catch(function(err){document.getElementById('spin-'+section).classList.remove('on');document.getElementById('ph-'+section).style.display='flex';var outEl=document.getElementById('out-'+section);outEl.innerHTML='<div style="color:var(--loss);font-family:\'IBM Plex Mono\',monospace;font-size:12px;padding:16px;">Error: '+err.message+'</div>';outEl.classList.add('on');btn.textContent='✦ Generate';btn.disabled=false;});
+/* ── SCORING FORMAT SUMMARY ── */
+function buildScoringCtx(){
+  var s=D.scoringSettings;if(!s||!Object.keys(s).length)return '';
+  var parts=[];
+  if(s.rec!==undefined)parts.push(s.rec===1?'Full PPR':s.rec===0.5?'Half PPR':'Non-PPR');
+  if(s.pass_td!==undefined)parts.push(s.pass_td+'pts/pass TD');
+  if(s.pass_yd!==undefined)parts.push('1pt/'+(1/s.pass_yd)+' pass yds');
+  if(s.rush_td!==undefined)parts.push(s.rush_td+'pts/rush TD');
+  if(s.bonus_rec_te!==undefined)parts.push('TE premium +'+s.bonus_rec_te);
+  if(s.rec_2pt!==undefined)parts.push('2pt conv bonus');
+  return parts.length?'\nScoring format: '+parts.join(' · ')+'\n':'';
+}
+
+/* ── FULL ROSTER CONTEXT FOR AI ── */
+function buildRosterCtx(team){
+  var r=D.rosters[team.id];if(!r)return team.name+': No roster data\n';
+  var out=team.name+' ('+team.owner+') '+team.wins+'-'+team.losses+':\n';
+  var posOrder=['QB','RB','WR','TE','DEF'];
+  /* Get all player IDs with stats */
+  var allPids=[];
+  posOrder.forEach(function(pos){
+    (r[pos]||[]).forEach(function(name){
+      /* Find pid by matching name in players */
+      allPids.push({name:name,pos:pos});
+    });
+  });
+  /* We stored player names in rosters — need pid lookup */
+  /* Use rosters._pids if available, else use names only */
+  posOrder.forEach(function(pos){
+    var pl=r[pos]||[];
+    if(!pl.length)return;
+    out+='  '+pos+': ';
+    var playerStrs=pl.map(function(name){
+      /* Find stats by matching stored pid */
+      var pid=r._pidByName&&r._pidByName[name];
+      var stats=pid?D.playerSeasonStats[pid]:null;
+      if(stats&&stats.pts>0){
+        return name+' ('+stats.pts+'pts, '+stats.avg+'/gm)';
+      }
+      return name;
+    });
+    out+=playerStrs.join(', ')+'\n';
+  });
+  return out;
+}
+
+/* ── PICK VALUE CONTEXT FOR AI ── */
+function buildPickCtx(){
+  /* Sort teams by record for standings position */
+  var sorted=D.teams.slice().sort(function(a,b){return b.wins-a.wins||b.pf-a.pf;});
+  var standingsPos={};
+  sorted.forEach(function(t,i){standingsPos[t.id]=i+1;});
+
+  var out='\nDRAFT CAPITAL (Full Holdings with Pick Value Context):\n';
+  var teamsSorted=D.teams.slice().sort(function(a,b){
+    return(D.fullPickHoldings[b.id]||[]).length-(D.fullPickHoldings[a.id]||[]).length;
+  });
+
+  teamsSorted.forEach(function(t){
+    var picks=D.fullPickHoldings[t.id]||[];
+    if(!picks.length){out+=t.name+': No picks\n';return;}
+    var r1s=picks.filter(function(p){return p.round===1;});
+    out+=t.name+' — '+picks.length+' picks ('+r1s.length+' R1s):\n';
+    /* Group by year */
+    var byYr={};
+    picks.forEach(function(p){if(!byYr[p.yr])byYr[p.yr]=[];byYr[p.yr].push(p);});
+    Object.keys(byYr).sort().forEach(function(yr){
+      byYr[yr].forEach(function(pk){
+        var origTeam=gt(pk.originalRosterId);
+        var slot='';
+        if(!pk.isOwn&&origTeam&&origTeam.id){
+          var pos=standingsPos[origTeam.id]||'?';
+          var rec=origTeam.wins+'-'+origTeam.losses;
+          /* Estimate pick slot from standings */
+          var pickSlot=pos<=2?'likely top-2 pick':pos<=4?'likely top-4 pick':pos<=6?'mid-round pick':'late round pick';
+          slot=' [from '+origTeam.name+', '+rec+', #'+pos+' in standings → '+pickSlot+']';
+        } else if(pk.isOwn){
+          var myPos=standingsPos[t.id]||'?';
+          var myRec=t.wins+'-'+t.losses;
+          slot=' [own pick, currently #'+myPos+' standings, '+myRec+']';
+        }
+        out+='    '+yr+' R'+pk.round+slot+'\n';
+      });
+    });
+  });
+  return out;
+}
+
+/* ── ALL ROSTER CONTEXT FOR AI ── */
+function buildAllRosterCtx(){
+  var out='\nFULL ROSTER BREAKDOWN (Player · Season Pts · Avg/Game):\n';
+  var sorted=D.teams.slice().sort(function(a,b){return b.wins-a.wins||b.pf-a.pf;});
+  sorted.forEach(function(t){out+=buildRosterCtx(t)+'\n';});
+  return out;
 }
 
 function buildPrompt(section){
   var histCtx=buildHistCtx();
+  var scoringCtx=buildScoringCtx();
+  var rosterCtx=buildAllRosterCtx();
+  var pickCtx=buildPickCtx();
   var standings=D.teams.map(function(t,i){return(i+1)+'. '+t.name+' ('+t.wins+'-'+t.losses+', '+t.pf.toFixed(0)+'pts, streak:'+t.streak+')';}).join('\n');
   var ms=D.matchups[D.week]||[];
-  var results=ms.map(function(m){var t1=gt(m[0]),t2=gt(m[1]),p1=m[2],p2=m[3];var w=p1>p2?t1:t2,l=p1>p2?t2:t1;return w.name+' ('+teamEmoji(w.name)+') def. '+l.name+' ('+teamEmoji(l.name)+') '+Math.max(p1,p2).toFixed(1)+'–'+Math.min(p1,p2).toFixed(1)+' [margin: '+Math.abs(p1-p2).toFixed(1)+']';}).join('\n');
+  var results=ms.map(function(m){
+    var t1=gt(m[0]),t2=gt(m[1]),p1=m[2],p2=m[3];
+    var w=p1>p2?t1:t2,l=p1>p2?t2:t1;
+    return w.name+' ('+teamEmoji(w.name)+') def. '+l.name+' ('+teamEmoji(l.name)+') '+Math.max(p1,p2).toFixed(1)+'–'+Math.min(p1,p2).toFixed(1)+' [margin: '+Math.abs(p1-p2).toFixed(1)+']';
+  }).join('\n');
+
+  var baseCtx = scoringCtx+histCtx;
 
   if(section==='recap'){
-    return 'You are a hilarious fantasy football analyst writing a FUNNY weekly matchup recap for a dynasty league. Be like a sports comedian — roast the losers, hype the winners, use sports banter.\n\nLEAGUE: '+D.leagueName+' | Week '+D.week+' | '+D.season+'\n\nWEEK '+D.week+' RESULTS:\n'+results+'\n\nSTANDINGS:\n'+standings+histCtx+'\n\nWrite a FUNNY Week '+D.week+' Recap. For EACH matchup write:\n- A creative punny headline (use team names/emojis)\n- 2-3 funny sentences roasting the loser and hyping the winner\n- A short "quote" from the winning manager (made up, funny)\n\nEnd with a "Power Move of the Week" calling out the funniest/best moment.\n\nBe irreverent, use humor, emojis, fantasy football slang. Make it something people will screenshot and share. Bold team names.';}
+    return 'You are a hilarious fantasy football analyst writing a FUNNY weekly matchup recap.\n\nLEAGUE: '+D.leagueName+' | Week '+D.week+' | '+D.season+baseCtx+'\n\nWEEK '+D.week+' RESULTS:\n'+results+'\n\nSTANDINGS:\n'+standings+'\n\nWrite a FUNNY Week '+D.week+' Recap. For EACH matchup:\n- A creative punny headline using team names/emojis\n- 2-3 funny sentences roasting the loser and hyping the winner\n- A short made-up funny "quote" from the winning manager\n\nEnd with a "Power Move of the Week". Be irreverent, use humor and fantasy football slang. Bold team names.';}
 
   if(section==='preview'){
     var nextWeek=D.week+1;
-    var previews=ms.map(function(m){var t1=gt(m[0]),t2=gt(m[1]);var o=calcOdds(t1,t2);var fav=o.t1fav?t1:t2,dog=o.t1fav?t2:t1;return 'Week '+nextWeek+' - '+t1.name+' vs '+t2.name+' | Spread: '+fav.name+' -'+o.spread+' | O/U: '+o.ou+' | '+fav.name+' is '+t1.pf.toFixed(0)+'pts this season, '+dog.name+' is '+t2.pf.toFixed(0)+'pts';}).join('\n');
-    return 'You are a fantasy football analyst writing a hype Week '+nextWeek+' matchup preview with trash talk potential.\n\nLEAGUE: '+D.leagueName+' | Previewing Week '+nextWeek+'\n\nUPCOMING MATCHUPS WITH LINES:\n'+previews+'\n\nCURRENT STANDINGS:\n'+standings+histCtx+'\n\nWrite a matchup preview for Week '+nextWeek+'. For each matchup:\n- Bold headline naming both teams\n- The story/narrative of the matchup (what\'s at stake, who has momentum)\n- A trash talk angle each manager could use\n- A "Pick" recommendation with reasoning\n\nEnd with "Game of the Week" calling out the most important matchup.\n\nUse sports preview style — confident picks, big narratives. Reference streaks and history where relevant. Bold team names.';}
+    var previews=ms.map(function(m){
+      var t1=gt(m[0]),t2=gt(m[1]);var o=calcOdds(t1,t2);
+      var fav=o.t1fav?t1:t2,dog=o.t1fav?t2:t1;
+      return 'Week '+nextWeek+' - '+t1.name+' vs '+t2.name+' | Spread: '+fav.name+' -'+o.spread+' | O/U: '+o.ou;
+    }).join('\n');
+    return 'You are a fantasy football analyst writing a hype matchup preview.\n\nLEAGUE: '+D.leagueName+' | Previewing Week '+nextWeek+baseCtx+'\n\nUPCOMING MATCHUPS:\n'+previews+'\n\nSTANDINGS:\n'+standings+rosterCtx+'\n\nWrite a matchup preview for Week '+nextWeek+'. For each matchup: bold headline, the story/narrative, a trash talk angle each manager could use, and a Pick. End with Game of the Week. Reference specific players and their production where relevant.';}
 
   if(section==='waiver'){
-    var adds=D.recentWaiverMoves.filter(function(m){return m.type==='add';});var drops=D.recentWaiverMoves.filter(function(m){return m.type==='drop';});
+    var adds=D.recentWaiverMoves.filter(function(m){return m.type==='add';});
+    var drops=D.recentWaiverMoves.filter(function(m){return m.type==='drop';});
     var addLines=adds.slice(0,10).map(function(m){return m.owner+' added '+m.player+' ('+m.pos+', '+m.team+') on '+m.date;}).join('\n');
     var dropLines=drops.slice(0,8).map(function(m){return m.owner+' dropped '+m.player+' ('+m.pos+', '+m.team+') on '+m.date;}).join('\n');
-    return 'You are a dynasty fantasy football waiver wire analyst.\n\nLEAGUE: '+D.leagueName+' | Week '+D.week+' | '+D.season+'\n\nWAIVER ADDS THIS WEEK:\n'+(addLines||'No adds recorded')+'\n\nDROPS THIS WEEK:\n'+(dropLines||'No drops recorded')+'\n\nCURRENT STANDINGS:\n'+standings+histCtx+'\n\nWrite a Waiver Wire Report covering:\n\n**BEST PICKUP OF THE WEEK** — Who made the smartest add and why?\n\n**RISKIEST DROP** — Was anything dropped that could haunt a team?\n\n**MOST ACTIVE MANAGER** — Who\'s been wheeling and dealing on the wire?\n\n**TOP AVAILABLE TARGETS** — Based on trends and rosters, who should teams be targeting right now? (3-4 specific recommendations by position)\n\n**WAIVER STRATEGY** — 2-3 sentences on what the wire looks like heading into next week and what positions to prioritize.\n\nBe specific and actionable. Reference manager names and actual player names from the moves.';}
+    return 'You are a dynasty fantasy football waiver wire analyst.\n\nLEAGUE: '+D.leagueName+' | Week '+D.week+baseCtx+'\n\nWAIVER ADDS:\n'+(addLines||'None')+'\n\nDROPS:\n'+(dropLines||'None')+'\n\nSTANDINGS:\n'+standings+rosterCtx+'\n\nWrite a Waiver Wire Report:\n**BEST PICKUP OF THE WEEK** — smartest add and why\n**RISKIEST DROP** — anything dropped that could backfire\n**MOST ACTIVE MANAGER** — who\'s working the wire hardest\n**TOP AVAILABLE TARGETS** — 3-4 specific recommendations by position considering each team\'s roster needs\n**WAIVER STRATEGY** — what positions to prioritize next week\n\nBe specific and actionable. Reference actual player stats and roster needs.';}
 
-  if(section==='weekly'){return 'You are an entertaining fantasy football analyst writing a weekly digest for a dynasty league commissioner.\n\nLEAGUE: '+D.leagueName+' | Week '+D.week+' | '+D.season+'\n\nRESULTS:\n'+results+'\n\nSTANDINGS:\n'+standings+histCtx+'\n\nWrite an engaging Weekly Digest with a creative headline, recap every game (1-2 sentences each), Performance of the Week, and 2 storylines to watch. Sports journalism style. Bold key team names.';}
-  if(section==='rankings'){var td=D.teams.map(function(t,i){return(i+1)+'. '+t.name+' ('+t.wins+'-'+t.losses+') '+t.pf.toFixed(0)+'pts streak:'+t.streak;}).join('\n');return 'Dynasty fantasy football power rankings analyst.\n\nLEAGUE: '+D.leagueName+' | After Week '+D.week+'\n\nTEAMS:\n'+td+histCtx+'\n\nWrite honest rankings 1–'+D.teams.length+'. Each: bold name + all-caps tagline, 2-3 sentences analysis (reference historical context where revealing), end with ↑ Rising / ↓ Falling / → Locked In. Add Bottom Line paragraph. Be direct and opinionated.';}
-  if(section==='aitrades'){var tl=D.trades.map(function(t,i){return'Trade '+(i+1)+' ('+t.date+'): '+t.teamA+' got '+t.aGets.join(', ')+' | '+t.teamB+' got '+t.bGets.join(', ');}).join('\n');return 'Dynasty trade analyst.\n\nLEAGUE: '+D.leagueName+' | Through Week '+D.week+'\n\nTRADES:\n'+tl+'\n\nSTANDINGS: '+standings+histCtx+'\n\nTrade analysis: Trade of the Year, Biggest Win, Toughest Loss, Most Active Trader, Trade Market Outlook. Be specific and opinionated.';}
-  if(section==='aidraft'){var picksSummary=D.teams.map(function(t){var picks=(D.fullPickHoldings[t.id]||[]);var r1s=picks.filter(function(p){return p.round===1;});var recv=picks.filter(function(p){return !p.isOwn;});return t.name+': '+picks.length+' total, '+r1s.length+' R1s, '+recv.length+' received ('+recv.map(function(p){return p.yr+' R'+p.round+' from '+gt(p.originalRosterId).name;}).join(', ')+')';}).join('\n');return 'Dynasty draft capital analyst.\n\nFULL PICK HOLDINGS:\n'+picksSummary+'\n\nSTANDINGS:\n'+standings+histCtx+'\n\nDraft capital report: 3 pick-richest teams, 2 pick-poorest, most valuable single pick, Rebuilding vs Contending for every team, Draft Strategy Preview.';}
+  if(section==='weekly'){
+    return 'You are an entertaining fantasy football analyst writing a weekly digest for a dynasty league commissioner.\n\nLEAGUE: '+D.leagueName+' | Week '+D.week+' | '+D.season+baseCtx+'\n\nRESULTS:\n'+results+'\n\nSTANDINGS:\n'+standings+'\n\nWrite an engaging Weekly Digest with a creative headline, recap every game (1-2 sentences each referencing key player performances), Performance of the Week, and 2 storylines to watch. Sports journalism style. Bold key team names.';}
+
+  if(section==='rankings'){
+    return 'You are a dynasty fantasy football power rankings analyst.\n\nLEAGUE: '+D.leagueName+' | After Week '+D.week+baseCtx+'\n\nCURRENT STANDINGS:\n'+standings+rosterCtx+pickCtx+'\n\nWrite honest power rankings 1–'+D.teams.length+'. For each team:\n- Bold name + all-caps tagline\n- 2-3 sentences of specific analysis — reference their actual players, scoring averages, roster strengths and weaknesses, and draft capital situation\n- End with ↑ Rising / ↓ Falling / → Locked In\n\nAdd a Bottom Line paragraph on the biggest dynasty storyline in the league. Be direct and opinionated. Reference specific players by name and their production.';}
+
+  if(section==='aitrades'){
+    var tl=D.trades.map(function(t,i){return'Trade '+(i+1)+' ('+t.date+'): '+t.teamA+' got '+t.aGets.join(', ')+' | '+t.teamB+' got '+t.bGets.join(', ');}).join('\n');
+    return 'You are a dynasty fantasy football trade analyst.\n\nLEAGUE: '+D.leagueName+' | Through Week '+D.week+baseCtx+'\n\nTRADES:\n'+tl+'\n\nSTANDINGS:\n'+standings+rosterCtx+pickCtx+'\n\nWrite a trade analysis:\n**TRADE OF THE YEAR** — most impactful trade with detailed winner/loser analysis referencing actual player production\n**BIGGEST WIN** — best value received, cite specific player stats\n**TOUGHEST LOSS** — worst deal in hindsight with stats to back it up\n**MOST ACTIVE TRADER** — are their moves working based on current standings?\n**TRADE MARKET OUTLOOK** — which teams should be buying or selling based on their roster composition and pick capital\n\nBe specific. Reference player production numbers. Name names.';}
+
+  if(section==='aidraft'){
+    return 'You are a dynasty fantasy football draft capital and roster analyst.\n\nLEAGUE: '+D.leagueName+' | '+D.season+baseCtx+'\n\nSTANDINGS:\n'+standings+rosterCtx+pickCtx+'\n\nWrite a comprehensive dynasty capital report:\n\n**CONTENTION WINDOW ANALYSIS** — For each team, assess whether their roster production + age profile + pick capital puts them in a contend-now, rebuild, or transition window\n\n**PICK RICHEST TEAMS** — Top 3 teams by draft capital quality. Factor in projected slot based on original owner\'s record.\n\n**MOST VALUABLE SINGLE PICK** — Identify the single most valuable traded pick in the league and explain why based on the original owner\'s current standing\n\n**ROSTER + CAPITAL GRADES** — Grade each team A through F considering both current roster production and future capital\n\n**OFFSEASON STRATEGY** — For each team, one specific actionable recommendation going into the draft\n\nBe specific. Use actual player names, scoring averages, and pick slot projections.';}
+
   return '';
 }
 
