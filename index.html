@@ -984,41 +984,107 @@ function launch(){
 
     /* Extract scoring settings from league object */
     var scoringSettings = leagueData.scoring_settings || {};
+    var currentSeasonYr = parseInt(leagueData.season) || new Date().getFullYear();
 
-    /* Fetch bulk season stats — one call for all NFL players */
-    return sGet('/stats/nfl/regular/' + leagueData.season)
-    .catch(function() { return {}; })
-    .then(function(bulkStats) {
+    /* Build list of seasons to fetch — current + 3 prior */
+    var seasonsToFetch = [];
+    for (var sy = currentSeasonYr - 3; sy <= currentSeasonYr; sy++) {
+      seasonsToFetch.push(sy);
+    }
+
+    /* Fetch all seasons in parallel — one bulk call per season */
+    return Promise.all(
+      seasonsToFetch.map(function(yr) {
+        return sGet('/stats/nfl/regular/' + yr)
+          .catch(function() { return {}; })
+          .then(function(data) { return { year: yr, data: data }; });
+      })
+    )
+    .then(function(allSeasonStats) {
       setStep('stats','done');
       btn.textContent = 'Building…';
 
-      /* Calculate fantasy points per player using league scoring */
-      var playerSeasonStats = {};
-      var gamesPlayed = currentWeek;
+      /* NFL season lengths by year */
+      var seasonLengths = { 2021:17, 2022:17, 2023:17, 2024:17, 2025:17, 2026:17 };
 
-      /* Get all rostered player IDs across all teams */
+      /* Get all rostered player IDs */
       var rosteredPids = {};
       rostersData.forEach(function(r) {
         (r.players || []).forEach(function(pid) { rosteredPids[pid] = true; });
       });
 
+      /* Calculate per-player multi-season stats */
+      var playerSeasonStats = {};
+
       Object.keys(rosteredPids).forEach(function(pid) {
-        var stats = bulkStats[pid];
-        if (!stats) return;
-        var pts = 0;
-        Object.keys(scoringSettings).forEach(function(stat) {
-          if (stats[stat]) {
-            pts += (stats[stat] * scoringSettings[stat]);
+        var history = [];
+
+        allSeasonStats.forEach(function(season) {
+          var stats = season.data[pid];
+          if (!stats) return;
+
+          /* Calculate fantasy points using league scoring */
+          var pts = 0;
+          Object.keys(scoringSettings).forEach(function(stat) {
+            if (stats[stat]) pts += stats[stat] * scoringSettings[stat];
+          });
+          pts = parseFloat(pts.toFixed(1));
+
+          var maxGames = seasonLengths[season.year] || 17;
+          var gp = parseInt(stats.gp) || 0;
+          var missed = maxGames - gp;
+          var avg = gp > 0 ? parseFloat((pts / gp).toFixed(1)) : 0;
+
+          /* Only include season if player actually played */
+          if (gp > 0 || pts > 0) {
+            history.push({
+              year: season.year,
+              pts: pts,
+              gp: gp,
+              missed: missed,
+              avg: avg,
+              maxGames: maxGames
+            });
           }
         });
-        pts = parseFloat(pts.toFixed(1));
-        var gp = stats.gp || gamesPlayed;
+
+        if (!history.length) return;
+
+        /* Sort by year descending */
+        history.sort(function(a, b) { return b.year - a.year; });
+
+        /* Calculate trend from last 2 completed seasons */
+        var trend = 'insufficient data';
+        var completed = history.filter(function(h) {
+          return h.year < currentSeasonYr || h.gp >= 10;
+        });
+        if (completed.length >= 2) {
+          var diff = completed[0].avg - completed[1].avg;
+          if (diff > 2) trend = 'rising';
+          else if (diff < -2) trend = 'declining';
+          else trend = 'stable';
+        }
+
+        /* Durability flag — missed 4+ games in any season */
+        var durabilityFlag = history.some(function(h) {
+          return h.missed >= 4 && h.year < currentSeasonYr;
+        });
+
+        /* Most recent season for quick reference */
+        var latest = history[0];
+
         playerSeasonStats[pid] = {
-          pts: pts,
-          gamesPlayed: gp,
-          avg: gp > 0 ? parseFloat((pts / gp).toFixed(1)) : 0
+          pts: latest.pts,
+          gamesPlayed: latest.gp,
+          avg: latest.avg,
+          missed: latest.missed,
+          history: history,
+          trend: trend,
+          durabilityFlag: durabilityFlag
         };
       });
+
+      var gamesPlayed = currentWeek;
 
       processData(leagueData, usersData, rostersData, mByWeek, allTxns, tradedPicksData, players, currentWeek, allWeeks, scoringSettings, playerSeasonStats, gamesPlayed);
       document.getElementById('tb-league').textContent = D.leagueName;
@@ -1031,7 +1097,6 @@ function launch(){
       document.getElementById('load-steps').style.display = 'none';
       ['league','history','teams','matchups','txns','players','stats'].forEach(function(s){ setStep(s,''); });
     });
-  })
   .catch(function(err){
     btn.disabled=false;btn.textContent='⚡ Load My League';
     document.getElementById('load-steps').style.display='none';
