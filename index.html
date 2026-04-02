@@ -979,16 +979,59 @@ function launch(){
     tradedPicksData=r[1]||[];setStep('txns','done');setStep('players','active');
     return sGet('/players/nfl');
   })
-  .then(function(players){
-    setStep('players','done');btn.textContent='Building…';
-    processData(leagueData,usersData,rostersData,mByWeek,allTxns,tradedPicksData,players,currentWeek,allWeeks);
-    document.getElementById('tb-league').textContent=D.leagueName;
-    document.getElementById('tb-week').textContent='Season '+D.season+' · Week '+D.week;
-    document.getElementById('tb-demo').classList.add('hidden');
-    showScreen('dashboard');buildAll();
-    btn.disabled=false;btn.textContent='⚡ Load My League';
-    document.getElementById('load-steps').style.display='none';
-    ['league','history','teams','matchups','txns','players'].forEach(function(s){setStep(s,'');});
+  .then(function(players) {
+    setStep('players','done');
+    setStep('stats','active');
+
+    /* Extract scoring settings from league object */
+    var scoringSettings = leagueData.scoring_settings || {};
+
+    /* Fetch bulk season stats — one call for all NFL players */
+    return sGet('/stats/nfl/regular/' + leagueData.season)
+    .catch(function() { return {}; })
+    .then(function(bulkStats) {
+      setStep('stats','done');
+      btn.textContent = 'Building…';
+
+      /* Calculate fantasy points per player using league scoring */
+      var playerSeasonStats = {};
+      var gamesPlayed = currentWeek;
+
+      /* Get all rostered player IDs across all teams */
+      var rosteredPids = {};
+      rostersData.forEach(function(r) {
+        (r.players || []).forEach(function(pid) { rosteredPids[pid] = true; });
+      });
+
+      Object.keys(rosteredPids).forEach(function(pid) {
+        var stats = bulkStats[pid];
+        if (!stats) return;
+        var pts = 0;
+        Object.keys(scoringSettings).forEach(function(stat) {
+          if (stats[stat]) {
+            pts += (stats[stat] * scoringSettings[stat]);
+          }
+        });
+        pts = parseFloat(pts.toFixed(1));
+        var gp = stats.gp || gamesPlayed;
+        playerSeasonStats[pid] = {
+          pts: pts,
+          gamesPlayed: gp,
+          avg: gp > 0 ? parseFloat((pts / gp).toFixed(1)) : 0
+        };
+      });
+
+      processData(leagueData, usersData, rostersData, mByWeek, allTxns, tradedPicksData, players, currentWeek, allWeeks, scoringSettings, playerSeasonStats, gamesPlayed);
+      document.getElementById('tb-league').textContent = D.leagueName;
+      document.getElementById('tb-week').textContent = 'Season ' + D.season + ' · Week ' + D.week;
+      document.getElementById('tb-demo').classList.add('hidden');
+      showScreen('dashboard');
+      buildAll();
+      btn.disabled = false;
+      btn.textContent = '⚡ Load My League';
+      document.getElementById('load-steps').style.display = 'none';
+      ['league','history','teams','matchups','txns','players','stats'].forEach(function(s){ setStep(s,''); });
+    });
   })
   .catch(function(err){
     btn.disabled=false;btn.textContent='⚡ Load My League';
