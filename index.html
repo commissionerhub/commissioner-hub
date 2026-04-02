@@ -1758,7 +1758,7 @@ function buildPrompt(section){
     var drops=D.recentWaiverMoves.filter(function(m){return m.type==='drop';});
     var addLines=adds.slice(0,10).map(function(m){return m.owner+' added '+m.player+' ('+m.pos+', '+m.team+') on '+m.date;}).join('\n');
     var dropLines=drops.slice(0,8).map(function(m){return m.owner+' dropped '+m.player+' ('+m.pos+', '+m.team+') on '+m.date;}).join('\n');
-    var waiverTimeCtx=D.gamesPlayed<=1?'OFFSEASON — analyzing recent offseason moves and roster construction':'Week '+D.week+' in-season wire';
+    var waiverTimeCtx=D.gamesPlayed<=1?'OFFSEASON':'Week '+D.week;
     return 'You are a dynasty fantasy football waiver wire analyst.\n\nLEAGUE: '+D.leagueName+' | '+waiverTimeCtx+baseCtx+'\n\nWAIVER ADDS:\n'
   if(section==='weekly'){
     return 'You are an entertaining fantasy football analyst writing a weekly digest for a dynasty league commissioner.\n\nLEAGUE: '+D.leagueName+' | Week '+D.week+' | '+D.season+baseCtx+'\n\nRESULTS:\n'+results+'\n\nSTANDINGS:\n'+standings+'\n\nWrite an engaging Weekly Digest with a creative headline, recap every game (1-2 sentences each referencing key player performances), Performance of the Week, and 2 storylines to watch. Sports journalism style. Bold key team names.';}
