@@ -408,6 +408,7 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
       <div class="week-pill" id="tb-week"></div>
       <div class="demo-pill hidden" id="tb-demo">🎮 Demo</div>
       <button class="btn-sm" onclick="resetApp()">← Back</button>
+      <button class="btn-sm" onclick="debugPicks()" style="background:var(--violet-dim);color:var(--violet);border-color:var(--violet);">🔍 Debug Picks</button>
     </div>
   </div>
   <div class="dash-body">
@@ -1228,7 +1229,29 @@ function loadDemo(){
 /* ════════════════════════════
    BUILD ALL
 ════════════════════════════ */
-function buildAll(){
+function debugPicks() {
+  var out = 'TRADED PICKS RAW DATA:\n\n';
+  var picks = D.tradedPicksRaw || [];
+  out += 'Total traded picks found: ' + picks.length + '\n\n';
+  if (picks.length === 0) {
+    out += 'NO TRADED PICKS RETURNED FROM SLEEPER\n';
+  }
+  picks.slice(0, 20).forEach(function(p, i) {
+    out += 'Pick ' + (i+1) + ':\n';
+    Object.keys(p).forEach(function(k) {
+      out += '  ' + k + ': ' + p[k] + '\n';
+    });
+    out += '\n';
+  });
+
+  out += '\nTEAM ROSTER IDs:\n';
+  D.teams.forEach(function(t) {
+    out += t.name + ' = roster_id ' + t.id + '\n';
+  });
+
+  alert(out);
+}
+  function buildAll(){
   buildOverview();buildStandings();buildRosters();buildCapital();
   buildTransactions();buildHistory();buildOdds();buildWWL();
   buildTopPlayers();buildTrends();buildLuck();buildPlayerTrends();
