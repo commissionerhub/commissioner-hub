@@ -691,14 +691,18 @@ var TC=['#6366f1','#f59e0b','#22c55e','#06b6d4','#8b5cf6','#f97316','#ec4899','#
 var proText={};
 
 var D={
-  leagueName:'',season:0,week:1,playoffSpots:6,totalWeeks:14,
-  draftRounds:4,futureSeasonsToShow:3,
-  teams:[],weeklyScores:{},matchups:{},rosters:{},
-  fullPickHoldings:{},tradedPicksRaw:[],
-  transactions:{},trades:[],recentWaiverMoves:[],
-  weeklyTopPlayers:{},playerTrends:{up:[],down:[]},
+  var D = {
+  leagueName:'', season:0, week:1, playoffSpots:6, totalWeeks:14,
+  draftRounds:4, futureSeasonsToShow:3,
+  teams:[], weeklyScores:{}, matchups:{}, rosters:{},
+  fullPickHoldings:{}, tradedPicksRaw:[],
+  transactions:{}, trades:[], recentWaiverMoves:[],
+  weeklyTopPlayers:{}, playerTrends:{up:[],down:[]},
   wwlPlayers:{topOver:[],topUnder:[]},
-  history:[]
+  history:[],
+  scoringSettings:{},     /* league scoring rules */
+  playerSeasonStats:{},   /* pid → {pts, gamesPlayed, avg} */
+  gamesPlayed: 0          /* weeks played in NFL season */
 };
 
 /* ════════════════════════════
