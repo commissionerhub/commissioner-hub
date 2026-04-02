@@ -1224,16 +1224,19 @@ function processData(league,users,rosters,mByWeek,allTxns,tradedPicks,players,cu
       var droppedPids=Object.keys(txn.drops||{});
       addedPids.forEach(function(pid){
         var rid=txn.adds[pid];var team=D.teams.find(function(t){return t.id===rid;});var pl=players[pid];
-        D.recentWaiverMoves.push({type:'add',player:pl?(pl.full_name||pid):pid,pos:pl?(pl.position||'?'):'?',team:pl?pl.team:'?',owner:team?team.name:'',date:new Date(txn.created).toLocaleDateString('en-US',{month:'short',day:'numeric'})});
+        
       });
       droppedPids.forEach(function(pid){
         var rid=txn.drops[pid];var team=D.teams.find(function(t){return t.id===rid;});var pl=players[pid];
-        D.recentWaiverMoves.push({type:'drop',player:pl?(pl.full_name||pid):pid,pos:pl?(pl.position||'?'):'?',team:pl?pl.team:'?',owner:team?team.name:'',date:new Date(txn.created).toLocaleDateString('en-US',{month:'short',day:'numeric'})});
+        D.recentWaiverMoves.push({type:'drop',player:pl?(pl.full_name||pid):pid,pos:pl?(pl.position||'?'):'?',team:pl?pl.team:'?',owner:team?team.name:'',date:new Date(txn.created).toLocaleDateString('en-US',{month:'short',day:'numeric'}),created:txn.created});
       });
     }
   });
-  /* Keep only last 30 moves */
-  D.recentWaiverMoves=D.recentWaiverMoves.slice(-30).reverse();
+  /* Filter to only moves from the last 30 days */
+  var thirtyDaysAgo=Date.now()-(30*24*60*60*1000);
+  D.recentWaiverMoves=D.recentWaiverMoves.filter(function(m){
+    return m.created&&m.created>thirtyDaysAgo;
+  }).slice(0,30);
 
   /* Trades */
   D.trades=[];
