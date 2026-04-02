@@ -783,11 +783,13 @@ function buildFullPickHoldings(tradedPicks, currentSeason, rounds) {
   D.teams.forEach(function(t) { holdings[t.id] = []; });
 
   /* Determine year range from traded picks data */
-  var minYr = parseInt(currentSeason) + 1;
-  var maxYr = parseInt(currentSeason) + 3; /* default 3 future years */
+  /* Start from current season — upcoming rookie draft picks exist this year */
+  var minYr = parseInt(currentSeason);
+  /* Only extend beyond currentSeason+2 if traded picks actually exist there */
+  var maxYr = parseInt(currentSeason) + 2;
   tradedPicks.forEach(function(tp) {
     var y = parseInt(tp.season) || 0;
-    if (y > maxYr) maxYr = y;
+    if (y > maxYr && y <= parseInt(currentSeason) + 4) maxYr = y;
   });
 
   /* Build ownership map keyed by (season_round_originalRosterId)
@@ -836,24 +838,86 @@ function buildFullPickHoldings(tradedPicks, currentSeason, rounds) {
 /* ════════════════════════════
    HISTORY FETCH
 ════════════════════════════ */
-function fetchHistory(prevId,acc){
-  if(!prevId)return Promise.resolve(acc);
-  return sGet('/league/'+prevId)
-  .then(function(league){
-    return Promise.all([sGet('/league/'+prevId+'/users'),sGet('/league/'+prevId+'/rosters')])
-    .then(function(r){
-      var users=r[0],rosters=r[1];
-      var uMap={};users.forEach(function(u){uMap[u.user_id]=u;});
-      var standings=rosters.map(function(ros){
-        var u=uMap[ros.owner_id]||{};
-        var tName=(u.metadata&&u.metadata.team_name)?u.metadata.team_name:(u.display_name||('Team '+ros.roster_id));
-        return{name:tName,owner:u.display_name||'',wins:parseInt((ros.settings&&ros.settings.wins)||0),losses:parseInt((ros.settings&&ros.settings.losses)||0),pf:pfv(ros)};
+function fetchHistory(prevId, acc) {
+  if (!prevId) return Promise.resolve(acc);
+  return sGet('/league/' + prevId)
+  .then(function(league) {
+    /* Only include leagues that are the same sport/type */
+    if (!league || league.sport !== 'nfl') return acc;
+
+    return Promise.all([
+      sGet('/league/' + prevId + '/users'),
+      sGet('/league/' + prevId + '/rosters'),
+      sGet('/league/' + prevId + '/winners_bracket').catch(function(){return[];})
+    ])
+    .then(function(r) {
+      var users = r[0], rosters = r[1], bracket = r[2] || [];
+      var uMap = {};
+      users.forEach(function(u) { uMap[u.user_id] = u; });
+
+      /* Build roster id → team name map */
+      var rosterMap = {};
+      rosters.forEach(function(ros) {
+        var u = uMap[ros.owner_id] || {};
+        var tName = (u.metadata && u.metadata.team_name) ? u.metadata.team_name : (u.display_name || ('Team ' + ros.roster_id));
+        rosterMap[ros.roster_id] = tName;
       });
-      standings.sort(function(a,b){return b.wins-a.wins||b.pf-a.pf;});
-      acc.push({season:league.season,champion:standings[0]?standings[0].name:'Unknown',totalWeeks:parseInt((league.settings&&league.settings.playoff_week_start)?league.settings.playoff_week_start-1:14),standings:standings});
-      return fetchHistory(league.previous_league_id,acc);
+
+      /* Find champion from winners bracket — look for 1st place finisher */
+      var championRosterId = null;
+      if (bracket && bracket.length) {
+        /* Find the matchup with p=1 (1st place) or highest round winner */
+        var champEntry = null;
+        var maxRound = 0;
+        bracket.forEach(function(b) {
+          if (b.p === 1 && b.w) {
+            champEntry = b;
+          }
+          if (!champEntry && b.r > maxRound && b.m === 1 && b.w) {
+            maxRound = b.r;
+            champEntry = b;
+          }
+        });
+        if (champEntry && champEntry.w) {
+          championRosterId = champEntry.w;
+        }
+      }
+
+      /* Build standings */
+      var standings = rosters.map(function(ros) {
+        var u = uMap[ros.owner_id] || {};
+        var tName = (u.metadata && u.metadata.team_name) ? u.metadata.team_name : (u.display_name || ('Team ' + ros.roster_id));
+        return {
+          name: tName,
+          owner: u.display_name || '',
+          wins: parseInt((ros.settings && ros.settings.wins) || 0),
+          losses: parseInt((ros.settings && ros.settings.losses) || 0),
+          pf: pfv(ros),
+          rosterId: ros.roster_id
+        };
+      });
+      standings.sort(function(a, b) { return b.wins - a.wins || b.pf - a.pf; });
+
+      /* Champion name — use bracket winner if found, else #1 seed */
+      var championName = standings[0] ? standings[0].name : 'Unknown';
+      if (championRosterId && rosterMap[championRosterId]) {
+        championName = rosterMap[championRosterId];
+      }
+
+      var totalWeeks = parseInt((league.settings && league.settings.playoff_week_start) ? league.settings.playoff_week_start - 1 : 14);
+
+      acc.push({
+        season: league.season,
+        leagueId: prevId,
+        champion: championName,
+        totalWeeks: totalWeeks,
+        standings: standings
+      });
+
+      return fetchHistory(league.previous_league_id, acc);
     });
-  }).catch(function(){return acc;});
+  })
+  .catch(function() { return acc; });
 }
 
 /* ════════════════════════════
