@@ -1053,6 +1053,16 @@ function processData(league,users,rosters,mByWeek,allTxns,tradedPicks,players,cu
   D.scoringSettings=scoringSettings||{};
   D.playerSeasonStats=playerSeasonStats||{};
   D.gamesPlayed=gamesPlayed||currentWeek;
+  D.rosterPositions=league.roster_positions||[];
+
+  /* Build starter slot counts from roster positions */
+  var slotCounts={};
+  D.rosterPositions.forEach(function(pos){
+    if(pos==='BN'||pos==='IR'||pos==='TAXI')return; /* skip bench/IR */
+    slotCounts[pos]=(slotCounts[pos]||0)+1;
+  });
+  D.starterSlots=slotCounts;
+  /* e.g. {QB:1, RB:2, WR:3, TE:1, FLEX:1, SUPER_FLEX:1} */
 
   var uMap={};users.forEach(function(u){uMap[u.user_id]=u;});
   D.teams=rosters.map(function(r){
