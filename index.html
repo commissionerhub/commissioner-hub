@@ -798,7 +798,7 @@ function buildFullPickHoldings(tradedPicks, currentSeason, rounds) {
      Value = current owner roster_id. */
   var tradedLookup = {};
   tradedPicks.forEach(function(tp) {
-    var origId = parseInt(tp.original_roster_id || tp.previous_owner_id || 0);
+    var origId = parseInt(tp.owner_id || tp.original_roster_id || tp.previous_owner_id || 0);
     if (!origId || !tp.season || !tp.round) return;
     var key = String(tp.season) + '_' + tp.round + '_' + origId;
     tradedLookup[key] = parseInt(tp.roster_id);
