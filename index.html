@@ -632,7 +632,7 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
         <div class="sec-hd">
           <div class="sec-eyebrow">Pro · Copy &amp; Share</div>
           <div class="sec-title">Waiver Wire <span class="accent">Report</span></div>
-          <div class="sec-desc">Recent waiver and free agent activity plus AI-generated analysis of the best moves, missed opportunities, and offseason targets.</div>
+          <div class="sec-desc" id="waiver-desc">Recent waiver and free agent activity plus AI-generated analysis of the best moves, missed opportunities, and targets.</div>
         </div>
         <!-- Waiver activity log from transaction data -->
         <div class="card" style="margin-bottom:16px;">
@@ -1502,9 +1502,8 @@ function buildPreviewCards(){
 ════════════════════════════ */
 function buildWaiverLog(){
   var moves=D.recentWaiverMoves||[];
-  var isOffseason=D.gamesPlayed===0||D.gamesPlayed===1&&!Object.keys(D.weeklyTopPlayers).length;
-  var waiverLabel=isOffseason?'Recent offseason activity ('+moves.length+' moves)':'Week '+D.week+' activity ('+moves.length+' moves)';
-  document.getElementById('waiver-meta').textContent=waiverLabel;
+  var isOffseason=!D.week||D.week<=1||!Object.keys(D.weeklyTopPlayers).length;
+  document.getElementById('waiver-meta').textContent=isOffseason?'Recent offseason activity ('+moves.length+' moves)':'Week '+D.week+' activity ('+moves.length+' moves)';
   if(!moves.length){document.getElementById('waiver-log').innerHTML='<div style="color:var(--muted);font-size:13px;">No waiver activity found for this week</div>';return;}
   var adds=moves.filter(function(m){return m.type==='add';});
   var drops=moves.filter(function(m){return m.type==='drop';});
