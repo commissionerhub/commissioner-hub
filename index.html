@@ -1016,6 +1016,54 @@ function launch(){
       /* Calculate per-player multi-season stats */
       var playerSeasonStats = {};
 
+      /* ── Step 1: Calculate points for ALL NFL players to enable rankings ── */
+      /* We need the full pool to rank rostered players against everyone */
+      var allPlayerPtsBySeasonAndPos = {};
+      /* allPlayerPtsBySeasonAndPos[year][pos] = [{pid, pts, avg, gp}] */
+
+      allSeasonStats.forEach(function(season) {
+        allPlayerPtsBySeasonAndPos[season.year] = {};
+        Object.keys(season.data).forEach(function(pid) {
+          var stats = season.data[pid];
+          if (!stats || !stats.position) return;
+          var pos = stats.position;
+          /* Only rank skill positions */
+          if (['QB','RB','WR','TE'].indexOf(pos) === -1) return;
+          var pts = 0;
+          Object.keys(scoringSettings).forEach(function(stat) {
+            if (stats[stat]) pts += stats[stat] * scoringSettings[stat];
+          });
+          pts = parseFloat(pts.toFixed(1));
+          var gp = parseInt(stats.gp) || 0;
+          if (gp < 4 || pts <= 0) return; /* skip injured/inactive players */
+          var avg = parseFloat((pts / gp).toFixed(1));
+          if (!allPlayerPtsBySeasonAndPos[season.year][pos]) {
+            allPlayerPtsBySeasonAndPos[season.year][pos] = [];
+          }
+          allPlayerPtsBySeasonAndPos[season.year][pos].push({
+            pid: pid, pts: pts, avg: avg, gp: gp
+          });
+        });
+        /* Sort each position by total pts descending to get rankings */
+        Object.keys(allPlayerPtsBySeasonAndPos[season.year]).forEach(function(pos) {
+          allPlayerPtsBySeasonAndPos[season.year][pos].sort(function(a, b) {
+            return b.pts - a.pts;
+          });
+        });
+      });
+
+      /* Helper — get positional rank for a player in a given season */
+      function getPositionalRank(pid, pos, year) {
+        var pool = allPlayerPtsBySeasonAndPos[year] &&
+                   allPlayerPtsBySeasonAndPos[year][pos];
+        if (!pool) return null;
+        for (var i = 0; i < pool.length; i++) {
+          if (pool[i].pid === pid) return i + 1;
+        }
+        return null;
+      }
+
+      /* ── Step 2: Build per-rostered-player multi-season stats with rankings ── */
       Object.keys(rosteredPids).forEach(function(pid) {
         var history = [];
 
@@ -1023,7 +1071,6 @@ function launch(){
           var stats = season.data[pid];
           if (!stats) return;
 
-          /* Calculate fantasy points using league scoring */
           var pts = 0;
           Object.keys(scoringSettings).forEach(function(stat) {
             if (stats[stat]) pts += stats[stat] * scoringSettings[stat];
@@ -1034,8 +1081,14 @@ function launch(){
           var gp = parseInt(stats.gp) || 0;
           var missed = maxGames - gp;
           var avg = gp > 0 ? parseFloat((pts / gp).toFixed(1)) : 0;
+          var pos = stats.position || '';
 
-          /* Only include season if player actually played */
+          /* Get positional ranking for this season */
+          var rank = null;
+          if (['QB','RB','WR','TE'].indexOf(pos) > -1) {
+            rank = getPositionalRank(pid, pos, season.year);
+          }
+
           if (gp > 0 || pts > 0) {
             history.push({
               year: season.year,
@@ -1043,7 +1096,9 @@ function launch(){
               gp: gp,
               missed: missed,
               avg: avg,
-              maxGames: maxGames
+              maxGames: maxGames,
+              rank: rank,        /* positional rank e.g. 21 = #21 QB */
+              pos: pos
             });
           }
         });
@@ -1060,17 +1115,24 @@ function launch(){
         });
         if (completed.length >= 2) {
           var diff = completed[0].avg - completed[1].avg;
-          if (diff > 2) trend = 'rising';
-          else if (diff < -2) trend = 'declining';
+          /* Also factor in ranking trend */
+          var rankDiff = null;
+          if (completed[0].rank && completed[1].rank) {
+            rankDiff = completed[1].rank - completed[0].rank;
+            /* Negative rankDiff = ranking got worse (higher number = worse) */
+          }
+          if (diff > 2 && (rankDiff === null || rankDiff >= 0)) trend = 'rising';
+          else if (diff < -2 && (rankDiff === null || rankDiff <= 0)) trend = 'declining';
+          else if (diff > 2 || (rankDiff && rankDiff > 3)) trend = 'rising';
+          else if (diff < -2 || (rankDiff && rankDiff < -3)) trend = 'declining';
           else trend = 'stable';
         }
 
-        /* Durability flag — missed 4+ games in any season */
+        /* Durability flag */
         var durabilityFlag = history.some(function(h) {
           return h.missed >= 4 && h.year < currentSeasonYr;
         });
 
-        /* Most recent season for quick reference */
         var latest = history[0];
 
         playerSeasonStats[pid] = {
