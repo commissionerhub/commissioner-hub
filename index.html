@@ -1701,11 +1701,12 @@ function buildRosterCtx(team){
       /* age stored in players object — look up by pid */
       line+='\n';
 
-      /* Multi-year history */
+       /* Multi-year history with positional rankings */
       stats.history.forEach(function(h){
         var missedStr=h.missed>0?' ⚠️ missed '+h.missed+' games':'';
         var gpStr=h.gp+'/'+h.maxGames+' games';
-        line+='      '+h.year+': '+h.pts+'pts ('+h.avg+'/gm, '+gpStr+missedStr+')\n';
+        var rankStr=h.rank?(' | #'+h.rank+' '+h.pos):'';
+        line+='      '+h.year+': '+h.pts+'pts ('+h.avg+'/gm, '+gpStr+rankStr+missedStr+')\n';
       });
 
       /* Trend and durability */
