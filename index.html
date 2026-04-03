@@ -1743,46 +1743,125 @@ function buildRosterCtx(team){
 
 /* ── PICK VALUE CONTEXT FOR AI ── */
 function buildPickCtx(){
-  /* Sort teams by record for standings position */
-  var sorted=D.teams.slice().sort(function(a,b){return b.wins-a.wins||b.pf-a.pf;});
-  var standingsPos={};
-  sorted.forEach(function(t,i){standingsPos[t.id]=i+1;});
+  var currentSeasonYr = parseInt(D.season);
 
-  var out='\nDRAFT CAPITAL (Full Holdings with Pick Value Context):\n';
-  var teamsSorted=D.teams.slice().sort(function(a,b){
-    return(D.fullPickHoldings[b.id]||[]).length-(D.fullPickHoldings[a.id]||[]).length;
+  /* Get last season's final standings from history for current-year pick slots */
+  var lastSeasonStandings = null;
+  if (D.history && D.history.length) {
+    /* Find most recent completed season */
+    var sorted = D.history.slice().sort(function(a,b){
+      return parseInt(b.season) - parseInt(a.season);
+    });
+    lastSeasonStandings = sorted[0] ? sorted[0].standings : null;
+  }
+
+  /* Build last season finish position by owner name */
+  var lastSeasonFinish = {};
+  if (lastSeasonStandings) {
+    lastSeasonStandings.forEach(function(s, i) {
+      lastSeasonFinish[s.owner] = i + 1;
+      lastSeasonFinish[s.name] = i + 1;
+    });
+  }
+
+  /* Current season standings position */
+  var currentSorted = D.teams.slice().sort(function(a,b){
+    return b.wins - a.wins || b.pf - a.pf;
+  });
+  var currentPos = {};
+  currentSorted.forEach(function(t, i) { currentPos[t.id] = i + 1; });
+
+  /* Determine if we are in offseason of currentSeasonYr
+     (week 1 with no matchup scores = pre-season) */
+  var isOffseason = D.week <= 1 && !Object.keys(D.weeklyTopPlayers).length;
+
+  var out = '\nDRAFT CAPITAL (Full Holdings with Pick Value Context):\n';
+
+  /* Note about draft timing */
+  if (isOffseason) {
+    out += 'NOTE: Currently in ' + currentSeasonYr + ' offseason. ';
+    out += currentSeasonYr + ' rookie draft is IMMINENT — pick slots are already determined by ' + (currentSeasonYr - 1) + ' final standings. ';
+    out += (currentSeasonYr + 1) + '+ pick slots are speculative based on current roster evaluation.\n\n';
+  }
+
+  var teamsSorted = D.teams.slice().sort(function(a,b){
+    return (D.fullPickHoldings[b.id]||[]).length - (D.fullPickHoldings[a.id]||[]).length;
   });
 
   teamsSorted.forEach(function(t){
-    var picks=D.fullPickHoldings[t.id]||[];
-    if(!picks.length){out+=t.name+': No picks\n';return;}
-    var r1s=picks.filter(function(p){return p.round===1;});
-    out+=t.name+' — '+picks.length+' picks ('+r1s.length+' R1s):\n';
-    /* Group by year */
-    var byYr={};
-    picks.forEach(function(p){if(!byYr[p.yr])byYr[p.yr]=[];byYr[p.yr].push(p);});
+    var picks = D.fullPickHoldings[t.id] || [];
+    if (!picks.length) { out += t.name + ': No picks\n'; return; }
+    var r1s = picks.filter(function(p){ return p.round === 1; });
+    out += t.name + ' — ' + picks.length + ' picks (' + r1s.length + ' R1s):\n';
+
+    var byYr = {};
+    picks.forEach(function(p){
+      if (!byYr[p.yr]) byYr[p.yr] = [];
+      byYr[p.yr].push(p);
+    });
+
     Object.keys(byYr).sort().forEach(function(yr){
+      var yrNum = parseInt(yr);
+      var isCurrentDraft = yrNum === currentSeasonYr;
+      var isFuture = yrNum > currentSeasonYr;
+
       byYr[yr].forEach(function(pk){
-        var origTeam=gt(pk.originalRosterId);
-        var slot='';
-        if(!pk.isOwn&&origTeam&&origTeam.id){
-          var pos=standingsPos[origTeam.id]||'?';
-          var rec=origTeam.wins+'-'+origTeam.losses;
-          /* Estimate pick slot from standings */
-          var pickSlot=pos<=2?'likely top-2 pick':pos<=4?'likely top-4 pick':pos<=6?'mid-round pick':'late round pick';
-          slot=' [from '+origTeam.name+', '+rec+', #'+pos+' in standings → '+pickSlot+']';
-        } else if(pk.isOwn){
-          var myPos=standingsPos[t.id]||'?';
-          var myRec=t.wins+'-'+t.losses;
-          slot=' [own pick, currently #'+myPos+' standings, '+myRec+']';
+        var origTeam = gt(pk.originalRosterId);
+        var slot = '';
+
+        if (isCurrentDraft) {
+          /* 2026 picks — slot is ALREADY SET based on last season's finish */
+          if (!pk.isOwn && origTeam && origTeam.id) {
+            /* Look up original team's finish in last season */
+            var finish = lastSeasonFinish[origTeam.name] ||
+                        lastSeasonFinish[origTeam.owner] || null;
+            var totalTeams = D.teams.length;
+            if (finish) {
+              /* Draft order is inverse of standings (worst team picks first) */
+              var draftSlot = totalTeams - finish + 1;
+              var slotDesc = draftSlot <= 2 ? 'top-2 pick' :
+                            draftSlot <= 4 ? 'top-4 pick' :
+                            draftSlot <= 6 ? 'mid-first' : 'late first';
+              slot = ' [from ' + origTeam.name + ' | ' + (currentSeasonYr-1) +
+                     ' finish: #' + finish + ' → approx pick #' + draftSlot +
+                     ' (' + slotDesc + ') — DRAFT ORDER SET]';
+            } else {
+              slot = ' [from ' + origTeam.name + ' — ' + currentSeasonYr + ' draft order set]';
+            }
+          } else if (pk.isOwn) {
+            var myFinish = lastSeasonFinish[t.name] || lastSeasonFinish[t.owner] || null;
+            var totalTeams2 = D.teams.length;
+            if (myFinish) {
+              var mySlot = totalTeams2 - myFinish + 1;
+              slot = ' [own pick | ' + (currentSeasonYr-1) + ' finish: #' + myFinish +
+                     ' → approx pick #' + mySlot + ' — DRAFT ORDER SET]';
+            } else {
+              slot = ' [own pick — ' + currentSeasonYr + ' draft order set]';
+            }
+          }
+        } else if (isFuture) {
+          /* 2027+ picks — speculative based on current evaluation */
+          if (!pk.isOwn && origTeam && origTeam.id) {
+            var pos = currentPos[origTeam.id] || '?';
+            var rec = origTeam.wins + '-' + origTeam.losses;
+            var pickSlot = pos <= 2 ? 'likely top-2 pick' :
+                          pos <= 4 ? 'likely top-4 pick' :
+                          pos <= 6 ? 'mid-round pick' : 'late round pick';
+            slot = ' [from ' + origTeam.name + ', currently #' + pos +
+                   ' (' + rec + ') → projected ' + pickSlot + ' — SPECULATIVE]';
+          } else if (pk.isOwn) {
+            var myPos = currentPos[t.id] || '?';
+            slot = ' [own pick | currently #' + myPos + ' standings — SPECULATIVE]';
+          }
         }
-        out+='    '+yr+' R'+pk.round+slot+'\n';
+
+        out += '    ' + yr + ' R' + pk.round + slot + '\n';
       });
     });
   });
+
   return out;
 }
-
 /* ── ALL ROSTER CONTEXT FOR AI ── */
 function buildAllRosterCtx(){
   var out='\nFULL ROSTER BREAKDOWN (Player · Season Pts · Avg/Game):\n';
