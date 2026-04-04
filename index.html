@@ -1290,12 +1290,21 @@ function processData(league,users,rosters,mByWeek,allTxns,tradedPicks,players,cu
       }
     });
     /* Store pid→name for display */
-    pg._pidNames={};
+  pg._pidNames={};
+    pg._pidAges={};
     (t._pids||[]).forEach(function(pid){
       var pl=players[pid];
       if(pl){
         var name=pl.full_name||((pl.first_name||'')+(pl.last_name?' '+pl.last_name:'')).trim()||pid;
         pg._pidNames[pid]=name;
+        if(pl.birth_date){
+          var birth=new Date(pl.birth_date);
+          var today=new Date();
+          var age=today.getFullYear()-birth.getFullYear();
+          var m=today.getMonth()-birth.getMonth();
+          if(m<0||(m===0&&today.getDate()<birth.getDate()))age--;
+          pg._pidAges[pid]=age;
+        }
       }
     });
     D.rosters[t.id]=pg;
@@ -1693,9 +1702,10 @@ function buildRosterCtx(team){
 
   var out='\n'+team.name+' ('+team.owner+') | '+team.wins+'-'+team.losses+' | '+lineupDesc+'\n';
 
-  var pidNames=r._pidNames||{};
-  var statsByPid=r._statsByPid||{};
-  var starterPids=r._starters||{};
+ var pidNames=r._pidNames||{};
+    var pidAges=r._pidAges||{};
+    var statsByPid=r._statsByPid||{};
+    var starterPids=r._starters||{};
 
   /* Reverse lookup name→pid */
   var nameToPid={};
@@ -1721,12 +1731,9 @@ function buildRosterCtx(team){
         return prefix+p.name+' (no stats available)\n';
       }
 
-      var line=prefix+p.name;
-
-      /* Add age if available */
-      var playerObj=null;
-      /* age stored in players object — look up by pid */
-      line+='\n';
+      var age=p.pid?pidAges[p.pid]:null;
+      var ageStr=age?' (age '+age+')':'';
+      var line=prefix+p.name+ageStr+'\n';
 
        /* Multi-year history with positional rankings */
       stats.history.forEach(function(h){
