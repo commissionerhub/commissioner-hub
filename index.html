@@ -1193,8 +1193,60 @@ function launch(){
 
       var gamesPlayed = currentWeek;
 
-      processData(leagueData, usersData, rostersData, mByWeek, allTxns, tradedPicksData, players, currentWeek, allWeeks, scoringSettings, playerSeasonStats, gamesPlayed);
-      document.getElementById('tb-league').textContent = D.leagueName;
+      /* Detect league format for FantasyCalc */
+      var isSuperflex = (leagueData.roster_positions||[]).indexOf('SUPER_FLEX') > -1;
+      var leaguePPR = scoringSettings.rec || 0;
+      var numQbs = 1;
+      (leagueData.roster_positions||[]).forEach(function(p){ if(p==='QB') numQbs++; });
+
+      setStep('values','active');
+
+      Promise.all([
+        /* FantasyCalc dynasty values — format-aware */
+        fetch('https://api.fantasycalc.com/values/current?isSuperflex='+isSuperflex+'&numQbs='+numQbs+'&ppr='+leaguePPR)
+          .then(function(r){ return r.json(); })
+          .catch(function(){ return []; }),
+        /* Sleeper trending adds across all leagues */
+        fetch('https://api.sleeper.app/v1/players/nfl/trending/add?lookback_hours=24&limit=25')
+          .then(function(r){ return r.json(); })
+          .catch(function(){ return []; })
+      ])
+      .then(function(results){
+        setStep('values','done');
+
+        /* Process FantasyCalc values into pid lookup */
+        var fantasyCalcValues = {};
+        var fcData = results[0] || [];
+        fcData.forEach(function(entry){
+          if(entry.player && entry.player.sleeperId){
+            fantasyCalcValues[entry.player.sleeperId] = {
+              value: entry.value || 0,
+              trend: entry.trend || 0,    /* positive = rising, negative = falling */
+              tier: entry.value > 7500 ? 'Elite' :
+                    entry.value > 5500 ? 'Solid Starter' :
+                    entry.value > 3500 ? 'Rotational' :
+                    entry.value > 1500 ? 'Depth' : 'Speculative'
+            };
+          }
+        });
+
+        /* Process Sleeper trending */
+        var sleeperTrending = [];
+        var trendData = results[1] || [];
+        trendData.forEach(function(entry){
+          var pl = players[entry.player_id];
+          if(pl){
+            sleeperTrending.push({
+              pid: entry.player_id,
+              name: pl.full_name || entry.player_id,
+              pos: pl.position || '',
+              count: entry.count || 0
+            });
+          }
+        });
+
+        processData(leagueData, usersData, rostersData, mByWeek, allTxns, tradedPicksData, players, currentWeek, allWeeks, scoringSettings, playerSeasonStats, gamesPlayed, fantasyCalcValues, sleeperTrending, isSuperflex, leaguePPR);
+        document.getElementById('tb-league').textContent = D.leagueName;
       document.getElementById('tb-week').textContent = 'Season ' + D.season + ' · Week ' + D.week;
       document.getElementById('tb-demo').classList.add('hidden');
       showScreen('dashboard');
