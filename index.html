@@ -1926,9 +1926,12 @@ function buildPickCtx(){
   teamsSorted.forEach(function(t){
     var picks = D.fullPickHoldings[t.id] || [];
     if (!picks.length) { out += t.name + ': No picks\n'; return; }
-    var r1s = picks.filter(function(p){ return p.round === 1; });
-    out += t.name + ' — ' + picks.length + ' picks (' + r1s.length + ' R1s):\n';
-
+var r1s = picks.filter(function(p){ return p.round === 1; });
+    /* Break R1s down by year so Claude understands they span multiple drafts */
+    var r1ByYr = {};
+    r1s.forEach(function(p){ if(!r1ByYr[p.yr])r1ByYr[p.yr]=0; r1ByYr[p.yr]++; });
+    var r1Summary = Object.keys(r1ByYr).sort().map(function(yr){ return r1ByYr[yr]+' in '+yr; }).join(', ');
+    out += t.name + ' — ' + picks.length + ' picks (' + r1s.length + ' R1s: ' + r1Summary + '):\n';
     var byYr = {};
     picks.forEach(function(p){
       if (!byYr[p.yr]) byYr[p.yr] = [];
