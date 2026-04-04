@@ -1742,11 +1742,7 @@ function buildRosterCtx(team){
 }
 
 /* ── PICK VALUE CONTEXT FOR AI ── */
-var debugOut = D.teams.map(function(t){
-    var picks = D.fullPickHoldings[t.id]||[];
-    return t.name+' (id='+t.id+'): '+picks.length+' picks, R1s='+picks.filter(function(p){return p.round===1;}).length;
-  }).join('\n');
-  document.getElementById('cap-meta').textContent = debugOut;
+
   var currentSeasonYr = parseInt(D.season);
 
   /* Get last season's final standings from history for current-year pick slots */
@@ -1926,6 +1922,7 @@ function buildPrompt(section){
 }
 function gen(section,btn){
   btn.disabled=true;btn.textContent='…';
+  if(section==='aidraft'){console.log('DRAFT PROMPT:\n'+buildPrompt('aidraft'));}
   document.getElementById('ph-'+section).style.display='none';
   document.getElementById('spin-'+section).classList.add('on');
   document.getElementById('out-'+section).classList.remove('on');
