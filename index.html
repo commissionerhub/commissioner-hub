@@ -1742,7 +1742,11 @@ function buildRosterCtx(team){
 }
 
 /* ── PICK VALUE CONTEXT FOR AI ── */
-console.log('All teams:', D.teams.map(function(t){ return t.id+': '+t.name; }).join(' | '));function buildPickCtx(){
+var debugOut = D.teams.map(function(t){
+    var picks = D.fullPickHoldings[t.id]||[];
+    return t.name+' (id='+t.id+'): '+picks.length+' picks, R1s='+picks.filter(function(p){return p.round===1;}).length;
+  }).join('\n');
+  document.getElementById('cap-meta').textContent = debugOut;
   var currentSeasonYr = parseInt(D.season);
 
   /* Get last season's final standings from history for current-year pick slots */
