@@ -740,10 +740,14 @@ var D={
   weeklyTopPlayers:{}, playerTrends:{up:[],down:[]},
   wwlPlayers:{topOver:[],topUnder:[]},
   history:[],
-  scoringSettings:{},     /* league scoring rules */
+ scoringSettings:{},     /* league scoring rules */
   playerSeasonStats:{},   /* pid → {pts, gamesPlayed, avg} */
   gamesPlayed: 0,         /* weeks played in NFL season */
-  rosterPositions:[]      /* starting lineup requirements e.g. [QB,RB,RB,WR...] */
+  rosterPositions:[],     /* starting lineup requirements e.g. [QB,RB,RB,WR...] */
+  fantasyCalcValues:{},   /* pid → dynasty value 0-10000 */
+  sleeperTrending:[],     /* trending adds across all Sleeper leagues */
+  isSuperflex: false,     /* league format flag */
+  leaguePPR: 0            /* 0 = non-PPR, 0.5 = half, 1 = full */
 };
 
 /* ════════════════════════════
