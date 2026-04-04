@@ -1742,7 +1742,7 @@ function buildRosterCtx(team){
 }
 
 /* ── PICK VALUE CONTEXT FOR AI ── */
-console.log('Pick holdings for all teams:', JSON.stringify(D.fullPickHoldings));
+var freshMeatId = D.teams.filter(function(t){ return t.name.toLowerCase().indexOf('fresh') > -1; })[0];   if(freshMeatId) console.log('Fresh Meat picks:', JSON.stringify(D.fullPickHoldings[freshMeatId.id]));
 function buildPickCtx(){
   var currentSeasonYr = parseInt(D.season);
 
