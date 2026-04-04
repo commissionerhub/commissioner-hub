@@ -1214,7 +1214,7 @@ function launch(){
 
       Promise.all([
         /* FantasyCalc dynasty values — format-aware */
-        fetch('https://api.fantasycalc.com/values/current?isSuperflex='+isSuperflex+'&numQbs='+numQbs+'&ppr='+leaguePPR)
+        fetch('https://api.fantasycalc.com/values/current?isSuperflex='+isSuperflex+'&numQbs='+numQbs)
           .then(function(r){ return r.json(); })
           .catch(function(){ return []; }),
         /* Sleeper trending adds across all leagues */
