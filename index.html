@@ -1997,8 +1997,43 @@ function gen(section,btn){
     btn.disabled=false;
   });
 }
-function mdToHtml(md){return md.replace(/^## (.+)$/gm,'<h2>$1</h2>').replace(/^### (.+)$/gm,'<h3>$1</h3>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/^↑ (.+)$/gm,'<span class="rising">↑ $1</span>').replace(/^↓ (.+)$/gm,'<span class="falling">↓ $1</span>').replace(/^→ (.+)$/gm,'<span class="steady">→ $1</span>').replace(/^---$/gm,'<hr>').replace(/^- (.+)$/gm,'<li>$1</li>').replace(/(<li>[^]*?<\/li>\n?)+/g,function(m){return'<ul>'+m+'</ul>';}).replace(/^(?!<[h234pulsi]|<hr)(.+)$/gm,'<p>$1</p>').replace(/<p><\/p>/g,'');}
-function copyPro(section){var text=proText[section];if(!text)return;navigator.clipboard.writeText(text).then(function(){var btn=document.getElementById('cp-'+section);btn.textContent='✓ Copied!';btn.classList.add('copied');setTimeout(function(){btn.textContent='📋 Copy';btn.classList.remove('copied');},2000);}).catch(function(){alert('Please copy manually.');});}
+function mdToHtml(md){
+  return md
+    /* Section headers — styled blocks */
+    .replace(/^\*\*([🏆💎🎯📊🚀🪟💀🤑😬🔄🏅⭐💣☠️🎬🔮📋📰⚡🤝👑🍀😤💪🔥]+)\s*([^*]+)\*\*/gm,function(match,emoji,title){
+      return '<h2>'+emoji+' '+title.trim()+'</h2>';
+    })
+    /* Bold section headers without emoji */
+    .replace(/^\*\*([A-Z][^*]{3,})\*\*$/gm,'<h3>$1</h3>')
+    /* Inline bold */
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    /* Trend indicators */
+    .replace(/↑ Rising/g,'<span class="rising">↑ Rising</span>')
+    .replace(/↓ Falling/g,'<span class="falling">↓ Falling</span>')
+    .replace(/→ Locked In/g,'<span class="steady">→ Locked In</span>')
+    .replace(/↑ ([^\n<]+)/g,'<span class="rising">↑ $1</span>')
+    .replace(/↓ ([^\n<]+)/g,'<span class="falling">↓ $1</span>')
+    .replace(/→ ([^\n<]+)/g,'<span class="steady">→ $1</span>')
+    /* Grades A-F */
+    .replace(/\bGrade:\s*A\+?/g,'<span class="pro-grade grade-a">A</span>')
+    .replace(/\bGrade:\s*B\+?/g,'<span class="pro-grade grade-b">B</span>')
+    .replace(/\bGrade:\s*C\+?/g,'<span class="pro-grade grade-c">C</span>')
+    .replace(/\bGrade:\s*D\+?/g,'<span class="pro-grade grade-d">D</span>')
+    .replace(/\bGrade:\s*F/g,'<span class="pro-grade grade-f">F</span>')
+    /* Horizontal rules */
+    .replace(/^---$/gm,'<hr>')
+    /* List items */
+    .replace(/^[-•] (.+)$/gm,'<li>$1</li>')
+    .replace(/^(\d+)\. (.+)$/gm,'<li><strong>$1.</strong> $2</li>')
+    .replace(/(<li>[\s\S]*?<\/li>\n?)+/g,function(m){return'<ul>'+m+'</ul>';})
+    /* Callout blocks — lines starting with 🏆 💣 ☠️ at paragraph level */
+    .replace(/^(🏆|💣|☠️|🎯|💎|🚀) (.+)$/gm,'<div class="pro-callout"><strong>$1 $2</strong></div>')
+    /* Regular paragraphs */
+    .replace(/^(?!<[hud]|<hr|<div)(.+)$/gm,'<p>$1</p>')
+    .replace(/<p><\/p>/g,'')
+    .replace(/<p>(<h[23]>)/g,'$1')
+    .replace(/(<\/h[23]>)<\/p>/g,'$1');
+}function copyPro(section){var text=proText[section];if(!text)return;navigator.clipboard.writeText(text).then(function(){var btn=document.getElementById('cp-'+section);btn.textContent='✓ Copied!';btn.classList.add('copied');setTimeout(function(){btn.textContent='📋 Copy';btn.classList.remove('copied');},2000);}).catch(function(){alert('Please copy manually.');});}
 
 /* ════════════════════════════
    NAV & SCREENS
