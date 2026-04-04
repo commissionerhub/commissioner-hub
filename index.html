@@ -757,7 +757,8 @@ var D={
   fantasyCalcValues:{},   /* pid → dynasty value 0-10000 */
   sleeperTrending:[],     /* trending adds across all Sleeper leagues */
   isSuperflex: false,     /* league format flag */
-  leaguePPR: 0            /* 0 = non-PPR, 0.5 = half, 1 = full */
+  leaguePPR: 0,           /* 0 = non-PPR, 0.5 = half, 1 = full */
+  hasToiletBowl: false    /* consolation bracket exists */
 };
 
 /* ════════════════════════════
@@ -1284,8 +1285,8 @@ function processData(league,users,rosters,mByWeek,allTxns,tradedPicks,players,cu
   D.season=parseInt(league.season)||new Date().getFullYear();
   D.week=currentWeek;
   D.totalWeeks=parseInt((league.settings&&league.settings.playoff_week_start)?league.settings.playoff_week_start-1:14);
-  D.playoffSpots=parseInt((league.settings&&league.settings.playoff_teams)||6);
-  D.tradedPicksRaw=tradedPicks;
+D.playoffSpots=parseInt((league.settings&&league.settings.playoff_teams)||6);
+  D.hasToiletBowl=parseInt((league.settings&&league.settings.loser_playoff_teams)||0)>0;  D.tradedPicksRaw=tradedPicks;
   D.scoringSettings=scoringSettings||{};
   D.playerSeasonStats=playerSeasonStats||{};
   D.gamesPlayed=gamesPlayed||currentWeek;
@@ -1908,8 +1909,12 @@ function buildPickCtx(){
   var isOffseason = D.week <= 1 && !Object.keys(D.weeklyTopPlayers).length;
 
 var out = '\nDRAFT CAPITAL (Full Holdings with Pick Value Context):\n';
-  out += 'IMPORTANT: Draft picks are listed by year. A team with 4 R1s in 2027 and 1 R1 in 2028 has FOUR first rounders in the upcoming 2027 draft and ONE in the 2028 draft. Never combine picks across years into a single count.\n\n';
-  /* Note about draft timing */
+out += 'IMPORTANT: Draft picks are listed by year. A team with 4 R1s in 2027 and 1 R1 in 2028 has FOUR first rounders in the upcoming 2027 draft and ONE in the 2028 draft. Never combine picks across years into a single count.\n\n';
+  if(D.hasToiletBowl){
+    out += 'DRAFT ORDER RULES: This league has a TOILET BOWL consolation bracket for non-playoff teams. The WINNER of the toilet bowl earns a better draft pick — losing is NOT rewarded. There is NO tanking incentive because winning every game including consolation games improves draft position. Draft slot for traded picks is determined by the original owning team\'s final tournament result, not just their regular season record. Do not suggest any team should tank or lose intentionally.\n\n';
+  } else {
+    out += 'DRAFT ORDER RULES: Draft order is determined by reverse final standings — worst record picks first. Teams holding picks from struggling teams benefit from those teams finishing poorly.\n\n';
+  }  /* Note about draft timing */
   if (isOffseason) {
     out += 'NOTE: Currently in ' + currentSeasonYr + ' offseason. ';
     out += currentSeasonYr + ' rookie draft is IMMINENT — pick slots are already determined by ' + (currentSeasonYr - 1) + ' final standings. ';
