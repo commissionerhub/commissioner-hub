@@ -660,7 +660,34 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
         <div class="sec-hd"><div class="sec-eyebrow">Pro · Copy &amp; Share</div><div class="sec-title">Weekly <span class="accent">Digest</span></div></div>
         <div class="pro-wrap"><div class="pro-hd"><div class="pro-title">📰 Weekly Digest <span class="pro-chip">Pro</span></div><div class="pro-btns"><button class="btn-copy-pro hidden" id="cp-weekly" onclick="copyPro('weekly')">📋 Copy</button><button class="btn-gen" id="btn-weekly" onclick="gen('weekly',this)">✦ Generate</button></div></div><div class="pro-body"><div class="pro-ph" id="ph-weekly"><div class="pro-ph-icon">📰</div><div class="pro-ph-txt">Click Generate to write this week's digest</div></div><div class="pro-spinning" id="spin-weekly"><div class="spin"></div><div class="spin-lbl">Writing digest…</div></div><div class="pro-out" id="out-weekly"></div></div></div>
       </div>
-
+<!-- PRO: SEASON POWER RANKINGS -->
+      <div class="tab" id="tab-seasonrank">
+        <div class="sec-hd">
+          <div class="sec-eyebrow">Pro · Copy &amp; Share</div>
+          <div class="sec-title">Season <span class="accent">Power Rankings</span></div>
+          <div class="sec-desc">Who wins the 2026 season? Ranked purely on roster construction, starter quality, positional depth, and win-now potential. Dynasty future value ignored entirely.</div>
+        </div>
+        <div class="pro-wrap">
+          <div class="pro-hd">
+            <div class="pro-title">🏆 Season Power Rankings <span class="pro-chip">Pro</span></div>
+            <div class="pro-btns">
+              <button class="btn-copy-pro hidden" id="cp-seasonrank" onclick="copyPro('seasonrank')">📋 Copy</button>
+              <button class="btn-gen" id="btn-seasonrank" onclick="gen('seasonrank',this)">✦ Generate</button>
+            </div>
+          </div>
+          <div class="pro-body">
+            <div class="pro-ph" id="ph-seasonrank">
+              <div class="pro-ph-icon">🏆</div>
+              <div class="pro-ph-txt">Click Generate for 2026 season power rankings</div>
+            </div>
+            <div class="pro-spinning" id="spin-seasonrank">
+              <div class="spin"></div>
+              <div class="spin-lbl">Evaluating rosters for 2026…</div>
+            </div>
+            <div class="pro-out" id="out-seasonrank"></div>
+          </div>
+        </div>
+      </div>
       <!-- PRO: POWER RANKINGS -->
       <div class="tab" id="tab-rankings">
         <div class="sec-hd"><div class="sec-eyebrow">Pro · Copy &amp; Share</div><div class="sec-title">Power <span class="accent">Rankings</span></div></div>
