@@ -2056,8 +2056,7 @@ if(section==='aidraft'){
 }
 function gen(section,btn){
   btn.disabled=true;btn.textContent='…';
-  if(section==='aidraft'){console.log('DRAFT PROMPT:\n'+buildPrompt('aidraft'));}
-  document.getElementById('ph-'+section).style.display='none';
+  if(section==='aidraft'||section==='rankings'||section==='seasonrank'){console.log(section.toUpperCase()+' PROMPT:\n'+buildPrompt(section));}  document.getElementById('ph-'+section).style.display='none';
   document.getElementById('spin-'+section).classList.add('on');
   document.getElementById('out-'+section).classList.remove('on');
   fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:buildPrompt(section)})})
