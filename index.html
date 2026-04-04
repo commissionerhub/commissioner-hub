@@ -1268,7 +1268,7 @@ function launch(){
 /* ════════════════════════════
    PROCESS DATA
 ════════════════════════════ */
-function processData(league,users,rosters,mByWeek,allTxns,tradedPicks,players,currentWeek,allWeeks,scoringSettings,playerSeasonStats,gamesPlayed){
+function processData(league,users,rosters,mByWeek,allTxns,tradedPicks,players,currentWeek,allWeeks,scoringSettings,playerSeasonStats,gamesPlayed,fantasyCalcValues,sleeperTrending,isSuperflex,leaguePPR){
   D.leagueName=league.name||'My League';
   D.season=parseInt(league.season)||new Date().getFullYear();
   D.week=currentWeek;
@@ -1279,11 +1279,14 @@ function processData(league,users,rosters,mByWeek,allTxns,tradedPicks,players,cu
   D.playerSeasonStats=playerSeasonStats||{};
   D.gamesPlayed=gamesPlayed||currentWeek;
   D.rosterPositions=league.roster_positions||[];
-
+  D.fantasyCalcValues=fantasyCalcValues||{};
+  D.sleeperTrending=sleeperTrending||[];
+  D.isSuperflex=isSuperflex||false;
+  D.leaguePPR=leaguePPR||0;
   /* Build starter slot counts from roster positions */
   var slotCounts={};
   D.rosterPositions.forEach(function(pos){
-    if(pos==='BN'||pos==='IR'||pos==='TAXI')return; /* skip bench/IR */
+    if(pos==='BN'||pos==='IR'||pos==='TAXI')return;
     slotCounts[pos]=(slotCounts[pos]||0)+1;
   });
   D.starterSlots=slotCounts;
@@ -1752,7 +1755,20 @@ function buildScoringCtx(){
   if(s.rush_td!==undefined)parts.push(s.rush_td+'pts/rush TD');
   if(s.bonus_rec_te!==undefined)parts.push('TE premium +'+s.bonus_rec_te);
   if(s.rec_2pt!==undefined)parts.push('2pt conv bonus');
-  return parts.length?'\nScoring format: '+parts.join(' · ')+'\n':'';
+  /* Add format flags */
+  if(D.isSuperflex)parts.push('SUPER_FLEX (QBs significantly more valuable)');
+  var lineupParts=[];
+  (D.rosterPositions||[]).forEach(function(pos){if(pos!=='BN'&&pos!=='IR'&&pos!=='TAXI')lineupParts.push(pos);});
+  var ctx=parts.length?'\nScoring format: '+parts.join(' · ')+'\n':'';
+  ctx+=lineupParts.length?'Lineup slots: '+lineupParts.join(', ')+'\n':'';
+  /* Add FantasyCalc context note */
+  ctx+='\nDynasty values sourced from FantasyCalc ('+( D.isSuperflex?'Superflex':'1QB')+' format, '+(D.leaguePPR===1?'Full PPR':D.leaguePPR===0.5?'Half PPR':'Non-PPR')+').\n';
+  /* Add Sleeper trending context */
+  if(D.sleeperTrending&&D.sleeperTrending.length){
+    ctx+='\nTrending adds across all Sleeper leagues (last 24hrs): ';
+    ctx+=D.sleeperTrending.slice(0,10).map(function(p){return p.name+' ('+p.pos+')';}).join(', ')+'.\n';
+  }
+  return ctx;
 }
 
 /* ── FULL ROSTER CONTEXT FOR AI ── */
@@ -1803,7 +1819,10 @@ function buildRosterCtx(team){
 
       var age=p.pid?pidAges[p.pid]:null;
       var ageStr=age?' (age '+age+')':'';
-      var line=prefix+p.name+ageStr+'\n';
+      /* FantasyCalc dynasty value */
+      var fcVal=p.pid?(D.fantasyCalcValues[p.pid]||null):null;
+      var fcStr=fcVal?' [Dynasty Value: '+fcVal.value+'/10000 — '+fcVal.tier+(fcVal.trend>100?' 📈':fcVal.trend<-100?' 📉':'')+']':'';
+      var line=prefix+p.name+ageStr+fcStr+'\n';
 
        /* Multi-year history with positional rankings */
       stats.history.forEach(function(h){
