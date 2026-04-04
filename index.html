@@ -1910,7 +1910,8 @@ function buildPickCtx(){
      (week 1 with no matchup scores = pre-season) */
   var isOffseason = D.week <= 1 && !Object.keys(D.weeklyTopPlayers).length;
 
-  var out = '\nDRAFT CAPITAL (Full Holdings with Pick Value Context):\n';
+  out += '\nDRAFT CAPITAL (Full Holdings with Pick Value Context):\n';
+  out += 'IMPORTANT: Draft picks are listed by year. A team with 4 R1s in 2027 and 1 R1 in 2028 has FOUR first rounders in the upcoming 2027 draft and ONE in the 2028 draft. Never combine picks across years into a single count.\n\n';
 
   /* Note about draft timing */
   if (isOffseason) {
