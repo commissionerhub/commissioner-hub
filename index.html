@@ -1742,8 +1742,7 @@ function buildRosterCtx(team){
 }
 
 /* ── PICK VALUE CONTEXT FOR AI ── */
-var freshMeatId = D.teams.filter(function(t){ return t.name.toLowerCase().indexOf('fresh') > -1; })[0];   if(freshMeatId) console.log('Fresh Meat picks:', JSON.stringify(D.fullPickHoldings[freshMeatId.id]));
-function buildPickCtx(){
+console.log('All teams:', D.teams.map(function(t){ return t.id+': '+t.name; }).join(' | '));function buildPickCtx(){
   var currentSeasonYr = parseInt(D.season);
 
   /* Get last season's final standings from history for current-year pick slots */
