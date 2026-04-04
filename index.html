@@ -1183,10 +1183,9 @@ function launch(){
           else trend = 'stable';
         }
 
-        /* Durability flag */
-        var durabilityFlag = history.some(function(h) {
-          return h.missed >= 4 && h.year < currentSeasonYr;
-        });
+        /* Don't make durability judgments — pass raw GP data to Claude
+           Claude's training knowledge knows WHY players missed time */
+        var durabilityFlag = false;
 
         var latest = history[0];
 
@@ -1851,9 +1850,7 @@ function buildRosterCtx(team){
       else if(stats.trend==='stable')trendStr='→ Stable';
       else trendStr='Insufficient data';
 
-      var durStr=stats.durabilityFlag?'⚠️ Durability concern (missed 4+ games in a prior season)':'✓ Reliable';
-      line+='      Trend: '+trendStr+' | Durability: '+durStr+'\n';
-
+line+='      Trend: '+trendStr+'\n';
       if(!isStarter)line=line.replace('  — ','  — [BENCH] ');
       return line;
     }
