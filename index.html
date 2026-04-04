@@ -1205,9 +1205,10 @@ function launch(){
 
       /* Detect league format for FantasyCalc */
       var isSuperflex = (leagueData.roster_positions||[]).indexOf('SUPER_FLEX') > -1;
-      var leaguePPR = scoringSettings.rec || 0;
-      var numQbs = 1;
+      var leaguePPR = parseFloat(scoringSettings.rec || 0);
+      var numQbs = 0;
       (leagueData.roster_positions||[]).forEach(function(p){ if(p==='QB') numQbs++; });
+      if(numQbs === 0) numQbs = 1; /* default to 1QB if not found */
 
       setStep('values','active');
 
