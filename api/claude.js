@@ -3,11 +3,16 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
   try {
-    const { prompt } = req.body;
+    const { prompt, section } = req.body;
 
     if (!process.env.ANTHROPIC_API_KEY) {
       return res.status(500).json({ error: 'API key not configured' });
     }
+
+    /* Analytical sections need near-deterministic output */
+    /* Creative sections can have more variance */
+    const analyticalSections = ['rankings','seasonrank','aitrades','aidraft'];
+    const temperature = analyticalSections.includes(section) ? 0.1 : 0.5;
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -19,7 +24,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 4000,
-        temperature: 0.4,
+        temperature: temperature,
         messages: [{ role: 'user', content: prompt }]
       })
     });
