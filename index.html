@@ -1773,9 +1773,14 @@ function buildScoringCtx(){
   (D.rosterPositions||[]).forEach(function(pos){if(pos!=='BN'&&pos!=='IR'&&pos!=='TAXI')lineupParts.push(pos);});
   var ctx=parts.length?'\nScoring format: '+parts.join(' · ')+'\n':'';
   ctx+=lineupParts.length?'Lineup slots: '+lineupParts.join(', ')+'\n':'';
-  /* Add FantasyCalc context note */
+/* Add FantasyCalc context note */
   ctx+='\nDynasty values sourced from FantasyCalc ('+( D.isSuperflex?'Superflex':'1QB')+' format, '+(D.leaguePPR===1?'Full PPR':D.leaguePPR===0.5?'Half PPR':'Non-PPR')+').\n';
-  /* Add Sleeper trending context */
+  ctx+='\nCRITICAL EVALUATION RULES:\n';
+  ctx+='1. Positional rankings from the stats data (e.g. #21 QB) are the definitive measure of CURRENT player quality. A player ranked #21 at their position is NOT elite, regardless of age, dynasty value, or prior reputation.\n';
+  ctx+='2. Dynasty value from FantasyCalc reflects FUTURE potential, not current performance. A high dynasty value player can still be a poor current starter — evaluate them separately.\n';
+  ctx+='3. A player with declining positional rankings across multiple seasons (e.g. #8 QB → #18 QB → #21 QB) is trending in the wrong direction and must be assessed as such.\n';
+  ctx+='4. Never let training impressions or prior reputation override the actual stats and rankings provided. The data in this prompt supersedes any prior knowledge.\n';
+  ctx+='5. Current season performance and positional rankings carry MORE weight than dynasty upside when evaluating win-now roster quality.\n\n';  /* Add Sleeper trending context */
   if(D.sleeperTrending&&D.sleeperTrending.length){
     ctx+='\nTrending adds across all Sleeper leagues (last 24hrs): ';
     ctx+=D.sleeperTrending.slice(0,10).map(function(p){return p.name+' ('+p.pos+')';}).join(', ')+'.\n';
