@@ -30,13 +30,17 @@ ABSOLUTE RULES:
         'x-api-key': process.env.ANTHROPIC_API_KEY,
         'anthropic-version': '2023-06-01'
       },
-      body: JSON.stringify({
+      const requestBody = {
         model: 'claude-sonnet-4-20250514',
         max_tokens: 4000,
         temperature: temperature,
-        system: analyticalSections.includes(section) ? analyticalSystem : undefined,
         messages: [{ role: 'user', content: prompt }]
-      })
+      };
+      if(analyticalSections.includes(section)){
+        requestBody.system = analyticalSystem;
+      }
+
+      
 
     const data = await response.json();
 
