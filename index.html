@@ -1744,16 +1744,31 @@ function buildTrades(){document.getElementById('trade-ct').textContent=D.trades.
 ════════════════════════════ */
 function buildHistCtx(){
   if(!D.history||!D.history.length)return '';
+
+  /* Pull most recent season champion explicitly */
+  var sorted=D.history.slice().sort(function(a,b){return parseInt(b.season)-parseInt(a.season);});
+  var lastSeason=sorted[0];
+  var recentChampion=lastSeason?lastSeason.champion:'Unknown';
+  var recentYear=lastSeason?lastSeason.season:'';
+
   var ctx='\n\nLEAGUE HISTORY:\n';
-  D.history.forEach(function(h){
+  ctx+='REIGNING CHAMPION: '+recentChampion+' ('+recentYear+' season) — this is the defending champion, verified from Sleeper bracket data.\n\n';
+
+  sorted.forEach(function(h){
     ctx+='--- '+h.season+' Champion: '+h.champion+' --- ';
     ctx+=h.standings.slice(0,5).map(function(s,i){return(i+1)+'. '+s.name+' ('+s.wins+'-'+s.losses+')';}).join(' | ');
     ctx+='\n';
   });
+
   ctx+='\nOwner Multi-Year Records:\n';
   var ownerHist={};
-  D.history.forEach(function(h){h.standings.forEach(function(s,i){if(!ownerHist[s.owner])ownerHist[s.owner]=[];ownerHist[s.owner].push({season:h.season,finish:i+1});});});
-  D.teams.forEach(function(t){var hist=ownerHist[t.owner];if(hist&&hist.length){ctx+=t.owner+' ('+t.name+'): '+hist.map(function(h){return h.season+': #'+h.finish;}).join(', ')+'\n';}});
+  D.history.forEach(function(h){h.standings.forEach(function(s,i){if(!ownerHist[s.owner])ownerHist[s.owner]=[];ownerHist[s.owner].push({season:h.season,finish:i+1,champion:h.champion===s.name});});});
+  D.teams.forEach(function(t){
+    var hist=ownerHist[t.owner];
+    if(hist&&hist.length){
+      ctx+=t.owner+' ('+t.name+'): '+hist.map(function(h){return h.season+': #'+h.finish+(h.champion?' 🏆 CHAMPION':'');}).join(', ')+'\n';
+    }
+  });
   return ctx;
 }
 
