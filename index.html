@@ -1803,8 +1803,9 @@ function buildRosterCtx(team){
   });
   var lineupDesc=lineupParts.length?'Lineup: '+lineupParts.join(', '):'';
 
-  var out='\n'+team.name+' ('+team.owner+') | '+team.wins+'-'+team.losses+' | '+lineupDesc+'\n';
-
+var isOffseason=D.week<=1&&!Object.keys(D.weeklyTopPlayers).length;
+  var starterNote=isOffseason?' [OFFSEASON — starters inferred from best available by position]':'';
+  var out='\n'+team.name+' ('+team.owner+') | '+team.wins+'-'+team.losses+' | '+lineupDesc+starterNote+'\n';
  var pidNames=r._pidNames||{};
     var pidAges=r._pidAges||{};
     var statsByPid=r._statsByPid||{};
@@ -1881,11 +1882,11 @@ function buildRosterCtx(team){
       var fcStr=fcVal?' [Dynasty Value: '+fcVal.value+'/10000 — '+fcVal.tier+(fcVal.trend>100?' 📈':fcVal.trend<-100?' 📉':'')+']':'';
       var line=prefix+p.name+ageStr+fcStr+'\n';
 
-       /* Multi-year history with positional rankings */
+/* Multi-year history with positional rankings */
       stats.history.forEach(function(h){
-        var missedStr=h.missed>0?' ⚠️ missed '+h.missed+' games':'';
+        var missedStr=h.missed>=3?' ⚠️ missed '+h.missed+' games':''; /* only flag 3+ missed */
         var gpStr=h.gp+'/'+h.maxGames+' games';
-        var rankStr=h.rank?(' | #'+h.rank+' '+h.pos):'';
+        var rankStr=h.rank?(' | #'+h.rank+' '+h.pos+' in '+h.year):'';
         line+='      '+h.year+': '+h.pts+'pts ('+h.avg+'/gm, '+gpStr+rankStr+missedStr+')\n';
       });
 
