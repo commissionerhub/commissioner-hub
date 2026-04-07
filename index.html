@@ -1810,9 +1810,49 @@ function buildRosterCtx(team){
     var statsByPid=r._statsByPid||{};
     var starterPids=r._starters||{};
 
-  /* Reverse lookup name→pid */
+/* Build reverse lookup name→pid */
   var nameToPid={};
   Object.keys(pidNames).forEach(function(pid){nameToPid[pidNames[pid]]=pid;});
+
+  /* If no starters detected (offseason) infer from best players by position */
+  var hasStarters=Object.keys(starterPids).length>0;
+  if(!hasStarters){
+    posOrder.forEach(function(pos){
+      var pl=r[pos]||[];
+      var numSlots=slots[pos]||0;
+      if(!numSlots||!pl.length)return;
+      /* Sort players by 2025 pts descending and mark top N as starters */
+      var withPts=pl.map(function(name){
+        var pid=nameToPid[name];
+        var stats=pid?statsByPid[pid]:null;
+        var pts=stats&&stats.history&&stats.history[0]?stats.history[0].pts:0;
+        return{name:name,pid:pid,pts:pts};
+      });
+      withPts.sort(function(a,b){return b.pts-a.pts;});
+      withPts.slice(0,numSlots).forEach(function(p){
+        if(p.pid)starterPids[p.pid]=true;
+      });
+    });
+    /* Also handle FLEX and SUPER_FLEX — mark next best RB/WR/TE and QB as starters */
+    var flexSlots=(slots['FLEX']||0)+(slots['SUPER_FLEX']||0);
+    if(flexSlots>0){
+      var flexCandidates=[];
+      ['QB','RB','WR','TE'].forEach(function(pos){
+        (r[pos]||[]).forEach(function(name){
+          var pid=nameToPid[name];
+          if(pid&&!starterPids[pid]){
+            var stats=statsByPid[pid];
+            var pts=stats&&stats.history&&stats.history[0]?stats.history[0].pts:0;
+            flexCandidates.push({pid:pid,pts:pts});
+          }
+        });
+      });
+      flexCandidates.sort(function(a,b){return b.pts-a.pts;});
+      flexCandidates.slice(0,flexSlots).forEach(function(p){
+        starterPids[p.pid]=true;
+      });
+    }
+  }
 
   posOrder.forEach(function(pos){
     var pl=r[pos]||[];
