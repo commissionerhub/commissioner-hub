@@ -2014,6 +2014,7 @@ function buildAllRosterCtx(){
   var out='\nFULL ROSTER BREAKDOWN (Player · Season Pts · Avg/Game):\n';
   var sorted=D.teams.slice().sort(function(a,b){return b.wins-a.wins||b.pf-a.pf;});
   sorted.forEach(function(t){out+=buildRosterCtx(t)+'\n';});
+  console.log('ROSTER CONTEXT SENT TO AI:\n'+out);
   return out;
 }
 
