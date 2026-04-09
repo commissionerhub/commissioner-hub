@@ -1263,48 +1263,51 @@ function launch(){
 /* Fetch NFLVerse weekly stats for last completed season */
         var nflSeason = currentSeasonYr - 1;
         fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fetchNFLVerse:true,nflSeason:nflSeason})})
-          .then(function(d){return d.csv||'';})
-          .catch(function(e){console.log('NFLVerse fetch failed:',e.message);return '';})
-          .then(function(csvText){
+          .then(function(r){return r.json();})
+          .catch(function(){return {csv:''};})
+          .then(function(d){
             setStep('nfl','done');
-            /* Parse CSV into name lookup */
+            var nflverseStats={};
+            var csvText=d.csv||'';
             if(csvText){
-              var lines = csvText.split('\n');
-              var headers = lines[0].split(',').map(function(h){ return h.trim().replace(/"/g,''); });
-              var nameIdx = headers.indexOf('player_display_name');
-              var snapIdx = headers.indexOf('snap_share');
-              var tgtIdx = headers.indexOf('target_share');
-              var airIdx = headers.indexOf('air_yards_share');
-              var posIdx = headers.indexOf('position');
+              var lines=csvText.split('\n');
+              var headers=lines[0].split(',').map(function(h){return h.trim().replace(/"/g,'');});
+              var nameIdx=headers.indexOf('player_display_name');
+              var snapIdx=headers.indexOf('snap_share');
+              var tgtIdx=headers.indexOf('target_share');
+              var airIdx=headers.indexOf('air_yards_share');
+              var posIdx=headers.indexOf('position');
               for(var li=1;li<lines.length;li++){
-                var cols = lines[li].split(',');
-                if(!cols[nameIdx]) continue;
-                var season = parseInt(cols[seasonIdx]);
-                var name = cols[nameIdx].replace(/"/g,'').trim();
-                var snap = parseFloat(cols[snapIdx])||0;
-                var tgt = parseFloat(cols[tgtIdx])||0;
-                var air = parseFloat(cols[airIdx])||0;
-                var pos = cols[posIdx]?cols[posIdx].replace(/"/g,'').trim():'';
-                /* Aggregate by name — sum across weeks then will avg */
-                if(!nflverseStats[name]){
-                  nflverseStats[name]={snapTotal:0,tgtTotal:0,airTotal:0,weeks:0,pos:pos};
-                }
+                var cols=lines[li].split(',');
+                if(!cols[nameIdx])continue;
+                var name=cols[nameIdx].replace(/"/g,'').trim();
+                var snap=parseFloat(cols[snapIdx])||0;
+                var tgt=parseFloat(cols[tgtIdx])||0;
+                var air=parseFloat(cols[airIdx])||0;
+                var pos=cols[posIdx]?cols[posIdx].replace(/"/g,'').trim():'';
+                if(!nflverseStats[name])nflverseStats[name]={snapTotal:0,tgtTotal:0,airTotal:0,weeks:0,pos:pos};
                 nflverseStats[name].snapTotal+=snap;
                 nflverseStats[name].tgtTotal+=tgt;
                 nflverseStats[name].airTotal+=air;
                 nflverseStats[name].weeks++;
               }
-              /* Average across weeks */
               Object.keys(nflverseStats).forEach(function(name){
-                var s=nflverseStats[name];
-                var w=s.weeks||1;
-                nflverseStats[name]={
-                  snapPct:parseFloat((s.snapTotal/w*100).toFixed(1)),
-                  targetShare:parseFloat((s.tgtTotal/w*100).toFixed(1)),
-                  airYards:parseFloat((s.airTotal/w*100).toFixed(1)),
-                  pos:s.pos
-                };
+                var s=nflverseStats[name];var w=s.weeks||1;
+                nflverseStats[name]={snapPct:parseFloat((s.snapTotal/w*100).toFixed(1)),targetShare:parseFloat((s.tgtTotal/w*100).toFixed(1)),airYards:parseFloat((s.airTotal/w*100).toFixed(1)),pos:s.pos};
               });
+            }
+            processData(leagueData,usersData,rostersData,mByWeek,allTxns,tradedPicksData,players,currentWeek,allWeeks,scoringSettings,playerSeasonStats,gamesPlayed,fantasyCalcValues,sleeperTrending,isSuperflex,leaguePPR,nflverseStats);
+            document.getElementById('tb-league').textContent=D.leagueName;
+            document.getElementById('tb-week').textContent='Season '+D.season+' · Week '+D.week;
+            document.getElementById('tb-demo').classList.add('hidden');
+            showScreen('dashboard');
+            buildAll();
+            btn.disabled=false;
+            btn.textContent='⚡ Load My League';
+            document.getElementById('load-steps').style.display='none';
+            ['league','history','teams','matchups','txns','players','stats','values','nfl'].forEach(function(s){setStep(s,'');});
+          });
+      });
         }
             /* nflverseStats is guaranteed to exist here */
             processData(leagueData,usersData,rostersData,mByWeek,allTxns,tradedPicksData,players,currentWeek,allWeeks,scoringSettings,playerSeasonStats,gamesPlayed,fantasyCalcValues,sleeperTrending,isSuperflex,leaguePPR,nflverseStats);
