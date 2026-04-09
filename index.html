@@ -416,6 +416,7 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 <div class="load-step" id="step-stats"><div class="step-dot"></div>Player stats (4 seasons)</div>
       <div class="load-step" id="step-values"><div class="step-dot"></div>Dynasty values &amp; trends</div>
       <div class="load-step" id="step-nfl"><div class="step-dot"></div>NFL snap &amp; target data</div>
+    </div>
     <div class="divider"><div class="divider-line"></div><div class="divider-txt">Or explore first</div><div class="divider-line"></div></div>
     <button class="btn-demo" onclick="loadDemo()">🎮 Preview with Demo League</button>
     <div class="demo-note">All features · No account needed</div>
@@ -1966,8 +1967,7 @@ var isOffseason=D.week<=1&&!Object.keys(D.weeklyTopPlayers).length;
       /* NFLVerse snap and target share */
       var nflName=p.name.replace(/\(.*?\)/g,'').trim();
       var nflData=D.nflverseStats[nflName]||null;
-      var nflStr=nflData&&nflData.snapPct>0?
-        ' | '+D.season-1+' Snaps: '+nflData.snapPct+'%'+(nflData.targetShare>0?' | Target Share: '+nflData.targetShare+'%'):'';
+      var nflStr=nflData&&nflData.snapPct>0?' | '+(D.season-1)+' Snaps: '+nflData.snapPct+'%'+(nflData.targetShare>0?' | Target Share: '+nflData.targetShare+'%'):'';
 var line=prefix+p.name+ageStr+fcStr+depthStr+injuryStr+nflStr+perfTier+'\n';
 /* Multi-year history with positional rankings */
       stats.history.forEach(function(h){
