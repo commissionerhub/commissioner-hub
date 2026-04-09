@@ -1258,9 +1258,7 @@ function launch(){
               count: entry.count || 0
             });
           }
-        });
-
-/* Fetch NFLVerse weekly stats for last completed season */
+            /* Fetch NFLVerse weekly stats for last completed season */
         var nflSeason = currentSeasonYr - 1;
         fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fetchNFLVerse:true,nflSeason:nflSeason})})
           .then(function(r){return r.json();})
