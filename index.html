@@ -1377,6 +1377,8 @@ D.playoffSpots=parseInt((league.settings&&league.settings.playoff_teams)||6);
     /* Store pid→name for display */
   pg._pidNames={};
     pg._pidAges={};
+    pg._pidDepth={};
+    pg._pidInjury={};
     (t._pids||[]).forEach(function(pid){
       var pl=players[pid];
       if(pl){
@@ -1389,6 +1391,14 @@ D.playoffSpots=parseInt((league.settings&&league.settings.playoff_teams)||6);
           var m=today.getMonth()-birth.getMonth();
           if(m<0||(m===0&&today.getDate()<birth.getDate()))age--;
           pg._pidAges[pid]=age;
+        }
+        /* Depth chart position — 0 = starter, 1 = backup, etc */
+        if(pl.depth_chart_order!==undefined&&pl.depth_chart_order!==null){
+          pg._pidDepth[pid]=parseInt(pl.depth_chart_order);
+        }
+        /* Current injury designation */
+        if(pl.injury_status){
+          pg._pidInjury[pid]=pl.injury_status;
         }
       }
     });
@@ -1822,9 +1832,11 @@ var isOffseason=D.week<=1&&!Object.keys(D.weeklyTopPlayers).length;
   var starterNote=isOffseason?' [OFFSEASON — starters inferred from best available by position]':'';
   var out='\n'+team.name+' ('+team.owner+') | '+team.wins+'-'+team.losses+' | '+lineupDesc+starterNote+'\n';
  var pidNames=r._pidNames||{};
-    var pidAges=r._pidAges||{};
-    var statsByPid=r._statsByPid||{};
-    var starterPids=r._starters||{};
+      var pidAges=r._pidAges||{};
+      var pidDepth=r._pidDepth||{};
+      var pidInjury=r._pidInjury||{};
+      var statsByPid=r._statsByPid||{};
+      var starterPids=r._starters||{};
 
 /* Build reverse lookup name→pid */
   var nameToPid={};
@@ -1892,10 +1904,15 @@ var isOffseason=D.week<=1&&!Object.keys(D.weeklyTopPlayers).length;
 
       var age=p.pid?pidAges[p.pid]:null;
       var ageStr=age?' (age '+age+')':'';
-      /* FantasyCalc dynasty value */
       var fcVal=p.pid?(D.fantasyCalcValues[p.pid]||null):null;
       var fcStr=fcVal?' [Dynasty Value: '+fcVal.value+'/10000 — '+fcVal.tier+(fcVal.trend>100?' 📈':fcVal.trend<-100?' 📉':'')+']':'';
-      var line=prefix+p.name+ageStr+fcStr+'\n';
+      /* NFL depth chart position */
+      var depth=p.pid!==undefined?pidDepth[p.pid]:undefined;
+      var depthStr=depth!==undefined?(' | NFL Depth: '+(depth===0?'STARTER':depth===1?'BACKUP':'3rd string')):'';
+      /* Current injury status */
+      var injury=p.pid?pidInjury[p.pid]:null;
+      var injuryStr=injury?' | ⚠️ '+injury:'';
+      var line=prefix+p.name+ageStr+fcStr+depthStr+injuryStr+perfTier+'\n';
 
 /* Multi-year history with positional rankings */
       stats.history.forEach(function(h){
