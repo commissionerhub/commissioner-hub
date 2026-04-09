@@ -1308,18 +1308,7 @@ function launch(){
             ['league','history','teams','matchups','txns','players','stats','values','nfl'].forEach(function(s){setStep(s,'');});
           });
       });
-        }
-            /* nflverseStats is guaranteed to exist here */
-            processData(leagueData,usersData,rostersData,mByWeek,allTxns,tradedPicksData,players,currentWeek,allWeeks,scoringSettings,playerSeasonStats,gamesPlayed,fantasyCalcValues,sleeperTrending,isSuperflex,leaguePPR,nflverseStats);
-            document.getElementById('tb-league').textContent=D.leagueName;
-            document.getElementById('tb-week').textContent='Season '+D.season+' · Week '+D.week;
-            document.getElementById('tb-demo').classList.add('hidden');
-            showScreen('dashboard');
-            buildAll();
-            btn.disabled=false;
-            btn.textContent='⚡ Load My League';
-            document.getElementById('load-steps').style.display='none';
-            ['league','history','teams','matchups','txns','players','stats','values','nfl'].forEach(function(s){setStep(s,'');});
+       
           });
       });
     });
