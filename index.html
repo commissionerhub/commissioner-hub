@@ -1262,9 +1262,10 @@ function launch(){
 
 /* Fetch NFLVerse weekly stats for last completed season */
         var nflSeason = currentSeasonYr - 1;
-        fetch('https://github.com/nflverse/nflverse-data/releases/download/player_stats/player_stats_'+nflSeason+'.csv', {mode:'cors'})
-          .then(function(r){ return r.text(); })
-          .catch(function(e){ console.log('NFLVerse fetch failed:',e.message); return ''; })
+        fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fetchNFLVerse:true,nflSeason:nflSeason})})
+          .then(function(r){return r.json();})
+          .then(function(d){return d.csv||'';})
+          .catch(function(e){console.log('NFLVerse fetch failed:',e.message);return '';})
           .then(function(csvText){
             setStep('nfl','done');
             /* Parse CSV into name lookup */
