@@ -1262,7 +1262,7 @@ function launch(){
 
 /* Fetch NFLVerse weekly stats for last completed season */
         var nflSeason = currentSeasonYr - 1;
-        fetch('https://github.com/nflverse/nflverse-data/releases/download/player_stats/player_stats_'+nflSeason+'.csv')
+        fetch('https://raw.githubusercontent.com/nflverse/nflverse-data/refs/heads/main/data/player_stats/player_stats_'+nflSeason+'.csv')
           .then(function(r){ return r.text(); })
           .catch(function(){ return ''; })
           .then(function(csvText){
