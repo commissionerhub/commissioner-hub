@@ -1307,7 +1307,6 @@ function launch(){
             document.getElementById('load-steps').style.display='none';
             ['league','history','teams','matchups','txns','players','stats','values','nfl'].forEach(function(s){setStep(s,'');});
           });
-     });
   })
   .catch(function(err){
     btn.disabled=false;btn.textContent='⚡ Load My League';
