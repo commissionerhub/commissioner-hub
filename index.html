@@ -1262,14 +1262,13 @@ function launch(){
 
 /* Fetch NFLVerse weekly stats for last completed season */
         var nflSeason = currentSeasonYr - 1;
-        fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fetchNFLVerse:true,nflSeason:nflSeason})})
-          .then(function(r){return r.json();})
+var nflverseStats={};
+        fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fetchNFLVerse:true,nflSeason:nflSeason})})          .then(function(r){return r.json();})
           .then(function(d){return d.csv||'';})
           .catch(function(e){console.log('NFLVerse fetch failed:',e.message);return '';})
           .then(function(csvText){
             setStep('nfl','done');
             /* Parse CSV into name lookup */
-            var nflverseStats = {};
             if(csvText){
               var lines = csvText.split('\n');
               var headers = lines[0].split(',').map(function(h){ return h.trim().replace(/"/g,''); });
