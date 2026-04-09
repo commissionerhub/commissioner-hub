@@ -4,10 +4,19 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { prompt, section } = req.body;
+    const { prompt, section, fetchNFLVerse, nflSeason } = req.body;
 
-    if (!process.env.ANTHROPIC_API_KEY) {
+    if (!process.env.ANTHROPIC_API_KEY && !fetchNFLVerse) {
       return res.status(500).json({ error: 'API key not configured' });
+    }
+
+    /* NFLVerse proxy — fetch CSV server-side to avoid CORS */
+    if (fetchNFLVerse) {
+      const csvUrl = `https://github.com/nflverse/nflverse-data/releases/download/player_stats/player_stats_${nflSeason}.csv`;
+      const r = await fetch(csvUrl);
+      if (!r.ok) return res.status(200).json({ csv: '' });
+      const csv = await r.text();
+      return res.status(200).json({ csv });
     }
 
     const analyticalSections = ['rankings','seasonrank','aitrades','aidraft'];
@@ -44,7 +53,7 @@ export default async function handler(req, res) {
     }
 
     const text = data.content?.[0]?.text || '';
-    return res.status(200).json({ text: text });
+    return res.status(200).json({ text });
 
   } catch (err) {
     return res.status(500).json({ error: err.message });
