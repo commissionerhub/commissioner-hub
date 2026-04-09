@@ -1262,9 +1262,9 @@ function launch(){
 
 /* Fetch NFLVerse weekly stats for last completed season */
         var nflSeason = currentSeasonYr - 1;
-        fetch('https://raw.githubusercontent.com/nflverse/nflverse-data/refs/heads/main/data/player_stats/player_stats_'+nflSeason+'.csv')
+        fetch('https://github.com/nflverse/nflverse-data/releases/download/player_stats/player_stats_'+nflSeason+'.csv', {mode:'cors'})
           .then(function(r){ return r.text(); })
-          .catch(function(){ return ''; })
+          .catch(function(e){ console.log('NFLVerse fetch failed:',e.message); return ''; })
           .then(function(csvText){
             setStep('nfl','done');
             /* Parse CSV into name lookup */
@@ -1307,7 +1307,7 @@ function launch(){
                 };
               });
             }
-            processData(leagueData, usersData, rostersData, mByWeek, allTxns, tradedPicksData, players, currentWeek, allWeeks, scoringSettings, playerSeasonStats, gamesPlayed, fantasyCalcValues, sleeperTrending, isSuperflex, leaguePPR, nflverseStats);        document.getElementById('tb-league').textContent = D.leagueName;
+            processData(leagueData, usersData, rostersData, mByWeek, allTxns, tradedPicksData, players, currentWeek, allWeeks, scoringSettings, playerSeasonStats, gamesPlayed, fantasyCalcValues, sleeperTrending, isSuperflex, leaguePPR, nflverseStats||{});        document.getElementById('tb-league').textContent = D.leagueName;
       document.getElementById('tb-week').textContent = 'Season ' + D.season + ' · Week ' + D.week;
       document.getElementById('tb-demo').classList.add('hidden');
       showScreen('dashboard');
