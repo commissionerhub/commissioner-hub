@@ -1967,8 +1967,11 @@ var isOffseason=D.week<=1&&!Object.keys(D.weeklyTopPlayers).length;
       /* NFLVerse snap and target share */
       var nflName=p.name.replace(/\(.*?\)/g,'').trim();
       var nflData=D.nflverseStats[nflName]||null;
-      var nflStr=nflData&&nflData.snapPct>0?' | '+(D.season-1)+' Snaps: '+nflData.snapPct+'%'+(nflData.targetShare>0?' | Target Share: '+nflData.targetShare+'%'):'';
-var line=prefix+p.name+ageStr+fcStr+depthStr+injuryStr+nflStr+perfTier+'\n';
+var nflStr='';
+      if(nflData&&nflData.snapPct>0){
+        nflStr=' | '+(D.season-1)+' Snaps: '+nflData.snapPct+'%';
+        if(nflData.targetShare>0)nflStr+=' | Target Share: '+nflData.targetShare+'%';
+      }var line=prefix+p.name+ageStr+fcStr+depthStr+injuryStr+nflStr+perfTier+'\n';
 /* Multi-year history with positional rankings */
       stats.history.forEach(function(h){
         var missedStr=h.missed>=3?' ⚠️ missed '+h.missed+' games':''; /* only flag 3+ missed */
