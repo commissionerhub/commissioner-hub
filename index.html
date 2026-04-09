@@ -414,7 +414,8 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
       <div class="load-step" id="step-txns"><div class="step-dot"></div>Transactions &amp; picks</div>
       <div class="load-step" id="step-players"><div class="step-dot"></div>Player database</div>
 <div class="load-step" id="step-stats"><div class="step-dot"></div>Player stats (4 seasons)</div>
-      <div class="load-step" id="step-values"><div class="step-dot"></div>Dynasty values &amp; trends</div>    </div>
+      <div class="load-step" id="step-values"><div class="step-dot"></div>Dynasty values &amp; trends</div>
+      <div class="load-step" id="step-nfl"><div class="step-dot"></div>NFL snap &amp; target data</div>
     <div class="divider"><div class="divider-line"></div><div class="divider-txt">Or explore first</div><div class="divider-line"></div></div>
     <button class="btn-demo" onclick="loadDemo()">🎮 Preview with Demo League</button>
     <div class="demo-note">All features · No account needed</div>
@@ -758,7 +759,8 @@ var D={
   sleeperTrending:[],     /* trending adds across all Sleeper leagues */
   isSuperflex: false,     /* league format flag */
   leaguePPR: 0,           /* 0 = non-PPR, 0.5 = half, 1 = full */
-  hasToiletBowl: false    /* consolation bracket exists */
+  hasToiletBowl: false,   /* consolation bracket exists */
+  nflverseStats:{}        /* name → {snapPct, targetShare, airYards} */
 };
 
 /* ════════════════════════════
@@ -1224,6 +1226,7 @@ function launch(){
       ])
       .then(function(results){
         setStep('values','done');
+        setStep('nfl','active');
 
         /* Process FantasyCalc values into pid lookup */
         var fantasyCalcValues = {};
@@ -1256,8 +1259,54 @@ function launch(){
           }
         });
 
-        processData(leagueData, usersData, rostersData, mByWeek, allTxns, tradedPicksData, players, currentWeek, allWeeks, scoringSettings, playerSeasonStats, gamesPlayed, fantasyCalcValues, sleeperTrending, isSuperflex, leaguePPR);
-        document.getElementById('tb-league').textContent = D.leagueName;
+/* Fetch NFLVerse weekly stats for last completed season */
+        var nflSeason = currentSeasonYr - 1;
+        fetch('https://github.com/nflverse/nflverse-data/releases/download/player_stats/player_stats_'+nflSeason+'.csv')
+          .then(function(r){ return r.text(); })
+          .catch(function(){ return ''; })
+          .then(function(csvText){
+            setStep('nfl','done');
+            /* Parse CSV into name lookup */
+            var nflverseStats = {};
+            if(csvText){
+              var lines = csvText.split('\n');
+              var headers = lines[0].split(',').map(function(h){ return h.trim().replace(/"/g,''); });
+              var nameIdx = headers.indexOf('player_display_name');
+              var snapIdx = headers.indexOf('snap_share');
+              var tgtIdx = headers.indexOf('target_share');
+              var airIdx = headers.indexOf('air_yards_share');
+              var posIdx = headers.indexOf('position');
+              for(var li=1;li<lines.length;li++){
+                var cols = lines[li].split(',');
+                if(!cols[nameIdx]) continue;
+                var season = parseInt(cols[seasonIdx]);
+                var name = cols[nameIdx].replace(/"/g,'').trim();
+                var snap = parseFloat(cols[snapIdx])||0;
+                var tgt = parseFloat(cols[tgtIdx])||0;
+                var air = parseFloat(cols[airIdx])||0;
+                var pos = cols[posIdx]?cols[posIdx].replace(/"/g,'').trim():'';
+                /* Aggregate by name — sum across weeks then will avg */
+                if(!nflverseStats[name]){
+                  nflverseStats[name]={snapTotal:0,tgtTotal:0,airTotal:0,weeks:0,pos:pos};
+                }
+                nflverseStats[name].snapTotal+=snap;
+                nflverseStats[name].tgtTotal+=tgt;
+                nflverseStats[name].airTotal+=air;
+                nflverseStats[name].weeks++;
+              }
+              /* Average across weeks */
+              Object.keys(nflverseStats).forEach(function(name){
+                var s=nflverseStats[name];
+                var w=s.weeks||1;
+                nflverseStats[name]={
+                  snapPct:parseFloat((s.snapTotal/w*100).toFixed(1)),
+                  targetShare:parseFloat((s.tgtTotal/w*100).toFixed(1)),
+                  airYards:parseFloat((s.airTotal/w*100).toFixed(1)),
+                  pos:s.pos
+                };
+              });
+            }
+            processData(leagueData, usersData, rostersData, mByWeek, allTxns, tradedPicksData, players, currentWeek, allWeeks, scoringSettings, playerSeasonStats, gamesPlayed, fantasyCalcValues, sleeperTrending, isSuperflex, leaguePPR, nflverseStats);        document.getElementById('tb-league').textContent = D.leagueName;
       document.getElementById('tb-week').textContent = 'Season ' + D.season + ' · Week ' + D.week;
       document.getElementById('tb-demo').classList.add('hidden');
       showScreen('dashboard');
@@ -1265,9 +1314,10 @@ function launch(){
       btn.disabled = false;
       btn.textContent = '⚡ Load My League';
       document.getElementById('load-steps').style.display = 'none';
-      ['league','history','teams','matchups','txns','players','stats'].forEach(function(s){ setStep(s,''); });
+       ['league','history','teams','matchups','txns','players','stats','values','nfl'].forEach(function(s){ setStep(s,''); });
+          });
+      });  
     });
-   });
   })
   .catch(function(err){
     btn.disabled=false;btn.textContent='⚡ Load My League';
@@ -1286,7 +1336,8 @@ function processData(league,users,rosters,mByWeek,allTxns,tradedPicks,players,cu
   D.week=currentWeek;
   D.totalWeeks=parseInt((league.settings&&league.settings.playoff_week_start)?league.settings.playoff_week_start-1:14);
 D.playoffSpots=parseInt((league.settings&&league.settings.playoff_teams)||6);
-  D.hasToiletBowl=parseInt((league.settings&&league.settings.loser_playoff_teams)||0)>0;  D.tradedPicksRaw=tradedPicks;
+   D.hasToiletBowl=parseInt((league.settings&&league.settings.loser_playoff_teams)||0)>0;
+  D.nflverseStats=nflverseStats||{};  D.tradedPicksRaw=tradedPicks;
   D.scoringSettings=scoringSettings||{};
   D.playerSeasonStats=playerSeasonStats||{};
   D.gamesPlayed=gamesPlayed||currentWeek;
@@ -1912,8 +1963,12 @@ var isOffseason=D.week<=1&&!Object.keys(D.weeklyTopPlayers).length;
       /* Current injury status */
       var injury=p.pid?pidInjury[p.pid]:null;
       var injuryStr=injury?' | ⚠️ '+injury:'';
-      var line=prefix+p.name+ageStr+fcStr+depthStr+injuryStr+perfTier+'\n';
-
+      /* NFLVerse snap and target share */
+      var nflName=p.name.replace(/\(.*?\)/g,'').trim();
+      var nflData=D.nflverseStats[nflName]||null;
+      var nflStr=nflData&&nflData.snapPct>0?
+        ' | '+D.season-1+' Snaps: '+nflData.snapPct+'%'+(nflData.targetShare>0?' | Target Share: '+nflData.targetShare+'%'):'';
+var line=prefix+p.name+ageStr+fcStr+depthStr+injuryStr+nflStr+perfTier+'\n';
 /* Multi-year history with positional rankings */
       stats.history.forEach(function(h){
         var missedStr=h.missed>=3?' ⚠️ missed '+h.missed+' games':''; /* only flag 3+ missed */
