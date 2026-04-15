@@ -23,7 +23,7 @@ if (req.body.fetchSheetTakes) {
         });
         if (!r.ok) return res.status(200).json({ csv: '', error: 'Sheet fetch failed: '+r.status });
         const csv = await r.text();
-        return res.status(200).json({ csv: csv.substring(0,500), debug: true });
+        return res.status(200).json({ csv: csv });
       } catch(e) {
         return res.status(200).json({ csv: '', error: e.message });
       }
