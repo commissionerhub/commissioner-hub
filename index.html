@@ -1275,24 +1275,28 @@ setStep('takes','active');
             if(sheetCsv){
               var sLines=sheetCsv.split('\n');
 /* Google Sheets gviz wraps everything in quotes — strip carefully */
-              var sHeaders=sLines[0].split(',').map(function(h){return h.trim().replace(/^"|"$/g,'').toLowerCase();});              var nameCol=sHeaders.indexOf('name');
-              var teamCol=sHeaders.indexOf('team');
-              var posCol=sHeaders.indexOf('position');
-              var ageCol=sHeaders.indexOf('age');
-              var valCol=sHeaders.indexOf('value');
-              var rankCol=sHeaders.indexOf('rank');
-              var posRankCol=sHeaders.indexOf('pos rank');
-              var trendCol=sHeaders.indexOf('30 day trend');
-              var profileCol=sHeaders.indexOf('profile');
-              var ceilCol=sHeaders.indexOf('ceiling');
-              var ceilCtxCol=sHeaders.indexOf('ceiling context');
-              var likelyCol=sHeaders.indexOf('likely');
-              var likelyCtxCol=sHeaders.indexOf('likely context');
-              var worstCol=sHeaders.indexOf('worst');
-              var worstCtxCol=sHeaders.indexOf('worst context');
-              var projCol=sHeaders.indexOf('projection');
-              var dynCol=sHeaders.indexOf('dynasty value');
-              var breakdownCol=sHeaders.indexOf('full breakdown');
+              var sHeaders=sLines[0].split(',').map(function(h){return h.trim().replace(/^"|"$/g,'').toLowerCase().replace(/\s+/g,' ');});
+              console.log('All headers:', sHeaders);
+              /* Flexible column matching — finds column containing keyword */
+              function findCol(keyword){return sHeaders.findIndex(function(h){return h.indexOf(keyword.toLowerCase())>-1;});}
+              var nameCol=findCol('name');
+              var teamCol=findCol('team');
+              var posCol=findCol('position');
+              var ageCol=findCol('age');
+              var valCol=findCol('value');
+              var rankCol=sHeaders.findIndex(function(h){return h==='rank';});
+              var posRankCol=findCol('pos rank');
+              var trendCol=findCol('30');
+              var profileCol=findCol('profile');
+              var ceilCol=sHeaders.findIndex(function(h){return h==='ceiling';});
+              var ceilCtxCol=findCol('ceiling context');
+              var likelyCol=sHeaders.findIndex(function(h){return h==='likely';});
+              var likelyCtxCol=findCol('likely context');
+              var worstCol=sHeaders.findIndex(function(h){return h==='worst';});
+              var worstCtxCol=findCol('worst context');
+              var projCol=findCol('projection');
+              var dynCol=findCol('dynasty');
+              var breakdownCol=findCol('breakdown');
               for(var si=1;si<sLines.length;si++){
                 /* Handle quoted CSV fields properly */
                 var row=[];var field='';var inQuote=false;
