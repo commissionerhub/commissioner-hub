@@ -1326,6 +1326,7 @@ setStep('takes','active');
               }
             }
             D.commishTakes=commishTakes;
+            console.log('Commissioner takes loaded: '+Object.keys(commishTakes).length+' players');
             setStep('takes','done');
             fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fetchNFLVerse:true,nflSeason:nflSeason})})          .then(function(r){return r.json();})
           .catch(function(){return {csv:''};})
