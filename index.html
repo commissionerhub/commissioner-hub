@@ -1269,6 +1269,7 @@ setStep('takes','active');
           .then(function(r){return r.json();})
           .catch(function(){return {csv:''};})
           .then(function(d){
+            console.log('Sheet response:', JSON.stringify(d).substring(0,200));
             var sheetCsv=d.csv||'';
             var commishTakes={};
             if(sheetCsv){
