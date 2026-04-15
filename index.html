@@ -1264,6 +1264,7 @@ function launch(){
         /* Fetch NFLVerse weekly stats for last completed season */
         var nflSeason = currentSeasonYr - 1;
 setStep('takes','active');
+        console.log('Fetching commissioner takes...');
         fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fetchSheetTakes:true})})
           .then(function(r){return r.json();})
           .catch(function(){return {csv:''};})
