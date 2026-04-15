@@ -2041,6 +2041,7 @@ var nflStr='';
         if(take.worst)takeStr+='\n      [FLOOR] '+take.worst+(take.worstCtx?' — '+take.worstCtx:'');
         if(take.trend)takeStr+='\n      [30-DAY TREND] '+take.trend;
         if(take.breakdown)takeStr+='\n      [FULL BREAKDOWN] '+take.breakdown;
+      }
       var line=prefix+p.name+ageStr+fcStr+depthStr+injuryStr+nflStr+(perfTier||'')+takeStr+'\n';
 /* Multi-year history with positional rankings */
       stats.history.forEach(function(h){
