@@ -1273,11 +1273,28 @@ setStep('takes','active');
             var sheetCsv=d.csv||'';
             var commishTakes={};
             if(sheetCsv){
+              /* Robust CSV parser that handles quoted fields with commas */
+              function parseCSVLine(line){
+                var result=[];var field='';var inQuote=false;
+                for(var i=0;i<line.length;i++){
+                  var c=line[i];
+                  if(c==='"'){
+                    if(inQuote&&line[i+1]==='"'){field+='"';i++;}
+                    else{inQuote=!inQuote;}
+                  } else if(c===','&&!inQuote){
+                    result.push(field.trim());field='';
+                  } else {
+                    field+=c;
+                  }
+                }
+                result.push(field.trim());
+                return result;
+              }
+
               var sLines=sheetCsv.split('\n');
-/* Google Sheets gviz wraps everything in quotes — strip carefully */
-              var sHeaders=sLines[0].split(',').map(function(h){return h.trim().replace(/^"|"$/g,'').toLowerCase().replace(/\s+/g,' ');});
+              var sHeaders=parseCSVLine(sLines[0]).map(function(h){return h.toLowerCase().replace(/\s+/g,' ');});
               console.log('All headers:', sHeaders);
-              /* Flexible column matching — finds column containing keyword */
+
               function findCol(keyword){return sHeaders.findIndex(function(h){return h.indexOf(keyword.toLowerCase())>-1;});}
               var nameCol=findCol('name');
               var teamCol=findCol('team');
@@ -1297,19 +1314,13 @@ setStep('takes','active');
               var projCol=findCol('projection');
               var dynCol=findCol('dynasty');
               var breakdownCol=findCol('breakdown');
+
               for(var si=1;si<sLines.length;si++){
-                /* Handle quoted CSV fields properly */
-                var row=[];var field='';var inQuote=false;
-                for(var ci=0;ci<sLines[si].length;ci++){
-                  var ch=sLines[si][ci];
-                  if(ch==='"'){inQuote=!inQuote;}
-                  else if(ch===','&&!inQuote){row.push(field.trim());field='';}
-                  else{field+=ch;}
-                }
-                row.push(field.trim());
-                var pName=nameCol>=0?(row[nameCol]||'').replace(/^"|"$/g,'').trim():'';
+                if(!sLines[si].trim())continue;
+                var row=parseCSVLine(sLines[si]);
+                var pName=nameCol>=0?(row[nameCol]||'').trim():'';
                 if(!pName)continue;
-                function cleanCell(val){return (val||'').replace(/^"|"$/g,'').trim();}
+                function cleanCell(val){return (val||'').trim();}
                 commishTakes[pName.toLowerCase()]={
                   name:pName,
                   team:teamCol>=0?cleanCell(row[teamCol]):'',
