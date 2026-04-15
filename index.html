@@ -2008,8 +2008,12 @@ var isOffseason=D.week<=1&&!Object.keys(D.weeklyTopPlayers).length;
       var stats=p.pid?statsByPid[p.pid]:null;
       var prefix=isStarter?'  ✓ ':'  — ';
       if(!stats||!stats.history||!stats.history.length){
-        return prefix+p.name+' (no stats available)\n';
+        var takeKey0=p.name.toLowerCase();
+        var take0=D.commishTakes?D.commishTakes[takeKey0]:null;
+        var takeStr0=take0&&take0.profile?'\n      [COMMISSIONER PROFILE] '+take0.profile:'';
+        return prefix+p.name+' (no stats available)'+takeStr0+'\n';
       }
+      var perfTier='';
 
       var age=p.pid?pidAges[p.pid]:null;
       var ageStr=age?' (age '+age+')':'';
@@ -2025,12 +2029,12 @@ var isOffseason=D.week<=1&&!Object.keys(D.weeklyTopPlayers).length;
       var nflName=p.name.replace(/\(.*?\)/g,'').trim();
       var nflData=D.nflverseStats[nflName]||null;
 var nflStr='';
-      var nflStr='';
       if(nflData&&nflData.snapPct>0){
         nflStr=' | '+(D.season-1)+' Snaps: '+nflData.snapPct+'%';
         if(nflData.targetShare>0)nflStr+=' | Target Share: '+nflData.targetShare+'%';
       }
       /* Commissioner scouting report */
+      var perfTier='';
       var takeKey=p.name.toLowerCase();
       var take=D.commishTakes[takeKey]||null;
       var takeStr='';
