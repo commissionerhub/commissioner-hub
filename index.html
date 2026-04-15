@@ -2241,6 +2241,10 @@ function buildAllRosterCtx(){
 
 function buildPrompt(section){
   var histCtx=buildHistCtx();
+  if(section==='rankings'){
+    var testPlayer=Object.keys(D.commishTakes)[0];
+    console.log('Sample take for',testPlayer,':',JSON.stringify(D.commishTakes[testPlayer]));
+  }
   var scoringCtx=buildScoringCtx();
   var rosterCtx=buildAllRosterCtx();
   var pickCtx=buildPickCtx();
