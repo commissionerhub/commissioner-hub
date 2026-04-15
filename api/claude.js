@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     /* NFLVerse proxy — fetch CSV server-side to avoid CORS */
 if (req.body.fetchSheetTakes) {
       try {
-        const sheetUrl = 'https://docs.google.com/spreadsheets/d/1MrQh_jRfoKw7Gwz06fAbVQhfev1-2q0T/export?format=csv&gid=0';
+        const sheetUrl = 'https://docs.google.com/spreadsheets/d/1MrQh_jRfoKw7Gwz06fAbVQhfev1-2q0T/gviz/tq?tqx=out:csv&sheet=Sheet1';
         const r = await fetch(sheetUrl, {
           headers: {
             'User-Agent': 'Mozilla/5.0',
