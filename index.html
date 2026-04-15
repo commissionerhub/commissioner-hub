@@ -415,8 +415,8 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
       <div class="load-step" id="step-players"><div class="step-dot"></div>Player database</div>
 <div class="load-step" id="step-stats"><div class="step-dot"></div>Player stats (4 seasons)</div>
       <div class="load-step" id="step-values"><div class="step-dot"></div>Dynasty values &amp; trends</div>
-      <div class="load-step" id="step-nfl"><div class="step-dot"></div>NFL snap &amp; target data</div>
-    </div>
+<div class="load-step" id="step-nfl"><div class="step-dot"></div>NFL snap &amp; target data</div>
+      <div class="load-step" id="step-takes"><div class="step-dot"></div>Commissioner scouting report</div>    </div>
     <div class="divider"><div class="divider-line"></div><div class="divider-txt">Or explore first</div><div class="divider-line"></div></div>
     <button class="btn-demo" onclick="loadDemo()">🎮 Preview with Demo League</button>
     <div class="demo-note">All features · No account needed</div>
@@ -761,7 +761,8 @@ var D={
   isSuperflex: false,     /* league format flag */
   leaguePPR: 0,           /* 0 = non-PPR, 0.5 = half, 1 = full */
   hasToiletBowl: false,   /* consolation bracket exists */
-  nflverseStats:{}        /* name → {snapPct, targetShare, airYards} */
+  nflverseStats:{},       /* name → {snapPct, targetShare, airYards} */
+  commishTakes:{}         /* name → commissioner's own player analysis */
 };
 
 /* ════════════════════════════
@@ -1262,8 +1263,70 @@ function launch(){
 
         /* Fetch NFLVerse weekly stats for last completed season */
         var nflSeason = currentSeasonYr - 1;
-        fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fetchNFLVerse:true,nflSeason:nflSeason})})
-          .then(function(r){return r.json();})
+setStep('takes','active');
+        fetch('https://docs.google.com/spreadsheets/d/1MrQh_jRfoKw7Gwz06fAbVQhfev1-2q0T/export?format=csv')
+          .then(function(r){return r.text();})
+          .catch(function(){return '';})
+          .then(function(sheetCsv){
+            var commishTakes={};
+            if(sheetCsv){
+              var sLines=sheetCsv.split('\n');
+              var sHeaders=sLines[0].split(',').map(function(h){return h.trim().replace(/"/g,'').toLowerCase();});
+              var nameCol=sHeaders.indexOf('name');
+              var teamCol=sHeaders.indexOf('team');
+              var posCol=sHeaders.indexOf('position');
+              var ageCol=sHeaders.indexOf('age');
+              var valCol=sHeaders.indexOf('value');
+              var rankCol=sHeaders.indexOf('rank');
+              var posRankCol=sHeaders.indexOf('pos rank');
+              var trendCol=sHeaders.indexOf('30 day trend');
+              var profileCol=sHeaders.indexOf('profile');
+              var ceilCol=sHeaders.indexOf('ceiling');
+              var ceilCtxCol=sHeaders.indexOf('ceiling context');
+              var likelyCol=sHeaders.indexOf('likely');
+              var likelyCtxCol=sHeaders.indexOf('likely context');
+              var worstCol=sHeaders.indexOf('worst');
+              var worstCtxCol=sHeaders.indexOf('worst context');
+              var projCol=sHeaders.indexOf('projection');
+              var dynCol=sHeaders.indexOf('dynasty value');
+              var breakdownCol=sHeaders.indexOf('full breakdown');
+              for(var si=1;si<sLines.length;si++){
+                /* Handle quoted CSV fields properly */
+                var row=[];var field='';var inQuote=false;
+                for(var ci=0;ci<sLines[si].length;ci++){
+                  var ch=sLines[si][ci];
+                  if(ch==='"'){inQuote=!inQuote;}
+                  else if(ch===','&&!inQuote){row.push(field.trim());field='';}
+                  else{field+=ch;}
+                }
+                row.push(field.trim());
+                var pName=nameCol>=0?(row[nameCol]||'').replace(/"/g,'').trim():'';
+                if(!pName)continue;
+                commishTakes[pName.toLowerCase()]={
+                  name:pName,
+                  team:teamCol>=0?(row[teamCol]||''):'',
+                  pos:posCol>=0?(row[posCol]||''):'',
+                  age:ageCol>=0?(row[ageCol]||''):'',
+                  value:valCol>=0?(row[valCol]||''):'',
+                  rank:rankCol>=0?(row[rankCol]||''):'',
+                  posRank:posRankCol>=0?(row[posRankCol]||''):'',
+                  trend:trendCol>=0?(row[trendCol]||''):'',
+                  profile:profileCol>=0?(row[profileCol]||''):'',
+                  ceiling:ceilCol>=0?(row[ceilCol]||''):'',
+                  ceilingCtx:ceilCtxCol>=0?(row[ceilCtxCol]||''):'',
+                  likely:likelyCol>=0?(row[likelyCol]||''):'',
+                  likelyCtx:likelyCtxCol>=0?(row[likelyCtxCol]||''):'',
+                  worst:worstCol>=0?(row[worstCol]||''):'',
+                  worstCtx:worstCtxCol>=0?(row[worstCtxCol]||''):'',
+                  projection:projCol>=0?(row[projCol]||''):'',
+                  dynastyValue:dynCol>=0?(row[dynCol]||''):'',
+                  breakdown:breakdownCol>=0?(row[breakdownCol]||''):''
+                };
+              }
+            }
+            D.commishTakes=commishTakes;
+            setStep('takes','done');
+            fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fetchNFLVerse:true,nflSeason:nflSeason})})          .then(function(r){return r.json();})
           .catch(function(){return {csv:''};})
           .then(function(d){
             setStep('nfl','done');
@@ -1305,7 +1368,8 @@ function launch(){
             btn.disabled=false;
             btn.textContent='⚡ Load My League';
             document.getElementById('load-steps').style.display='none';
-            ['league','history','teams','matchups','txns','players','stats','values','nfl'].forEach(function(s){setStep(s,'');});
+           ['league','history','teams','matchups','txns','players','stats','values','nfl','takes'].forEach(function(s){setStep(s,'');});
+          });
           });
       })
     })
@@ -1328,7 +1392,9 @@ function processData(league,users,rosters,mByWeek,allTxns,tradedPicks,players,cu
   D.totalWeeks=parseInt((league.settings&&league.settings.playoff_week_start)?league.settings.playoff_week_start-1:14);
 D.playoffSpots=parseInt((league.settings&&league.settings.playoff_teams)||6);
    D.hasToiletBowl=parseInt((league.settings&&league.settings.loser_playoff_teams)||0)>0;
-  D.nflverseStats=nflverseStats||{};  D.tradedPicksRaw=tradedPicks;
+  D.nflverseStats=nflverseStats||{};
+  /* commishTakes already set directly on D before processData call */
+  if(!D.commishTakes)D.commishTakes={};  D.tradedPicksRaw=tradedPicks;
   D.scoringSettings=scoringSettings||{};
   D.playerSeasonStats=playerSeasonStats||{};
   D.gamesPlayed=gamesPlayed||currentWeek;
@@ -1958,10 +2024,23 @@ var isOffseason=D.week<=1&&!Object.keys(D.weeklyTopPlayers).length;
       var nflName=p.name.replace(/\(.*?\)/g,'').trim();
       var nflData=D.nflverseStats[nflName]||null;
 var nflStr='';
+      var nflStr='';
       if(nflData&&nflData.snapPct>0){
         nflStr=' | '+(D.season-1)+' Snaps: '+nflData.snapPct+'%';
         if(nflData.targetShare>0)nflStr+=' | Target Share: '+nflData.targetShare+'%';
-      }var line=prefix+p.name+ageStr+fcStr+depthStr+injuryStr+nflStr+perfTier+'\n';
+      }
+      /* Commissioner scouting report */
+      var takeKey=p.name.toLowerCase();
+      var take=D.commishTakes[takeKey]||null;
+      var takeStr='';
+      if(take){
+        if(take.profile)takeStr+='\n      [COMMISSIONER PROFILE] '+take.profile;
+        if(take.likely)takeStr+='\n      [2026 LIKELY] '+take.likely+(take.likelyCtx?' — '+take.likelyCtx:'');
+        if(take.ceiling)takeStr+='\n      [CEILING] '+take.ceiling+(take.ceilingCtx?' — '+take.ceilingCtx:'');
+        if(take.worst)takeStr+='\n      [FLOOR] '+take.worst+(take.worstCtx?' — '+take.worstCtx:'');
+        if(take.trend)takeStr+='\n      [30-DAY TREND] '+take.trend;
+        if(take.breakdown)takeStr+='\n      [FULL BREAKDOWN] '+take.breakdown;
+      }var line=prefix+p.name+ageStr+fcStr+depthStr+injuryStr+nflStr+perfTier+takeStr+'\n';
 /* Multi-year history with positional rankings */
       stats.history.forEach(function(h){
         var missedStr=h.missed>=3?' ⚠️ missed '+h.missed+' games':''; /* only flag 3+ missed */
