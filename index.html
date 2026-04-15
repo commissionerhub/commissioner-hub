@@ -1316,7 +1316,8 @@ setStep('takes','active');
                 if(!sLines[si].trim())continue;
                 var row=parseCSVLine(sLines[si]);
                 var pName=nameCol>=0?(row[nameCol]||'').trim():'';
-                if(!pName)continue;
+                /* Skip if pName looks like a header row */
+                if(!pName||pName.toLowerCase()==='name'||pName.toLowerCase().indexOf('trend')>-1)continue;
                 function cleanCell(val){return (val||'').trim();}
                 commishTakes[pName.toLowerCase()]={
                   name:pName,
@@ -1977,10 +1978,12 @@ var isOffseason=D.week<=1&&!Object.keys(D.weeklyTopPlayers).length;
       var withPts=pl.map(function(name){
         var pid=nameToPid[name];
         var stats=pid?statsByPid[pid]:null;
+        /* Use per-game average for starter inference — not total pts which penalizes injuries */
+        var avg=stats&&stats.history&&stats.history[0]?stats.history[0].avg:0;
         var pts=stats&&stats.history&&stats.history[0]?stats.history[0].pts:0;
-        return{name:name,pid:pid,pts:pts};
+        return{name:name,pid:pid,pts:pts,avg:avg};
       });
-      withPts.sort(function(a,b){return b.pts-a.pts;});
+      withPts.sort(function(a,b){return b.avg-a.avg||b.pts-a.pts;});
       withPts.slice(0,numSlots).forEach(function(p){
         if(p.pid)starterPids[p.pid]=true;
       });
@@ -2049,9 +2052,35 @@ var nflStr='';
         if(nflData.targetShare>0)nflStr+=' | Target Share: '+nflData.targetShare+'%';
       }
       /* Commissioner scouting report */
+      /* Calculate performance tier from positional ranking */
       var perfTier='';
-      var takeKey=p.name.toLowerCase();
+      var stats3=p.pid?statsByPid[p.pid]:null;
+      if(stats3&&stats3.history&&stats3.history.length){
+        for(var phi=0;phi<stats3.history.length;phi++){
+          if(stats3.history[phi].rank&&stats3.history[phi].pos){
+            var pRank=stats3.history[phi].rank;
+            var pPos=stats3.history[phi].pos;
+            var tierThresholds={QB:[5,12,18,24],RB:[5,12,20,30],WR:[5,12,24,36],TE:[3,6,10,14]};
+            var pt=tierThresholds[pPos]||[5,12,20,30];
+            var tierLabel=pRank<=pt[0]?'ELITE STARTER':pRank<=pt[1]?'SOLID STARTER':pRank<=pt[2]?'AVERAGE STARTER':pRank<=pt[3]?'BELOW AVERAGE':'STREAMING/BENCH';
+            perfTier=' | CURRENT PERFORMANCE: '+tierLabel+' (#'+pRank+' '+pPos+')';
+            break;
+          }
+        }
+      }
+      var takeKey=p.name.replace(/\s*\(.*?\)/g,'').toLowerCase().trim();
       var take=D.commishTakes[takeKey]||null;
+      /* Also try first/last name only match */
+      if(!take){
+        var nameParts=takeKey.split(' ');
+        if(nameParts.length>=2){
+          Object.keys(D.commishTakes).forEach(function(k){
+            if(!take&&k.indexOf(nameParts[0])>-1&&k.indexOf(nameParts[nameParts.length-1])>-1){
+              take=D.commishTakes[k];
+            }
+          });
+        }
+      }
       var takeStr='';
       if(take){
         if(take.profile)takeStr+='\n      [COMMISSIONER PROFILE] '+take.profile;
