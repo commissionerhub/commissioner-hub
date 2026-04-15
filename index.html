@@ -1264,12 +1264,10 @@ function launch(){
         /* Fetch NFLVerse weekly stats for last completed season */
         var nflSeason = currentSeasonYr - 1;
 setStep('takes','active');
-        console.log('Fetching commissioner takes...');
         fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fetchSheetTakes:true})})
           .then(function(r){return r.json();})
           .catch(function(){return {csv:''};})
           .then(function(d){
-            console.log('Sheet response:', JSON.stringify(d).substring(0,200));
             var sheetCsv=d.csv||'';
             var commishTakes={};
             if(sheetCsv){
@@ -1293,7 +1291,6 @@ setStep('takes','active');
 
               var sLines=sheetCsv.split('\n');
               var sHeaders=parseCSVLine(sLines[0]).map(function(h){return h.toLowerCase().replace(/\s+/g,' ');});
-              console.log('All headers:', sHeaders);
 
               function findCol(keyword){return sHeaders.findIndex(function(h){return h.indexOf(keyword.toLowerCase())>-1;});}
               var nameCol=findCol('name');
@@ -1344,8 +1341,6 @@ setStep('takes','active');
               }
             }
             D.commishTakes=commishTakes;
-            console.log('Commissioner takes loaded: '+Object.keys(commishTakes).length+' players');
-            console.log('Sheet headers detected:', sHeaders.join(' | '));
             setStep('takes','done');
             fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fetchNFLVerse:true,nflSeason:nflSeason})})          .then(function(r){return r.json();})
           .catch(function(){return {csv:''};})
