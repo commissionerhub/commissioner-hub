@@ -11,8 +11,15 @@ export default async function handler(req, res) {
     }
 
     /* NFLVerse proxy — fetch CSV server-side to avoid CORS */
-    if (fetchNFLVerse) {
-      const csvUrl = `https://github.com/nflverse/nflverse-data/releases/download/player_stats/player_stats_${nflSeason}.csv`;
+if (req.body.fetchSheetTakes) {
+      const sheetUrl = `https://docs.google.com/spreadsheets/d/1MrQh_jRfoKw7Gwz06fAbVQhfev1-2q0T/export?format=csv`;
+      const r = await fetch(sheetUrl);
+      if (!r.ok) return res.status(200).json({ csv: '' });
+      const csv = await r.text();
+      return res.status(200).json({ csv });
+    }
+
+    if (fetchNFLVerse) {      const csvUrl = `https://github.com/nflverse/nflverse-data/releases/download/player_stats/player_stats_${nflSeason}.csv`;
       const r = await fetch(csvUrl);
       if (!r.ok) return res.status(200).json({ csv: '' });
       const csv = await r.text();
