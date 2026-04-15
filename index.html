@@ -1274,8 +1274,8 @@ setStep('takes','active');
             var commishTakes={};
             if(sheetCsv){
               var sLines=sheetCsv.split('\n');
-              var sHeaders=sLines[0].split(',').map(function(h){return h.trim().replace(/"/g,'').toLowerCase();});
-              var nameCol=sHeaders.indexOf('name');
+/* Google Sheets gviz wraps everything in quotes — strip carefully */
+              var sHeaders=sLines[0].split(',').map(function(h){return h.trim().replace(/^"|"$/g,'').toLowerCase();});              var nameCol=sHeaders.indexOf('name');
               var teamCol=sHeaders.indexOf('team');
               var posCol=sHeaders.indexOf('position');
               var ageCol=sHeaders.indexOf('age');
@@ -1303,27 +1303,28 @@ setStep('takes','active');
                   else{field+=ch;}
                 }
                 row.push(field.trim());
-                var pName=nameCol>=0?(row[nameCol]||'').replace(/"/g,'').trim():'';
+                var pName=nameCol>=0?(row[nameCol]||'').replace(/^"|"$/g,'').trim():'';
                 if(!pName)continue;
+                function cleanCell(val){return (val||'').replace(/^"|"$/g,'').trim();}
                 commishTakes[pName.toLowerCase()]={
                   name:pName,
-                  team:teamCol>=0?(row[teamCol]||''):'',
-                  pos:posCol>=0?(row[posCol]||''):'',
-                  age:ageCol>=0?(row[ageCol]||''):'',
-                  value:valCol>=0?(row[valCol]||''):'',
-                  rank:rankCol>=0?(row[rankCol]||''):'',
-                  posRank:posRankCol>=0?(row[posRankCol]||''):'',
-                  trend:trendCol>=0?(row[trendCol]||''):'',
-                  profile:profileCol>=0?(row[profileCol]||''):'',
-                  ceiling:ceilCol>=0?(row[ceilCol]||''):'',
-                  ceilingCtx:ceilCtxCol>=0?(row[ceilCtxCol]||''):'',
-                  likely:likelyCol>=0?(row[likelyCol]||''):'',
-                  likelyCtx:likelyCtxCol>=0?(row[likelyCtxCol]||''):'',
-                  worst:worstCol>=0?(row[worstCol]||''):'',
-                  worstCtx:worstCtxCol>=0?(row[worstCtxCol]||''):'',
-                  projection:projCol>=0?(row[projCol]||''):'',
-                  dynastyValue:dynCol>=0?(row[dynCol]||''):'',
-                  breakdown:breakdownCol>=0?(row[breakdownCol]||''):''
+                  team:teamCol>=0?cleanCell(row[teamCol]):'',
+                  pos:posCol>=0?cleanCell(row[posCol]):'',
+                  age:ageCol>=0?cleanCell(row[ageCol]):'',
+                  value:valCol>=0?cleanCell(row[valCol]):'',
+                  rank:rankCol>=0?cleanCell(row[rankCol]):'',
+                  posRank:posRankCol>=0?cleanCell(row[posRankCol]):'',
+                  trend:trendCol>=0?cleanCell(row[trendCol]):'',
+                  profile:profileCol>=0?cleanCell(row[profileCol]):'',
+                  ceiling:ceilCol>=0?cleanCell(row[ceilCol]):'',
+                  ceilingCtx:ceilCtxCol>=0?cleanCell(row[ceilCtxCol]):'',
+                  likely:likelyCol>=0?cleanCell(row[likelyCol]):'',
+                  likelyCtx:likelyCtxCol>=0?cleanCell(row[likelyCtxCol]):'',
+                  worst:worstCol>=0?cleanCell(row[worstCol]):'',
+                  worstCtx:worstCtxCol>=0?cleanCell(row[worstCtxCol]):'',
+                  projection:projCol>=0?cleanCell(row[projCol]):'',
+                  dynastyValue:dynCol>=0?cleanCell(row[dynCol]):'',
+                  breakdown:breakdownCol>=0?cleanCell(row[breakdownCol]):''
                 };
               }
             }
