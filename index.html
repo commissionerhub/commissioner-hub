@@ -1264,10 +1264,11 @@ function launch(){
         /* Fetch NFLVerse weekly stats for last completed season */
         var nflSeason = currentSeasonYr - 1;
 setStep('takes','active');
-        fetch('https://docs.google.com/spreadsheets/d/1MrQh_jRfoKw7Gwz06fAbVQhfev1-2q0T/export?format=csv')
-          .then(function(r){return r.text();})
-          .catch(function(){return '';})
-          .then(function(sheetCsv){
+        fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fetchSheetTakes:true})})
+          .then(function(r){return r.json();})
+          .catch(function(){return {csv:''};})
+          .then(function(d){
+            var sheetCsv=d.csv||'';
             var commishTakes={};
             if(sheetCsv){
               var sLines=sheetCsv.split('\n');
@@ -2040,7 +2041,7 @@ var nflStr='';
         if(take.worst)takeStr+='\n      [FLOOR] '+take.worst+(take.worstCtx?' — '+take.worstCtx:'');
         if(take.trend)takeStr+='\n      [30-DAY TREND] '+take.trend;
         if(take.breakdown)takeStr+='\n      [FULL BREAKDOWN] '+take.breakdown;
-      }var line=prefix+p.name+ageStr+fcStr+depthStr+injuryStr+nflStr+perfTier+takeStr+'\n';
+      var line=prefix+p.name+ageStr+fcStr+depthStr+injuryStr+nflStr+(perfTier||'')+takeStr+'\n';
 /* Multi-year history with positional rankings */
       stats.history.forEach(function(h){
         var missedStr=h.missed>=3?' ⚠️ missed '+h.missed+' games':''; /* only flag 3+ missed */
