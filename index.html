@@ -2263,6 +2263,9 @@ var r1s = picks.filter(function(p){ return p.round === 1; });
 }
 /* ── ALL ROSTER CONTEXT FOR AI ── */
 function buildAllRosterCtx(){
+  /* Debug — count how many players have full breakdown data */
+  var withBreakdown=Object.keys(D.commishTakes).filter(function(k){return D.commishTakes[k].breakdown&&D.commishTakes[k].breakdown.length>10;}).length;
+  console.log('Players with Full Breakdown data:',withBreakdown,'of',Object.keys(D.commishTakes).length);
   var out='\nFULL ROSTER BREAKDOWN (Player · Season Pts · Avg/Game):\n';
   var sorted=D.teams.slice().sort(function(a,b){return b.wins-a.wins||b.pf-a.pf;});
   sorted.forEach(function(t){out+=buildRosterCtx(t)+'\n';});
