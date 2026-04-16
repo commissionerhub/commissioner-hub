@@ -1077,16 +1077,17 @@ function launch(){
       var playerSeasonStats = {};
 
       /* ── Step 1: Calculate points for ALL NFL players to enable rankings ── */
-      /* We need the full pool to rank rostered players against everyone */
       var allPlayerPtsBySeasonAndPos = {};
-      /* allPlayerPtsBySeasonAndPos[year][pos] = [{pid, pts, avg, gp}] */
 
       allSeasonStats.forEach(function(season) {
         allPlayerPtsBySeasonAndPos[season.year] = {};
         Object.keys(season.data).forEach(function(pid) {
           var stats = season.data[pid];
-          if (!stats || !stats.position) return;
-          var pos = stats.position;
+          if (!stats) return;
+          /* Position can be in stats.position or need lookup from players db */
+          var pos = stats.position || (players[pid] && players[pid].position) || '';
+          /* Normalize position to uppercase */
+          pos = pos.toUpperCase();
           /* Only rank skill positions */
           if (['QB','RB','WR','TE'].indexOf(pos) === -1) return;
           var pts = 0;
@@ -1141,8 +1142,7 @@ function launch(){
           var gp = parseInt(stats.gp) || 0;
           var missed = maxGames - gp;
           var avg = gp > 0 ? parseFloat((pts / gp).toFixed(1)) : 0;
-          var pos = stats.position || '';
-
+          var pos = (stats.position || (players[pid] && players[pid].position) || '').toUpperCase();
           /* Get positional ranking for this season */
           var rank = null;
           if (['QB','RB','WR','TE'].indexOf(pos) > -1) {
