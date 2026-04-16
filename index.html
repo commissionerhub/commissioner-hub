@@ -2055,6 +2055,8 @@ var nflStr='';
       /* Calculate performance tier from positional ranking */
       var perfTier='';
       var stats3=p.pid?statsByPid[p.pid]:null;
+      /* Also try stats directly since statsByPid and stats may differ */
+      if(!stats3)stats3=stats;
       if(stats3&&stats3.history&&stats3.history.length){
         for(var phi=0;phi<stats3.history.length;phi++){
           if(stats3.history[phi].rank&&stats3.history[phi].pos){
