@@ -1310,8 +1310,8 @@ setStep('takes','active');
               var worstCtxCol=findCol('worst context');
               var projCol=findCol('projection');
               var dynCol=findCol('dynasty');
-              var breakdownCol=findCol('breakdown');
-
+var breakdownCol=findCol('breakdown');
+              console.log('Column indexes — profile:',profileCol,'breakdown:',breakdownCol,'likely:',likelyCol,'ceiling:',ceilCol);
               for(var si=1;si<sLines.length;si++){
                 if(!sLines[si].trim())continue;
                 var row=parseCSVLine(sLines[si]);
