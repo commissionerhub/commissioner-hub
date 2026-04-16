@@ -2266,15 +2266,13 @@ function buildAllRosterCtx(){
   var out='\nFULL ROSTER BREAKDOWN (Player · Season Pts · Avg/Game):\n';
   var sorted=D.teams.slice().sort(function(a,b){return b.wins-a.wins||b.pf-a.pf;});
   sorted.forEach(function(t){out+=buildRosterCtx(t)+'\n';});
-  console.log('ROSTER CONTEXT SENT TO AI:\n'+out);
+  
   return out;
 }
 
 function buildPrompt(section){
   var histCtx=buildHistCtx();
-  if(section==='rankings'){
-    var testPlayer=Object.keys(D.commishTakes)[0];
-    console.log('Sample take for',testPlayer,':',JSON.stringify(D.commishTakes[testPlayer]));
+
   }
   var scoringCtx=buildScoringCtx();
   var rosterCtx=buildAllRosterCtx();
@@ -2327,7 +2325,7 @@ if(section==='seasonrank'){
 }
 function gen(section,btn){
   btn.disabled=true;btn.textContent='…';
-  if(section==='aidraft'||section==='rankings'||section==='seasonrank'){console.log(section.toUpperCase()+' PROMPT:\n'+buildPrompt(section));}  document.getElementById('ph-'+section).style.display='none';
+  
   document.getElementById('spin-'+section).classList.add('on');
   document.getElementById('out-'+section).classList.remove('on');
   fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:buildPrompt(section),section:section})})
