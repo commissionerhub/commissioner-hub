@@ -1311,9 +1311,9 @@ setStep('takes','active');
               var projCol=findCol('projection');
               var dynCol=findCol('dynasty');
 var breakdownCol=findCol('breakdown');
-console.log('Total columns found:',sHeaders.length);
-              console.log('All column headers:',sHeaders.join(' | '));
-              console.log('Column indexes — profile:',profileCol,'breakdown:',breakdownCol,'likely:',likelyCol,'ceiling:',ceilCol);              for(var si=1;si<sLines.length;si++){
+
+              
+                            for(var si=1;si<sLines.length;si++){
                 if(!sLines[si].trim())continue;
                 var row=parseCSVLine(sLines[si]);
                 var pName=nameCol>=0?(row[nameCol]||'').trim():'';
@@ -2032,7 +2032,6 @@ var isOffseason=D.week<=1&&!Object.keys(D.weeklyTopPlayers).length;
         var takeStr0=take0&&take0.profile?'\n      [COMMISSIONER PROFILE] '+take0.profile:'';
         return prefix+p.name+' (no stats available)'+takeStr0+'\n';
       }
-      var perfTier='';
 
       var age=p.pid?pidAges[p.pid]:null;
       var ageStr=age?' (age '+age+')':'';
@@ -2053,21 +2052,34 @@ var nflStr='';
         if(nflData.targetShare>0)nflStr+=' | Target Share: '+nflData.targetShare+'%';
       }
       /* Commissioner scouting report */
-      /* Calculate performance tier from positional ranking */
+      /* Calculate performance tier — spreadsheet posRank is primary source */
       var perfTier='';
-      var stats3=p.pid?statsByPid[p.pid]:null;
-      /* Also try stats directly since statsByPid and stats may differ */
-      if(!stats3)stats3=stats;
-      if(stats3&&stats3.history&&stats3.history.length){
-        for(var phi=0;phi<stats3.history.length;phi++){
-          if(stats3.history[phi].rank&&stats3.history[phi].pos){
-            var pRank=stats3.history[phi].rank;
-            var pPos=stats3.history[phi].pos;
-            var tierThresholds={QB:[5,12,18,24],RB:[5,12,20,30],WR:[5,12,24,36],TE:[3,6,10,14]};
-            var pt=tierThresholds[pPos]||[5,12,20,30];
-            var tierLabel=pRank<=pt[0]?'ELITE STARTER':pRank<=pt[1]?'SOLID STARTER':pRank<=pt[2]?'AVERAGE STARTER':pRank<=pt[3]?'BELOW AVERAGE':'STREAMING/BENCH';
-            perfTier=' | CURRENT PERFORMANCE: '+tierLabel+' (#'+pRank+' '+pPos+')';
-            break;
+      var takeKeyPerf=p.name.replace(/\s*\(.*?\)/g,'').toLowerCase().trim();
+      var takePerf=D.commishTakes?D.commishTakes[takeKeyPerf]:null;
+      if(takePerf&&takePerf.posRank&&takePerf.pos){
+        var sheetPosRank=parseInt(takePerf.posRank)||0;
+        var sheetPos=takePerf.pos.toUpperCase();
+        if(sheetPosRank>0&&['QB','RB','WR','TE'].indexOf(sheetPos)>-1){
+          var tierThresholds={QB:[5,12,18,24],RB:[5,12,20,30],WR:[5,12,24,36],TE:[3,6,10,14]};
+          var pt=tierThresholds[sheetPos]||[5,12,20,30];
+          var tierLabel=sheetPosRank<=pt[0]?'ELITE STARTER':sheetPosRank<=pt[1]?'SOLID STARTER':sheetPosRank<=pt[2]?'AVERAGE STARTER':sheetPosRank<=pt[3]?'BELOW AVERAGE':'STREAMING/BENCH';
+          perfTier=' | CURRENT PERFORMANCE: '+tierLabel+' (#'+sheetPosRank+' '+sheetPos+')';
+        }
+      }
+      if(!perfTier){
+        var stats3=p.pid?statsByPid[p.pid]:null;
+        if(!stats3)stats3=stats;
+        if(stats3&&stats3.history&&stats3.history.length){
+          for(var phi=0;phi<stats3.history.length;phi++){
+            if(stats3.history[phi].rank&&stats3.history[phi].pos){
+              var pRank=stats3.history[phi].rank;
+              var pPos=stats3.history[phi].pos;
+              var tierThresholds2={QB:[5,12,18,24],RB:[5,12,20,30],WR:[5,12,24,36],TE:[3,6,10,14]};
+              var pt2=tierThresholds2[pPos]||[5,12,20,30];
+              var tierLabel2=pRank<=pt2[0]?'ELITE STARTER':pRank<=pt2[1]?'SOLID STARTER':pRank<=pt2[2]?'AVERAGE STARTER':pRank<=pt2[3]?'BELOW AVERAGE':'STREAMING/BENCH';
+              perfTier=' | CURRENT PERFORMANCE: '+tierLabel2+' (#'+pRank+' '+pPos+')';
+              break;
+            }
           }
         }
       }
@@ -2264,13 +2276,7 @@ var r1s = picks.filter(function(p){ return p.round === 1; });
 }
 /* ── ALL ROSTER CONTEXT FOR AI ── */
 function buildAllRosterCtx(){
-  /* Debug — count how many players have full breakdown data */
-  var withBreakdown=Object.keys(D.commishTakes).filter(function(k){return D.commishTakes[k].breakdown&&D.commishTakes[k].breakdown.length>10;}).length;
-              var withProfile=Object.keys(D.commishTakes).filter(function(k){return D.commishTakes[k].profile&&D.commishTakes[k].profile.length>5;}).length;
-              console.log('Players with Full Breakdown:',withBreakdown,'| With Profile:',withProfile,'| Total:',Object.keys(D.commishTakes).length);
-              /* Log one sample player with data */
-              var sampleKey=Object.keys(D.commishTakes).find(function(k){return D.commishTakes[k].breakdown&&D.commishTakes[k].breakdown.length>10;});
-              if(sampleKey)console.log('Sample player with breakdown:',sampleKey,'→',D.commishTakes[sampleKey].breakdown.substring(0,150));
+  
   var out='\nFULL ROSTER BREAKDOWN (Player · Season Pts · Avg/Game):\n';
   var sorted=D.teams.slice().sort(function(a,b){return b.wins-a.wins||b.pf-a.pf;});
   sorted.forEach(function(t){out+=buildRosterCtx(t)+'\n';});
