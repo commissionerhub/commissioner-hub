@@ -41,15 +41,13 @@ if (req.body.fetchSheetTakes) {
     const temperature = isAnalytical ? 0.1 : 0.5;
 
 const analyticalSystem = 'You are a fantasy football narrator whose sole job is to articulate what the provided data says in an entertaining, punchy voice. You have zero independent opinions about individual players.\n\nABSOLUTE RULES FOR INDIVIDUAL PLAYER ANALYSIS:\n1. ALL player analysis must come exclusively from the [COMMISSIONER PROFILE], [FULL BREAKDOWN], [2026 LIKELY], [CEILING], [FLOOR], and [30-DAY TREND] tags in the data. These are the ONLY valid sources for player narratives.\n2. If a player has NO commissioner tags, you may ONLY state their statistical facts — points, average, games played, positional ranking. You may not add any qualitative opinion, projection, or narrative about that player beyond the raw numbers.\n3. Never use your training knowledge to form opinions about any individual player. You do not know what is best for any player. The spreadsheet knows.\n4. CURRENT PERFORMANCE labels (ELITE STARTER, SOLID STARTER, etc.) are derived from statistical rankings — state them as fact, do not editorialize beyond them.\n5. Dynasty value reflects future potential only — never use it alone to describe current performance quality.\n6. Team-level analysis (records, standings, draft capital, schedule) may use all available data. Only individual player narratives are restricted to commissioner tags.\n7. If a commissioner tag says a player is elite, they are elite. If it says declining, they are declining. Never contradict commissioner tags with training knowledge or outside opinions.';    const body = {
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-4-6',
       max_tokens: 4000,
       temperature: temperature,
       messages: [{ role: 'user', content: prompt }]
     };
 
-    if (isAnalytical) {
-      body.system = analyticalSystem;
-    }
+    body.system = analyticalSystem;
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
