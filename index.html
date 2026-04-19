@@ -2224,31 +2224,21 @@ var r1s = picks.filter(function(p){ return p.round === 1; });
         var slot = '';
 
         if (isCurrentDraft) {
-          /* 2026 picks — slot is determined by final 2025 standings INCLUDING toilet bowl results.
-             We do not calculate slots here because toilet bowl inverts expected order.
-             Claude must not infer or calculate pick slots. */
           if (!pk.isOwn && origTeam && origTeam.id) {
-            slot = ' [from ' + origTeam.name + ' — pick slot set by 2025 final standings including toilet bowl results, exact order unknown to this system]';
+            slot = ' [from ' + origTeam.name + ' — slot set by 2025 final standings including toilet bowl results, exact order unknown]';
           } else if (pk.isOwn) {
-            slot = ' [own pick — slot set by 2025 final standings including toilet bowl results, exact order unknown to this system]';
+            slot = ' [own pick — slot set by 2025 final standings including toilet bowl results, exact order unknown]';
           }
-          else if (pk.isOwn) {
-            var myFinish = lastSeasonFinish[t.name] || lastSeasonFinish[t.owner] || null;
-            } else if (isFuture) {
-          /* 2027+ picks — speculative based on current evaluation */
+        } else if (isFuture) {
           if (!pk.isOwn && origTeam && origTeam.id) {
             var pos = currentPos[origTeam.id] || '?';
             var rec = origTeam.wins + '-' + origTeam.losses;
-            var pickSlot = pos <= 2 ? 'likely top-2 pick' :
-                          pos <= 4 ? 'likely top-4 pick' :
-                          pos <= 6 ? 'mid-round pick' : 'late round pick';
-            slot = ' [from ' + origTeam.name + ', currently #' + pos +
-                   ' (' + rec + ') → projected ' + pickSlot + ' — SPECULATIVE]';
+            var pickSlot = pos <= 2 ? 'likely top-2 pick' : pos <= 4 ? 'likely top-4 pick' : pos <= 6 ? 'mid-round pick' : 'late round pick';
+            slot = ' [from ' + origTeam.name + ', currently #' + pos + ' (' + rec + ') → projected ' + pickSlot + ' — SPECULATIVE]';
           } else if (pk.isOwn) {
             var myPos = currentPos[t.id] || '?';
             slot = ' [own pick | currently #' + myPos + ' standings — SPECULATIVE]';
           }
-        }
 
         out += '    ' + yr + ' R' + pk.round + slot + '\n';
       });
