@@ -2,7 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#ff6b2b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CHub">
+<link rel="manifest" href="/manifest.json">
 <title>Commissioner Hub</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Exo+2:wght@700;800;900&family=Barlow+Condensed:wght@400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"><style>
 :root{--bg:#181820;--s0:#1e1e28;--s1:#252534;--s2:#2e2e3e;--s3:#383850;--border:#3e3e56;--border2:#4e4e68;--text:#f0eef8;--text2:#c8c6d8;--muted:#8886a8;--dim:#5a5878;--orange:#ff6b2b;--orange2:#ff8c50;--orange-dim:rgba(255,107,43,0.14);--violet:#a855f7;--violet-dim:rgba(168,85,247,0.12);--win:#22c55e;--loss:#ef4444;--gold:#fbbf24;--blue:#3b82f6;--teal:#06b6d4;--r:10px;--r-sm:6px;}
@@ -2383,6 +2389,13 @@ function mdToHtml(md){
 function go(tab){var tabs=document.querySelectorAll('.tab');for(var i=0;i<tabs.length;i++)tabs[i].classList.remove('active');var navs=document.querySelectorAll('.nav-item');for(var j=0;j<navs.length;j++)navs[j].classList.remove('active');var t=document.getElementById('tab-'+tab);if(t)t.classList.add('active');var n=document.getElementById('nav-'+tab);if(n)n.classList.add('active');}
 function showScreen(id){document.getElementById('screen-landing').style.display='none';document.getElementById('screen-dashboard').style.display=id==='dashboard'?'flex':'none';}
 function resetApp(){document.getElementById('screen-landing').style.display='flex';document.getElementById('screen-dashboard').style.display='none';document.getElementById('tb-demo').classList.add('hidden');go('overview');}
+</script>
+  <script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('/sw.js');
+  });
+}
 </script>
 </body>
 </html>
