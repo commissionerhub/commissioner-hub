@@ -2179,12 +2179,14 @@ function buildPickCtx(){
   var isOffseason = D.week <= 1 && !Object.keys(D.weeklyTopPlayers).length;
 
 var out = '\nDRAFT CAPITAL (Full Holdings with Pick Value Context):\n';
-out += 'IMPORTANT: Draft picks are listed by year. A team with 4 R1s in 2027 and 1 R1 in 2028 has FOUR first rounders in the upcoming 2027 draft and ONE in the 2028 draft. Never combine picks across years into a single count.\n\n';
+out += 'IMPORTANT: These are FANTASY LEAGUE rookie draft picks — NOT NFL draft picks. Pick slots are determined by fantasy league final standings, not NFL team performance. Never confuse these with NFL draft order.\n\n';
+out += 'Draft picks are listed by year. A team with 4 R1s in 2027 and 1 R1 in 2028 has FOUR first rounders in the upcoming 2027 fantasy rookie draft and ONE in the 2028 draft. Never combine picks across years into a single count.\n\n';
   if(D.hasToiletBowl){
-    out += 'DRAFT ORDER RULES: This league has a TOILET BOWL consolation bracket for non-playoff teams. The WINNER of the toilet bowl earns a better draft pick — losing is NOT rewarded. There is NO tanking incentive because winning every game including consolation games improves draft position. Draft slot for traded picks is determined by the original owning team\'s final tournament result, not just their regular season record. Do not suggest any team should tank or lose intentionally.\n\n';
+    out += 'DRAFT ORDER RULES: This league has a TOILET BOWL consolation bracket for non-playoff teams. The WINNER of the toilet bowl earns a BETTER draft pick — losing is NOT rewarded. Regular season finish does NOT determine draft order for non-playoff teams — the toilet bowl bracket result does. Do NOT calculate or estimate pick numbers from regular season standings. Do NOT assign specific pick numbers to any team. Never suggest tanking.\n\n';
   } else {
-    out += 'DRAFT ORDER RULES: Draft order is determined by reverse final standings — worst record picks first. Teams holding picks from struggling teams benefit from those teams finishing poorly.\n\n';
-  }  /* Note about draft timing */
+    out += 'DRAFT ORDER RULES: Draft order is determined by reverse final standings — worst record picks first. Do NOT calculate or estimate specific pick numbers.\n\n';
+  } 
+  /* Note about draft timing */
   if (isOffseason) {
     out += 'NOTE: Currently in ' + currentSeasonYr + ' offseason. ';
     out += currentSeasonYr + ' rookie draft is IMMINENT — pick slots are already determined by ' + (currentSeasonYr - 1) + ' final standings. ';
@@ -2222,35 +2224,20 @@ var r1s = picks.filter(function(p){ return p.round === 1; });
         var slot = '';
 
         if (isCurrentDraft) {
-          /* 2026 picks — slot is ALREADY SET based on last season's finish */
+          /* 2026 picks — slot is determined by final 2025 standings INCLUDING toilet bowl results.
+             We do not calculate slots here because toilet bowl inverts expected order.
+             Claude must not infer or calculate pick slots. */
           if (!pk.isOwn && origTeam && origTeam.id) {
-            /* Look up original team's finish in last season */
-            var finish = lastSeasonFinish[origTeam.name] ||
-                        lastSeasonFinish[origTeam.owner] || null;
-            var totalTeams = D.teams.length;
-            if (finish) {
-              /* Draft order is inverse of standings (worst team picks first) */
-              var draftSlot = totalTeams - finish + 1;
-              var slotDesc = draftSlot <= 2 ? 'top-2 pick' :
-                            draftSlot <= 4 ? 'top-4 pick' :
-                            draftSlot <= 6 ? 'mid-first' : 'late first';
-              slot = ' [from ' + origTeam.name + ' | ' + (currentSeasonYr-1) +
-                     ' finish: #' + finish + ' → approx pick #' + draftSlot +
-                     ' (' + slotDesc + ') — DRAFT ORDER SET]';
-            } else {
-              slot = ' [from ' + origTeam.name + ' — ' + currentSeasonYr + ' draft order set]';
-            }
+            slot = ' [from ' + origTeam.name + ' — pick slot set by 2025 final standings including toilet bowl results, exact order unknown to this system]';
           } else if (pk.isOwn) {
-            var myFinish = lastSeasonFinish[t.name] || lastSeasonFinish[t.owner] || null;
-            var totalTeams2 = D.teams.length;
-            if (myFinish) {
-              var mySlot = totalTeams2 - myFinish + 1;
-              slot = ' [own pick | ' + (currentSeasonYr-1) + ' finish: #' + myFinish +
-                     ' → approx pick #' + mySlot + ' — DRAFT ORDER SET]';
-            } else {
-              slot = ' [own pick — ' + currentSeasonYr + ' draft order set]';
-            }
+            slot = ' [own pick — slot set by 2025 final standings including toilet bowl results, exact order unknown to this system]';
           }
+          else if (pk.isOwn) {
+            var myFinish = lastSeasonFinish[t.name] || lastSeasonFinish[t.owner] || null;
+            slot = ' [own pick' + (myFinish ? ' | 2025 regular season finish: #' + myFinish : '') +
+                   ' — exact pick slot determined by final 2025 standings including toilet bowl bracket, do NOT calculate or estimate the pick number]';
+          }
+        }
         } else if (isFuture) {
           /* 2027+ picks — speculative based on current evaluation */
           if (!pk.isOwn && origTeam && origTeam.id) {
