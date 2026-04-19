@@ -2225,9 +2225,9 @@ var r1s = picks.filter(function(p){ return p.round === 1; });
 
         if (isCurrentDraft) {
           if (!pk.isOwn && origTeam && origTeam.id) {
-            slot = ' [from ' + origTeam.name + ' — slot set by 2025 final standings including toilet bowl results, exact order unknown]';
+            slot = ' [from ' + origTeam.name + ' — slot set by 2025 final standings including toilet bowl, exact order unknown]';
           } else if (pk.isOwn) {
-            slot = ' [own pick — slot set by 2025 final standings including toilet bowl results, exact order unknown]';
+            slot = ' [own pick — slot set by 2025 final standings including toilet bowl, exact order unknown]';
           }
         } else if (isFuture) {
           if (!pk.isOwn && origTeam && origTeam.id) {
@@ -2235,11 +2235,11 @@ var r1s = picks.filter(function(p){ return p.round === 1; });
             var rec = origTeam.wins + '-' + origTeam.losses;
             var pickSlot = pos <= 2 ? 'likely top-2 pick' : pos <= 4 ? 'likely top-4 pick' : pos <= 6 ? 'mid-round pick' : 'late round pick';
             slot = ' [from ' + origTeam.name + ', currently #' + pos + ' (' + rec + ') → projected ' + pickSlot + ' — SPECULATIVE]';
-          } else if (pk.isOwn) {
+        } else if (pk.isOwn) {
             var myPos = currentPos[t.id] || '?';
             slot = ' [own pick | currently #' + myPos + ' standings — SPECULATIVE]';
           }
-
+        }
         out += '    ' + yr + ' R' + pk.round + slot + '\n';
       });
     });
