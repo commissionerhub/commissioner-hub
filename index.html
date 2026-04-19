@@ -2234,11 +2234,7 @@ var r1s = picks.filter(function(p){ return p.round === 1; });
           }
           else if (pk.isOwn) {
             var myFinish = lastSeasonFinish[t.name] || lastSeasonFinish[t.owner] || null;
-            slot = ' [own pick' + (myFinish ? ' | 2025 regular season finish: #' + myFinish : '') +
-                   ' — exact pick slot determined by final 2025 standings including toilet bowl bracket, do NOT calculate or estimate the pick number]';
-          }
-        }
-        } else if (isFuture) {
+            } else if (isFuture) {
           /* 2027+ picks — speculative based on current evaluation */
           if (!pk.isOwn && origTeam && origTeam.id) {
             var pos = currentPos[origTeam.id] || '?';
