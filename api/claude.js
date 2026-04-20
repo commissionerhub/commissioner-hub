@@ -82,33 +82,23 @@ export default async function handler(req, res) {
         trialDaysLeft: isAdmin ? 999 : trialDaysLeft
       });
     }
-/* ── CREATE CHECKOUT SESSION ── */
+
+    /* ── CREATE CHECKOUT SESSION ── */
     if (body.createCheckout) {
       const { leagueId, username } = body;
       const stripe = new (await import('stripe')).default(process.env.STRIPE_SECRET_KEY);
-
       try {
         const session = await stripe.checkout.sessions.create({
           payment_method_types: ['card'],
-          line_items: [{
-            price: process.env.STRIPE_PRICE_ID,
-            quantity: 1
-          }],
+          line_items: [{ price: process.env.STRIPE_PRICE_ID, quantity: 1 }],
           mode: 'subscription',
           success_url: 'https://commissioner-hub.vercel.app?paid=true&league=' + leagueId,
           cancel_url: 'https://commissioner-hub.vercel.app',
           subscription_data: {
-            metadata: {
-              league_id: leagueId,
-              commissioner_username: username
-            }
+            metadata: { league_id: leagueId, commissioner_username: username }
           },
-          metadata: {
-            league_id: leagueId,
-            commissioner_username: username
-          }
+          metadata: { league_id: leagueId, commissioner_username: username }
         });
-
         return res.status(200).json({ url: session.url });
       } catch(stripeErr) {
         console.error('Stripe checkout error:', stripeErr.message);
@@ -116,8 +106,6 @@ export default async function handler(req, res) {
       }
     }
 
-      return res.status(200).json({ url: session.url });
-    }
     /* ── TRIAL ACTIVATION ── */
     if (body.activateTrial) {
       const { leagueId } = body;
@@ -128,6 +116,7 @@ export default async function handler(req, res) {
       }).eq('league_id', leagueId);
       return res.status(200).json({ success: true, trialEnd: trialEnd.toISOString(), trialDaysLeft: 14 });
     }
+
     /* ── SHEET TAKES PROXY ── */
     if (body.fetchSheetTakes) {
       try {
