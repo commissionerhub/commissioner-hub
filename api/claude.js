@@ -23,7 +23,7 @@ export default async function handler(req, res) {
       const lowerUsername = username.toLowerCase().trim();
 
       /* Permanent admin whitelist — always full Pro access */
-      const whitelist = ['wolfgang22', 'skolsplitter'];
+      const whitelist = ['skolsplitter', 'wolfgang22'];
       const isAdmin = whitelist.includes(lowerUsername);
 
       /* Fetch league users from Sleeper */
