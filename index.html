@@ -778,6 +778,7 @@ var D={
   hasToiletBowl: false,   /* consolation bracket exists */
   nflverseStats:{},       /* name → {snapPct, targetShare, airYards} */
   commishTakes:{},        /* name → commissioner's own player analysis */
+  leagueId:'',            /* current league id */
   isCommissioner:false,   /* verified commissioner of this league */
   isPaid:false,           /* paid subscription active */
   trialActive:false,      /* within 14-day trial */
@@ -1450,6 +1451,7 @@ var breakdownCol=findCol('breakdown');
 ════════════════════════════ */
 function processData(league,users,rosters,mByWeek,allTxns,tradedPicks,players,currentWeek,allWeeks,scoringSettings,playerSeasonStats,gamesPlayed,fantasyCalcValues,sleeperTrending,isSuperflex,leaguePPR,nflverseStats){
   D.leagueName=league.name||'My League';
+  D.leagueId=league.league_id||'';
   D.season=parseInt(league.season)||new Date().getFullYear();
   D.week=currentWeek;
   D.totalWeeks=parseInt((league.settings&&league.settings.playoff_week_start)?league.settings.playoff_week_start-1:14);
@@ -2442,7 +2444,35 @@ function updateProAccess(){
 }
 
 function showPaywall(){
-  alert('Stripe payment coming soon! Contact your commissioner or visit commissioner-hub.vercel.app to unlock Pro.');
+  var modal=document.createElement('div');
+  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+  modal.innerHTML='<div style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:32px;max-width:420px;width:100%;text-align:center;">'+
+    '<div style="font-size:32px;margin-bottom:12px;">🏆</div>'+
+    '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:28px;letter-spacing:0.06em;color:var(--orange);margin-bottom:8px;">Commissioner Hub Pro</div>'+
+    '<div style="font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.6;">Power Rankings, Recaps, Trade Analysis, Draft Analysis, Waiver Wire, and Weekly Digests — all generated from your actual Sleeper data.<br><br><strong style="color:var(--text);">$39/season per league.</strong> Split from league dues — less than $4 per team.</div>'+
+    '<button onclick="startTrial()" style="width:100%;background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;border:none;border-radius:var(--r-sm);padding:14px;font-family:\'Bebas Neue\',sans-serif;font-size:20px;letter-spacing:0.1em;cursor:pointer;margin-bottom:10px;">⚡ Start Free 14-Day Trial</button>'+
+    '<button onclick="this.closest(\'div\').parentNode.remove()" style="width:100%;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px;font-family:\'IBM Plex Mono\',monospace;font-size:11px;cursor:pointer;">Maybe later</button>'+
+  '</div>';
+  document.body.appendChild(modal);
+}
+
+function startTrial(){
+  fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({activateTrial:true,leagueId:D.leagueId||document.getElementById('inp-league').value.trim()})})
+    .then(function(r){return r.json();})
+    .then(function(v){
+      if(v.success){
+        D.trialActive=true;
+        D.trialDaysLeft=v.trialDaysLeft;
+        var tb=document.getElementById('tb-trial');
+        tb.textContent='⚡ Trial: '+v.trialDaysLeft+' days left';
+        tb.classList.remove('hidden');
+        document.querySelectorAll('[id^="ph-"]').forEach(function(el){el.innerHTML='<div class="pro-ph-icon">✦</div><div class="pro-ph-txt">Click Generate to produce this section</div>';});
+        updateProAccess();
+        /* Close modal */
+        var modal=document.querySelector('[style*="position:fixed"]');
+        if(modal)modal.remove();
+      }
+    });
 }
 
 function go(tab){var tabs=document.querySelectorAll('.tab');for(var i=0;i<tabs.length;i++)tabs[i].classList.remove('active');var navs=document.querySelectorAll('.nav-item');for(var j=0;j<navs.length;j++)navs[j].classList.remove('active');var t=document.getElementById('tab-'+tab);if(t)t.classList.add('active');var n=document.getElementById('nav-'+tab);if(n)n.classList.add('active');}
