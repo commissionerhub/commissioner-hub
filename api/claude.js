@@ -20,94 +20,63 @@ export default async function handler(req, res) {
         return res.status(200).json({ isCommissioner: false, error: 'Missing fields' });
       }
 
+      const lowerUsername = username.toLowerCase().trim();
+
+      /* Permanent admin whitelist — always full Pro access */
+      const whitelist = ['wolfgang22', 'skolsplitter'];
+      const isAdmin = whitelist.includes(lowerUsername);
+
       /* Fetch league users from Sleeper */
       const sleeperRes = await fetch(`https://api.sleeper.app/v1/league/${leagueId}/users`);
       if (!sleeperRes.ok) return res.status(200).json({ isCommissioner: false, error: 'League not found' });
       const users = await sleeperRes.json();
 
-      /* Fetch league to get commissioner roster_id */
+      /* Fetch league to get owner_id */
       const leagueRes = await fetch(`https://api.sleeper.app/v1/league/${leagueId}`);
       const league = await leagueRes.json();
 
-      const lowerUsername = username.toLowerCase().trim();
-
-      /* Fetch rosters to check co-commissioners */
-      const rostersRes = await fetch(`https://api.sleeper.app/v1/league/${leagueId}/rosters`);
-      const rosters = await rostersRes.json();
-
-      /* Build set of all commissioner user_ids — owner + co-owners from rosters */
-      const commishIds = new Set();
-      commishIds.add(league.owner_id);
-      rosters.forEach(function(r) {
-        if (r.co_owners) r.co_owners.forEach(function(id) { commishIds.add(id); });
-      });
-
-      /* Manual whitelist — add trusted usernames here */
-      const whitelist = ['wolfgang22', 'skolsplitter'];
-
-      /* Match username to user_id then check if that user is a commissioner */
-      const matchedUser = users.find(function(u) {
-        return (u.display_name || '').toLowerCase() === lowerUsername;
-      });
-
-      const isCommissioner = whitelist.includes(lowerUsername) ||
-        (matchedUser && commishIds.has(matchedUser.user_id));
-
-      /* Debug log */
-      console.log('Commissioner check:', {
-        lowerUsername,
-        matchedUser: matchedUser ? matchedUser.user_id : null,
-        commishIds: Array.from(commishIds),
-        isCommissioner
-      });
+      /* Match username to Sleeper user */
+      const matchedUser = users.find(u => (u.display_name || '').toLowerCase() === lowerUsername);
+      const isCommissioner = isAdmin || (matchedUser && matchedUser.user_id === league.owner_id);
 
       if (!isCommissioner) {
         return res.status(200).json({ isCommissioner: false });
       }
 
       /* Check or create league record in Supabase */
-      const { data: existing } = await supabase
+      let { data: record } = await supabase
         .from('leagues')
         .select('*')
         .eq('league_id', leagueId)
         .single();
 
-      if (!existing) {
-        /* First time — create trial record */
+      if (!record) {
         await supabase.from('leagues').insert({
           league_id: leagueId,
           commissioner_username: lowerUsername,
           trial_start_date: new Date().toISOString(),
           is_paid: false
         });
+        const result = await supabase
+          .from('leagues')
+          .select('*')
+          .eq('league_id', leagueId)
+          .single();
+        record = result.data;
       }
 
-      /* Fetch fresh record */
-      const { data: record } = await supabase
-        .from('leagues')
-        .select('*')
-        .eq('league_id', leagueId)
-        .single();
-
-      /* Trial logic — active during first 2 weeks of NFL season (Sep 1 - Sep 14)
-         OR first 2 weeks after commissioner first loads the app during active season */
+      /* Trial logic */
       const now = new Date();
-      const seasonYear = new Date().getFullYear();
-      
-      /* NFL season typically starts first Thursday of September */
-      const seasonStart = new Date(seasonYear, 8, 1); /* Sep 1 as proxy */
+      const seasonYear = now.getFullYear();
+      const seasonStart = new Date(seasonYear, 8, 1);
       const seasonTrialEnd = new Date(seasonStart.getTime() + 14 * 24 * 60 * 60 * 1000);
-      
-      /* Also allow trial if commissioner first loaded during season and within 14 days */
       const firstLoad = new Date(record.trial_start_date);
       const firstLoadTrialEnd = new Date(firstLoad.getTime() + 14 * 24 * 60 * 60 * 1000);
-      
-      /* Trial is active if either window is open */
       const inSeasonTrial = now >= seasonStart && now <= seasonTrialEnd;
       const inFirstLoadTrial = now <= firstLoadTrialEnd;
       const trialActive = inSeasonTrial || inFirstLoadTrial;
       const trialDaysLeft = trialActive ? Math.max(0, Math.ceil(
-        (Math.max(seasonTrialEnd.getTime(), firstLoadTrialEnd.getTime()) - now.getTime()) 
+        (Math.max(seasonTrialEnd.getTime(), firstLoadTrialEnd.getTime()) - now.getTime())
         / (1000 * 60 * 60 * 24)
       )) : 0;
 
