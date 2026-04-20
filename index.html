@@ -375,6 +375,20 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .wwl-val.pos{color:var(--win);font-family:'IBM Plex Mono',monospace;font-size:12px;}
 .wwl-val.neg{color:var(--loss);font-family:'IBM Plex Mono',monospace;font-size:12px;}
 
+  /* LANDING PAGE SECTIONS */
+.land-sections{width:100%;max-width:480px;margin-top:32px;display:flex;flex-direction:column;gap:16px;}
+.land-section{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:20px 24px;position:relative;overflow:hidden;}
+.land-section::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent);}
+.land-section-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--orange);margin-bottom:8px;display:block;}
+.land-section-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text);margin-bottom:10px;}
+.land-section-body{font-size:12px;color:var(--muted);line-height:1.7;font-family:'IBM Plex Sans',sans-serif;}
+.land-section-body strong{color:var(--text2);font-weight:500;}
+.land-features{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+.land-feature{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:var(--s2);border-radius:var(--r-sm);border:1px solid var(--border);}
+.land-feature-icon{font-size:13px;flex-shrink:0;margin-top:1px;}
+.land-feature-text{font-size:11px;color:var(--text2);line-height:1.5;font-family:'IBM Plex Sans',sans-serif;}
+.land-disclaimer{font-size:10px;color:var(--dim);line-height:1.6;font-family:'IBM Plex Mono',monospace;text-align:center;padding:14px 20px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:var(--r-sm);margin-top:4px;}
+.land-disclaimer a{color:var(--dim);text-decoration:underline;}
 @media(max-width:768px){
   .sidebar{position:static;width:100%;height:auto;border-right:none;border-bottom:1px solid var(--border);display:flex;flex-direction:row;overflow-x:auto;padding:6px 0;}
   .nav-group-lbl{display:none;}
@@ -435,6 +449,30 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
     <button class="btn-demo" onclick="loadDemo()">🎮 Preview with Demo League</button>
     <div class="demo-note">All features · No account needed</div>
   </div>
+
+  <!-- WHAT IS COMMISSIONER HUB -->
+  <div class="land-sections">
+    <div class="land-section">
+      <span class="land-section-eyebrow">Built for commissioners</span>
+      <div class="land-section-title">What is Commissioner Hub?</div>
+      <div class="land-section-body">
+        Commissioner Hub is a <strong>dynasty fantasy football intelligence platform</strong> built exclusively for league commissioners. Connect your Sleeper league and generate AI-powered content your entire league will talk about — Power Rankings, Matchup Recaps, Trade Analysis, Waiver Reports, and Weekly Digests, all sourced from your real league data.
+        <div class="land-features">
+          <div class="land-feature"><span class="land-feature-icon">⚡</span><span class="land-feature-text">AI Power Rankings from real Sleeper data</span></div>
+          <div class="land-feature"><span class="land-feature-icon">🎬</span><span class="land-feature-text">Matchup Recaps ready to drop in the group chat</span></div>
+          <div class="land-feature"><span class="land-feature-icon">🤝</span><span class="land-feature-text">Trade Analysis graded with actual stats</span></div>
+          <div class="land-feature"><span class="land-feature-icon">🎯</span><span class="land-feature-text">Draft Capital grades for every team</span></div>
+          <div class="land-feature"><span class="land-feature-icon">📋</span><span class="land-feature-text">Waiver Wire targets by roster need</span></div>
+          <div class="land-feature"><span class="land-feature-icon">📰</span><span class="land-feature-text">Weekly Digest built for your league</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="land-disclaimer">
+      Commissioner Hub is an independent tool and is not affiliated with, endorsed by, or connected to Sleeper, FantasyCalc, or any other platform. All data is sourced from publicly available APIs. Fantasy football involves no real money wagering.
+    </div>
+  </div>
+
 </div>
 
 <!-- DASHBOARD -->
