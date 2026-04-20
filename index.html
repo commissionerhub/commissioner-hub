@@ -2499,7 +2499,26 @@ function startTrial(){
 
 function go(tab){var tabs=document.querySelectorAll('.tab');for(var i=0;i<tabs.length;i++)tabs[i].classList.remove('active');var navs=document.querySelectorAll('.nav-item');for(var j=0;j<navs.length;j++)navs[j].classList.remove('active');var t=document.getElementById('tab-'+tab);if(t)t.classList.add('active');var n=document.getElementById('nav-'+tab);if(n)n.classList.add('active');}
 function showScreen(id){document.getElementById('screen-landing').style.display='none';document.getElementById('screen-dashboard').style.display=id==='dashboard'?'flex':'none';}
-function resetApp(){document.getElementById('screen-landing').style.display='flex';document.getElementById('screen-dashboard').style.display='none';document.getElementById('tb-demo').classList.add('hidden');go('overview');}
+/* Handle return from Stripe payment */
+window.addEventListener('load', function(){
+  var params = new URLSearchParams(window.location.search);
+  if(params.get('paid') === 'true'){
+    var leagueId = params.get('league');
+    if(leagueId){
+      document.getElementById('inp-league').value = leagueId;
+      /* Clean URL */
+      window.history.replaceState({}, '', '/');
+      /* Show success message */
+      var err = document.getElementById('land-err');
+      err.style.background = 'rgba(34,197,94,0.1)';
+      err.style.borderColor = 'rgba(34,197,94,0.25)';
+      err.style.color = 'var(--win)';
+      err.textContent = '✅ Payment successful! Enter your Sleeper username and load your league to access Pro features.';
+      err.style.display = 'block';
+    }
+  }
+});
+  function resetApp(){document.getElementById('screen-landing').style.display='flex';document.getElementById('screen-dashboard').style.display='none';document.getElementById('tb-demo').classList.add('hidden');go('overview');}
 </script>
   <script>
 if('serviceWorker' in navigator){
