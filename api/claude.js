@@ -87,7 +87,7 @@ export default async function handler(req, res) {
       const { leagueId, username } = body;
       const stripe = new (await import('stripe')).default(process.env.STRIPE_SECRET_KEY);
       
-      const session = await stripe.checkout.sessions.create({
+     const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: [{
           price: process.env.STRIPE_PRICE_ID,
@@ -105,8 +105,17 @@ export default async function handler(req, res) {
         metadata: {
           league_id: leagueId,
           commissioner_username: username
-        }
+        },
+        customer_creation: 'always',
+        customer_email: undefined
       });
+
+      /* After session created, update customer metadata */
+      if (session.customer) {
+        await stripe.customers.update(session.customer, {
+          metadata: { league_id: leagueId, commissioner_username: username }
+        });
+      }
 
       return res.status(200).json({ url: session.url });
     }
