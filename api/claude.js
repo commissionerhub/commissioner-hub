@@ -89,12 +89,27 @@ export default async function handler(req, res) {
         .eq('league_id', leagueId)
         .single();
 
-      /* Calculate trial status */
-      const trialStart = new Date(record.trial_start_date);
-      const trialEnd = new Date(trialStart.getTime() + 14 * 24 * 60 * 60 * 1000);
+      /* Trial logic — active during first 2 weeks of NFL season (Sep 1 - Sep 14)
+         OR first 2 weeks after commissioner first loads the app during active season */
       const now = new Date();
-      const trialActive = now < trialEnd;
-      const trialDaysLeft = Math.max(0, Math.ceil((trialEnd - now) / (1000 * 60 * 60 * 24)));
+      const seasonYear = new Date().getFullYear();
+      
+      /* NFL season typically starts first Thursday of September */
+      const seasonStart = new Date(seasonYear, 8, 1); /* Sep 1 as proxy */
+      const seasonTrialEnd = new Date(seasonStart.getTime() + 14 * 24 * 60 * 60 * 1000);
+      
+      /* Also allow trial if commissioner first loaded during season and within 14 days */
+      const firstLoad = new Date(record.trial_start_date);
+      const firstLoadTrialEnd = new Date(firstLoad.getTime() + 14 * 24 * 60 * 60 * 1000);
+      
+      /* Trial is active if either window is open */
+      const inSeasonTrial = now >= seasonStart && now <= seasonTrialEnd;
+      const inFirstLoadTrial = now <= firstLoadTrialEnd;
+      const trialActive = inSeasonTrial || inFirstLoadTrial;
+      const trialDaysLeft = trialActive ? Math.max(0, Math.ceil(
+        (Math.max(seasonTrialEnd.getTime(), firstLoadTrialEnd.getTime()) - now.getTime()) 
+        / (1000 * 60 * 60 * 24)
+      )) : 0;
 
       return res.status(200).json({
         isCommissioner: true,
