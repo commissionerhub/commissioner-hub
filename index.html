@@ -2449,11 +2449,33 @@ function showPaywall(){
   modal.innerHTML='<div style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:32px;max-width:420px;width:100%;text-align:center;">'+
     '<div style="font-size:32px;margin-bottom:12px;">🏆</div>'+
     '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:28px;letter-spacing:0.06em;color:var(--orange);margin-bottom:8px;">Commissioner Hub Pro</div>'+
-    '<div style="font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.6;">Power Rankings, Recaps, Trade Analysis, Draft Analysis, Waiver Wire, and Weekly Digests — all generated from your actual Sleeper data.<br><br><strong style="color:var(--text);">$39/season per league.</strong> Split from league dues — less than $4 per team.</div>'+
+    '<div style="font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.6;">Power Rankings, Recaps, Trade Analysis, Draft Analysis, Waiver Wire, and Weekly Digests — all generated from your actual Sleeper data.<br><br><strong style="color:var(--text);">$39/year per league.</strong> Split from league dues — less than $4 per team.</div>'+
     '<button onclick="startTrial()" style="width:100%;background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;border:none;border-radius:var(--r-sm);padding:14px;font-family:\'Bebas Neue\',sans-serif;font-size:20px;letter-spacing:0.1em;cursor:pointer;margin-bottom:10px;">⚡ Start Free 14-Day Trial</button>'+
+    '<button onclick="handlePayment()" id="pay-btn" style="width:100%;background:var(--s2);color:var(--text);border:1px solid var(--border2);border-radius:var(--r-sm);padding:14px;font-family:\'Bebas Neue\',sans-serif;font-size:20px;letter-spacing:0.1em;cursor:pointer;margin-bottom:10px;">💳 Subscribe — $39/year</button>'+
     '<button onclick="this.closest(\'div\').parentNode.remove()" style="width:100%;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px;font-family:\'IBM Plex Mono\',monospace;font-size:11px;cursor:pointer;">Maybe later</button>'+
   '</div>';
   document.body.appendChild(modal);
+}
+
+function handlePayment(){
+  var btn=document.getElementById('pay-btn');
+  if(btn){btn.textContent='Loading...';btn.disabled=true;}
+  var leagueId=D.leagueId||document.getElementById('inp-league').value.trim();
+  var username=document.getElementById('inp-username').value.trim();
+  fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({createCheckout:true,leagueId:leagueId,username:username})})
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(data.url){
+        window.location.href=data.url;
+      } else {
+        if(btn){btn.textContent='💳 Subscribe — $39/year';btn.disabled=false;}
+        alert('Error creating payment session. Please try again.');
+      }
+    })
+    .catch(function(){
+      if(btn){btn.textContent='💳 Subscribe — $39/year';btn.disabled=false;}
+      alert('Error connecting to payment system. Please try again.');
+    });
 }
 
 function startTrial(){
