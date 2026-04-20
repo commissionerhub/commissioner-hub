@@ -1,53 +1,125 @@
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_KEY
+);
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const { prompt, section, fetchNFLVerse, nflSeason } = req.body;
+    const body = req.body;
 
-    if (!process.env.ANTHROPIC_API_KEY && !fetchNFLVerse) {
-      return res.status(500).json({ error: 'API key not configured' });
+    /* ── COMMISSIONER VERIFICATION ── */
+    if (body.verifyCommissioner) {
+      const { leagueId, username } = body;
+      if (!leagueId || !username) {
+        return res.status(200).json({ isCommissioner: false, error: 'Missing fields' });
+      }
+
+      /* Fetch league users from Sleeper */
+      const sleeperRes = await fetch(`https://api.sleeper.app/v1/league/${leagueId}/users`);
+      if (!sleeperRes.ok) return res.status(200).json({ isCommissioner: false, error: 'League not found' });
+      const users = await sleeperRes.json();
+
+      /* Fetch league to get commissioner roster_id */
+      const leagueRes = await fetch(`https://api.sleeper.app/v1/league/${leagueId}`);
+      const league = await leagueRes.json();
+
+      /* Find commissioner — Sleeper marks them via league.metadata or we match display_name */
+      const lowerUsername = username.toLowerCase().trim();
+      const isCommissioner = users.some(function(u) {
+        return (u.display_name || '').toLowerCase() === lowerUsername &&
+               u.user_id === league.owner_id;
+      });
+
+      if (!isCommissioner) {
+        return res.status(200).json({ isCommissioner: false });
+      }
+
+      /* Check or create league record in Supabase */
+      const { data: existing } = await supabase
+        .from('leagues')
+        .select('*')
+        .eq('league_id', leagueId)
+        .single();
+
+      if (!existing) {
+        /* First time — create trial record */
+        await supabase.from('leagues').insert({
+          league_id: leagueId,
+          commissioner_username: lowerUsername,
+          trial_start_date: new Date().toISOString(),
+          is_paid: false
+        });
+      }
+
+      /* Fetch fresh record */
+      const { data: record } = await supabase
+        .from('leagues')
+        .select('*')
+        .eq('league_id', leagueId)
+        .single();
+
+      /* Calculate trial status */
+      const trialStart = new Date(record.trial_start_date);
+      const trialEnd = new Date(trialStart.getTime() + 14 * 24 * 60 * 60 * 1000);
+      const now = new Date();
+      const trialActive = now < trialEnd;
+      const trialDaysLeft = Math.max(0, Math.ceil((trialEnd - now) / (1000 * 60 * 60 * 24)));
+
+      return res.status(200).json({
+        isCommissioner: true,
+        isPaid: record.is_paid,
+        paidUntil: record.paid_until,
+        trialActive: trialActive,
+        trialDaysLeft: trialDaysLeft,
+        trialEnd: trialEnd.toISOString()
+      });
     }
 
-    /* NFLVerse proxy — fetch CSV server-side to avoid CORS */
-if (req.body.fetchSheetTakes) {
+    /* ── SHEET TAKES PROXY ── */
+    if (body.fetchSheetTakes) {
       try {
         const sheetUrl = 'https://docs.google.com/spreadsheets/d/1MrQh_jRfoKw7Gwz06fAbVQhfev1-2q0T/gviz/tq?tqx=out:csv&sheet=Sheet1';
         const r = await fetch(sheetUrl, {
-          headers: {
-            'User-Agent': 'Mozilla/5.0',
-            'Accept': 'text/csv,text/plain,*/*'
-          },
+          headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'text/csv,text/plain,*/*' },
           redirect: 'follow'
         });
-        if (!r.ok) return res.status(200).json({ csv: '', error: 'Sheet fetch failed: '+r.status });
+        if (!r.ok) return res.status(200).json({ csv: '', error: 'Sheet fetch failed: ' + r.status });
         const csv = await r.text();
-        return res.status(200).json({ csv: csv });
+        return res.status(200).json({ csv });
       } catch(e) {
         return res.status(200).json({ csv: '', error: e.message });
       }
     }
 
-    if (fetchNFLVerse) {      const csvUrl = `https://github.com/nflverse/nflverse-data/releases/download/player_stats/player_stats_${nflSeason}.csv`;
+    /* ── NFLVERSE PROXY ── */
+    if (body.fetchNFLVerse) {
+      const csvUrl = `https://github.com/nflverse/nflverse-data/releases/download/player_stats/player_stats_${body.nflSeason}.csv`;
       const r = await fetch(csvUrl);
       if (!r.ok) return res.status(200).json({ csv: '' });
       const csv = await r.text();
       return res.status(200).json({ csv });
     }
 
+    /* ── CLAUDE AI ── */
     const analyticalSections = ['rankings','seasonrank','aitrades','aidraft'];
-    const isAnalytical = analyticalSections.includes(section);
+    const isAnalytical = analyticalSections.includes(body.section);
     const temperature = isAnalytical ? 0.1 : 0.5;
 
-const analyticalSystem = 'You are a fantasy football narrator whose sole job is to articulate what the provided data says in an entertaining, punchy voice. You have zero independent opinions about individual players.\n\nABSOLUTE RULES FOR INDIVIDUAL PLAYER ANALYSIS:\n1. ALL player analysis must come exclusively from the [COMMISSIONER PROFILE], [FULL BREAKDOWN], [2026 LIKELY], [CEILING], [FLOOR], and [30-DAY TREND] tags in the data. These are the ONLY valid sources for player narratives.\n2. If a player has NO commissioner tags, you may ONLY state their statistical facts — points, average, games played, positional ranking. You may not add any qualitative opinion, projection, or narrative about that player beyond the raw numbers.\n3. Never use your training knowledge to form opinions about any individual player. You do not know what is best for any player. The spreadsheet knows.\n4. CURRENT PERFORMANCE labels (ELITE STARTER, SOLID STARTER, etc.) are derived from statistical rankings — state them as fact, do not editorialize beyond them.\n5. Dynasty value reflects future potential only — never use it alone to describe current performance quality.\n6. Team-level analysis (records, standings, draft capital, schedule) may use all available data. Only individual player narratives are restricted to commissioner tags.\n7. If a commissioner tag says a player is elite, they are elite. If it says declining, they are declining. Never contradict commissioner tags with training knowledge or outside opinions. 8. When using commissioner tag content, write it as direct analysis — do NOT say "the commissioner profile says" or "according to the commissioner profile." Just state it as fact in your own voice.';    const body = {
+    const analyticalSystem = 'You are a fantasy football narrator whose sole job is to articulate what the provided data says in an entertaining, punchy voice. You have zero independent opinions about individual players.\n\nABSOLUTE RULES FOR INDIVIDUAL PLAYER ANALYSIS:\n1. ALL player analysis must come exclusively from the [COMMISSIONER PROFILE], [FULL BREAKDOWN], [2026 LIKELY], [CEILING], [FLOOR], and [30-DAY TREND] tags in the data. These are the ONLY valid sources for player narratives.\n2. If a player has NO commissioner tags, you may ONLY state their statistical facts — points, average, games played, positional ranking. You may not add any qualitative opinion, projection, or narrative about that player beyond the raw numbers.\n3. Never use your training knowledge to form opinions about any individual player. You do not know what is best for any player. The spreadsheet knows.\n4. CURRENT PERFORMANCE labels (ELITE STARTER, SOLID STARTER, etc.) are derived from statistical rankings — state them as fact, do not editorialize beyond them.\n5. Dynasty value reflects future potential only — never use it alone to describe current performance quality.\n6. Team-level analysis (records, standings, draft capital, schedule) may use all available data. Only individual player narratives are restricted to commissioner tags.\n7. If a commissioner tag says a player is elite, they are elite. If it says declining, they are declining. Never contradict commissioner tags with training knowledge or outside opinions.\n8. When using commissioner tag content, write it as direct analysis — do NOT say "the commissioner profile says" or "according to the commissioner profile." Just state it as fact in your own voice.\n\nROSTER ACCURACY RULE: Only mention a player under the team whose roster section lists them. Never assign a player to a team based on training knowledge — if a player is not in a team\'s roster data, they do not belong to that team.';
+
+    const requestBody = {
       model: 'claude-sonnet-4-6',
       max_tokens: 4000,
-      temperature: temperature,
-      messages: [{ role: 'user', content: prompt }]
+      temperature,
+      system: analyticalSystem,
+      messages: [{ role: 'user', content: body.prompt }]
     };
-
-    body.system = analyticalSystem;
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -56,17 +128,15 @@ const analyticalSystem = 'You are a fantasy football narrator whose sole job is 
         'x-api-key': process.env.ANTHROPIC_API_KEY,
         'anthropic-version': '2023-06-01'
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify(requestBody)
     });
 
     const data = await response.json();
-
     if (!response.ok) {
       return res.status(500).json({ error: data.error?.message || JSON.stringify(data) });
     }
 
-    const text = data.content?.[0]?.text || '';
-    return res.status(200).json({ text });
+    return res.status(200).json({ text: data.content?.[0]?.text || '' });
 
   } catch (err) {
     return res.status(500).json({ error: err.message });
