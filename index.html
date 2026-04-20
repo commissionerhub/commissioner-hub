@@ -403,13 +403,21 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
     <div class="land-tagline">⚡ &nbsp; Powered by real Sleeper data &nbsp; ⚡</div>
   </div>  <div class="land-card">
     <div class="field-group">
-      <label class="field-lbl" for="inp-league">Sleeper League ID</label>
-      <div class="inp-wrap">
-        <input class="app-inp" id="inp-league" type="text" placeholder="e.g. 1234567890123456789" autocomplete="off">
-        <span class="inp-icon">🏈</span>
-      </div>
-      <div class="field-hint">Sleeper → League → Settings → League ID</div>
-    </div>
+  <label class="field-lbl" for="inp-league">Sleeper League ID</label>
+  <div class="inp-wrap">
+    <input class="app-inp" id="inp-league" type="text" placeholder="e.g. 1234567890123456789" autocomplete="off">
+    <span class="inp-icon">🏈</span>
+  </div>
+  <div class="field-hint">Sleeper → League → Settings → League ID</div>
+</div>
+<div class="field-group">
+  <label class="field-lbl" for="inp-username">Your Sleeper Username</label>
+  <div class="inp-wrap">
+    <input class="app-inp" id="inp-username" type="text" placeholder="e.g. wolfgang22" autocomplete="off">
+    <span class="inp-icon">👤</span>
+  </div>
+  <div class="field-hint">Required to verify commissioner status</div>
+</div>
     <div id="land-err" class="err-msg"></div>
     <button class="btn-primary" id="btn-launch" onclick="launch()">⚡ Load My League</button>
     <div class="load-steps" id="load-steps">
@@ -440,6 +448,7 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
     <div class="topbar-right">
       <div class="week-pill" id="tb-week"></div>
       <div class="demo-pill hidden" id="tb-demo">🎮 Demo</div>
+<div class="week-pill hidden" id="tb-trial"></div>
       <button class="btn-sm" onclick="resetApp()">← Back</button>
       
     </div>
@@ -768,7 +777,11 @@ var D={
   leaguePPR: 0,           /* 0 = non-PPR, 0.5 = half, 1 = full */
   hasToiletBowl: false,   /* consolation bracket exists */
   nflverseStats:{},       /* name → {snapPct, targetShare, airYards} */
-  commishTakes:{}         /* name → commissioner's own player analysis */
+  commishTakes:{},        /* name → commissioner's own player analysis */
+  isCommissioner:false,   /* verified commissioner of this league */
+  isPaid:false,           /* paid subscription active */
+  trialActive:false,      /* within 14-day trial */
+  trialDaysLeft:0         /* days remaining in trial */
 };
 
 /* ════════════════════════════
@@ -1005,8 +1018,10 @@ function fetchHistory(prevId, acc) {
 ════════════════════════════ */
 function launch(){
   var id=document.getElementById('inp-league').value.trim();
+  var username=document.getElementById('inp-username').value.trim();
   var errEl=document.getElementById('land-err');
   if(!id){errEl.textContent='Please enter your Sleeper League ID.';errEl.style.display='block';return;}
+  if(!username){errEl.textContent='Please enter your Sleeper username.';errEl.style.display='block';return;}
   errEl.style.display='none';
   var btn=document.getElementById('btn-launch');
   btn.disabled=true;btn.textContent='Loading…';
@@ -1392,6 +1407,29 @@ var breakdownCol=findCol('breakdown');
             btn.disabled=false;
             btn.textContent='⚡ Load My League';
             document.getElementById('load-steps').style.display='none';
+            /* Verify commissioner status */
+            fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({verifyCommissioner:true,leagueId:id,username:username})})
+              .then(function(r){return r.json();})
+              .then(function(v){
+                D.isCommissioner=v.isCommissioner||false;
+                D.isPaid=v.isPaid||false;
+                D.trialActive=v.trialActive||false;
+                D.trialDaysLeft=v.trialDaysLeft||0;
+                if(v.isCommissioner){
+                  if(v.trialActive&&!v.isPaid){
+                    var tb=document.getElementById('tb-trial');
+                    tb.textContent='⚡ Trial: '+v.trialDaysLeft+' days left';
+                    tb.classList.remove('hidden');
+                  }
+                }
+                updateProAccess();
+              })
+              .catch(function(){
+                D.isCommissioner=false;
+                D.isPaid=false;
+                D.trialActive=false;
+                updateProAccess();
+              });
            ['league','history','teams','matchups','txns','players','stats','values','nfl','takes'].forEach(function(s){setStep(s,'');});
           });
           });
@@ -2386,6 +2424,26 @@ function mdToHtml(md){
 /* ════════════════════════════
    NAV & SCREENS
 ════════════════════════════ */
+function updateProAccess(){
+  var hasAccess=D.isCommissioner&&(D.isPaid||D.trialActive);
+  var proSections=['recap','preview','waiver','weekly','rankings','seasonrank','aitrades','aidraft'];
+  proSections.forEach(function(section){
+    var btn=document.getElementById('btn-'+section);
+    var ph=document.getElementById('ph-'+section);
+    if(!btn||!ph)return;
+    if(!hasAccess){
+      btn.style.display='none';
+      ph.innerHTML='<div class="pro-ph-icon">🔒</div><div class="pro-ph-txt" style="color:var(--orange);">'+(D.isCommissioner?'Your trial has expired — renew to unlock Pro features':'Pro features are available to league commissioners only')+' </div><button class="btn-primary" style="margin-top:16px;font-size:16px;max-width:260px;" onclick="showPaywall()">🏆 Unlock Pro — $39/season</button>';
+    } else {
+      btn.style.display='';
+    }
+  });
+}
+
+function showPaywall(){
+  alert('Stripe payment coming soon! Contact your commissioner or visit commissioner-hub.vercel.app to unlock Pro.');
+}
+
 function go(tab){var tabs=document.querySelectorAll('.tab');for(var i=0;i<tabs.length;i++)tabs[i].classList.remove('active');var navs=document.querySelectorAll('.nav-item');for(var j=0;j<navs.length;j++)navs[j].classList.remove('active');var t=document.getElementById('tab-'+tab);if(t)t.classList.add('active');var n=document.getElementById('nav-'+tab);if(n)n.classList.add('active');}
 function showScreen(id){document.getElementById('screen-landing').style.display='none';document.getElementById('screen-dashboard').style.display=id==='dashboard'?'flex':'none';}
 function resetApp(){document.getElementById('screen-landing').style.display='flex';document.getElementById('screen-dashboard').style.display='none';document.getElementById('tb-demo').classList.add('hidden');go('overview');}
