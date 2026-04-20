@@ -65,19 +65,13 @@ export default async function handler(req, res) {
         record = result.data;
       }
 
-      /* Trial logic */
+      /* Trial logic — 14 days from activation */
       const now = new Date();
-      const seasonYear = now.getFullYear();
-      const seasonStart = new Date(seasonYear, 8, 1);
-      const seasonTrialEnd = new Date(seasonStart.getTime() + 14 * 24 * 60 * 60 * 1000);
-      const firstLoad = new Date(record.trial_start_date);
-      const firstLoadTrialEnd = new Date(firstLoad.getTime() + 14 * 24 * 60 * 60 * 1000);
-      const inSeasonTrial = now >= seasonStart && now <= seasonTrialEnd;
-      const inFirstLoadTrial = now <= firstLoadTrialEnd;
-      const trialActive = inSeasonTrial || inFirstLoadTrial;
+      const trialActivated = record.trial_activated || false;
+      const trialEnd = record.trial_end_date ? new Date(record.trial_end_date) : null;
+      const trialActive = trialActivated && trialEnd && now < trialEnd;
       const trialDaysLeft = trialActive ? Math.max(0, Math.ceil(
-        (Math.max(seasonTrialEnd.getTime(), firstLoadTrialEnd.getTime()) - now.getTime())
-        / (1000 * 60 * 60 * 24)
+        (trialEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
       )) : 0;
 
       return res.status(200).json({
@@ -88,7 +82,16 @@ export default async function handler(req, res) {
         trialDaysLeft: isAdmin ? 999 : trialDaysLeft
       });
     }
-
+/* ── TRIAL ACTIVATION ── */
+    if (body.activateTrial) {
+      const { leagueId } = body;
+      const trialEnd = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
+      await supabase.from('leagues').update({
+        trial_activated: true,
+        trial_end_date: trialEnd.toISOString()
+      }).eq('league_id', leagueId);
+      return res.status(200).json({ success: true, trialEnd: trialEnd.toISOString(), trialDaysLeft: 14 });
+    }
     /* ── SHEET TAKES PROXY ── */
     if (body.fetchSheetTakes) {
       try {
