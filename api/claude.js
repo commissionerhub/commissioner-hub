@@ -29,11 +29,36 @@ export default async function handler(req, res) {
       const leagueRes = await fetch(`https://api.sleeper.app/v1/league/${leagueId}`);
       const league = await leagueRes.json();
 
-      /* Find commissioner — Sleeper marks them via league.metadata or we match display_name */
       const lowerUsername = username.toLowerCase().trim();
-      const isCommissioner = users.some(function(u) {
-        return (u.display_name || '').toLowerCase() === lowerUsername &&
-               u.user_id === league.owner_id;
+
+      /* Fetch rosters to check co-commissioners */
+      const rostersRes = await fetch(`https://api.sleeper.app/v1/league/${leagueId}/rosters`);
+      const rosters = await rostersRes.json();
+
+      /* Build set of all commissioner user_ids — owner + co-owners from rosters */
+      const commishIds = new Set();
+      commishIds.add(league.owner_id);
+      rosters.forEach(function(r) {
+        if (r.co_owners) r.co_owners.forEach(function(id) { commishIds.add(id); });
+      });
+
+      /* Manual whitelist — add trusted usernames here */
+      const whitelist = ['wolfgang22', 'skolsplitter'];
+
+      /* Match username to user_id then check if that user is a commissioner */
+      const matchedUser = users.find(function(u) {
+        return (u.display_name || '').toLowerCase() === lowerUsername;
+      });
+
+      const isCommissioner = whitelist.includes(lowerUsername) ||
+        (matchedUser && commishIds.has(matchedUser.user_id));
+
+      /* Debug log */
+      console.log('Commissioner check:', {
+        lowerUsername,
+        matchedUser: matchedUser ? matchedUser.user_id : null,
+        commishIds: Array.from(commishIds),
+        isCommissioner
       });
 
       if (!isCommissioner) {
