@@ -44,10 +44,31 @@ export default async function handler(req, res) {
       const customerId = invoice.customer;
       const subscriptionId = invoice.subscription;
 
-      /* Get subscription to find metadata */
-      const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-      const leagueId = subscription.metadata.league_id;
-      const username = subscription.metadata.commissioner_username;
+      /* Get league_id from invoice metadata first, then fall back to subscription */
+      let leagueId = invoice.metadata && invoice.metadata.league_id;
+      let username = invoice.metadata && invoice.metadata.commissioner_username;
+
+      /* If not on invoice, try subscription */
+      if (!leagueId && subscriptionId) {
+        try {
+          const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+          leagueId = subscription.metadata.league_id;
+          username = subscription.metadata.commissioner_username;
+        } catch(e) {
+          console.error('Could not retrieve subscription:', e.message);
+        }
+      }
+
+      /* If still no leagueId, try customer metadata */
+      if (!leagueId) {
+        try {
+          const customer = await stripe.customers.retrieve(customerId);
+          leagueId = customer.metadata && customer.metadata.league_id;
+          username = customer.metadata && customer.metadata.commissioner_username;
+        } catch(e) {
+          console.error('Could not retrieve customer:', e.message);
+        }
+      }
 
       if (!leagueId) {
         console.error('No league_id in subscription metadata');
