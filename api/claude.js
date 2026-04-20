@@ -86,36 +86,35 @@ export default async function handler(req, res) {
     if (body.createCheckout) {
       const { leagueId, username } = body;
       const stripe = new (await import('stripe')).default(process.env.STRIPE_SECRET_KEY);
-      
-     const session = await stripe.checkout.sessions.create({
-        payment_method_types: ['card'],
-        line_items: [{
-          price: process.env.STRIPE_PRICE_ID,
-          quantity: 1
-        }],
-        mode: 'subscription',
-        success_url: 'https://commissioner-hub.vercel.app?paid=true&league=' + leagueId,
-        cancel_url: 'https://commissioner-hub.vercel.app',
-        subscription_data: {
+
+      try {
+        const session = await stripe.checkout.sessions.create({
+          payment_method_types: ['card'],
+          line_items: [{
+            price: process.env.STRIPE_PRICE_ID,
+            quantity: 1
+          }],
+          mode: 'subscription',
+          success_url: 'https://commissioner-hub.vercel.app?paid=true&league=' + leagueId,
+          cancel_url: 'https://commissioner-hub.vercel.app',
+          subscription_data: {
+            metadata: {
+              league_id: leagueId,
+              commissioner_username: username
+            }
+          },
           metadata: {
             league_id: leagueId,
             commissioner_username: username
           }
-        },
-        metadata: {
-          league_id: leagueId,
-          commissioner_username: username
-        },
-        customer_creation: 'always',
-        customer_email: undefined
-      });
-
-      /* After session created, update customer metadata */
-      if (session.customer) {
-        await stripe.customers.update(session.customer, {
-          metadata: { league_id: leagueId, commissioner_username: username }
         });
+
+        return res.status(200).json({ url: session.url });
+      } catch(stripeErr) {
+        console.error('Stripe checkout error:', stripeErr.message);
+        return res.status(500).json({ error: stripeErr.message });
       }
+    }
 
       return res.status(200).json({ url: session.url });
     }
