@@ -1416,7 +1416,6 @@ var breakdownCol=findCol('breakdown');
                 D.isPaid=v.isPaid||false;
                 D.trialActive=v.trialActive||false;
                 D.trialDaysLeft=v.trialDaysLeft||0;
-                console.log('Entitlement:', v);
                 if(v.isCommissioner){
                   if(v.trialActive&&!v.isPaid){
                     var tb=document.getElementById('tb-trial');
