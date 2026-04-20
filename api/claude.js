@@ -113,11 +113,10 @@ export default async function handler(req, res) {
 
       return res.status(200).json({
         isCommissioner: true,
-        isPaid: record.is_paid,
-        paidUntil: record.paid_until,
-        trialActive: trialActive,
-        trialDaysLeft: trialDaysLeft,
-        trialEnd: trialEnd.toISOString()
+        isPaid: isAdmin ? true : record.is_paid,
+        paidUntil: isAdmin ? '2099-01-01' : record.paid_until,
+        trialActive: isAdmin ? true : trialActive,
+        trialDaysLeft: isAdmin ? 999 : trialDaysLeft
       });
     }
 
