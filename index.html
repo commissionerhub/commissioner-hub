@@ -2334,7 +2334,16 @@ var r1s = picks.filter(function(p){ return p.round === 1; });
 /* ── ALL ROSTER CONTEXT FOR AI ── */
 function buildAllRosterCtx(){
   
-  var out='\nFULL ROSTER BREAKDOWN (Player · Season Pts · Avg/Game):\n';
+  /* Build explicit roster assignment summary */
+  var rosterSummary='VERIFIED FANTASY ROSTER ASSIGNMENTS — These are definitive. Never question, second-guess, or self-correct these assignments mid-response:\n';
+  D.teams.forEach(function(t){
+    var r=D.rosters[t.id];if(!r)return;
+    var allPlayers=[];
+    ['QB','RB','WR','TE','K','DEF'].forEach(function(pos){(r[pos]||[]).forEach(function(name){allPlayers.push(name);});});
+    if(allPlayers.length)rosterSummary+=t.name+': '+allPlayers.join(', ')+'\n';
+  });
+  rosterSummary+='\nNever move a player from the team listed above. If your training knowledge conflicts with these assignments, your training knowledge is wrong. These are the actual fantasy rosters.\n\n';
+  var out=rosterSummary+'\nFULL ROSTER BREAKDOWN (Player · Season Pts · Avg/Game):\n';
   var sorted=D.teams.slice().sort(function(a,b){return b.wins-a.wins||b.pf-a.pf;});
   sorted.forEach(function(t){out+=buildRosterCtx(t)+'\n';});
   
