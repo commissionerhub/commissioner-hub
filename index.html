@@ -830,7 +830,65 @@ var D={
    HELPERS
 ════════════════════════════ */
 function tc(id){return TC[(id-1)%TC.length];}
+
+function getTeamEmoji(name){
+  if(!name)return'🏈';
+  var n=name.toLowerCase();
+  if(/snake|viper|cobra|python|reptile/.test(n))return'🐍';
+  if(/wolf|wolves|wolfpack/.test(n))return'🐺';
+  if(/king|queen|royal|crown|throne/.test(n))return'👑';
+  if(/desert|cactus|sand|mesa|canyon/.test(n))return'🌵';
+  if(/fire|flame|blaze|inferno|heat/.test(n))return'🔥';
+  if(/ice|frost|frozen|freeze|cold|winter/.test(n))return'❄️';
+  if(/shark|fish|whale|dolphin|ocean|sea/.test(n))return'🦈';
+  if(/bear|grizzly|panda/.test(n))return'🐻';
+  if(/lion|tiger|leopard|panther|cat/.test(n))return'🦁';
+  if(/eagle|hawk|falcon|bird|raven|crow/.test(n))return'🦅';
+  if(/bull|cow|bison|ox/.test(n))return'🐂';
+  if(/horse|stallion|bronco|mustang/.test(n))return'🐎';
+  if(/dog|hound|wolf|husky/.test(n))return'🐕';
+  if(/wizard|wiz|magic|witch|sorcerer/.test(n))return'🧙';
+  if(/ghost|demon|devil|evil|dark/.test(n))return'👻';
+  if(/money|cash|bank|rich|gold|diamond/.test(n))return'💰';
+  if(/meat|beef|steak|burger/.test(n))return'🥩';
+  if(/honey|bee|sweet/.test(n))return'🍯';
+  if(/chowder|soup|food|chef|cook/.test(n))return'🍲';
+  if(/slippery|slip|shuck|oyster/.test(n))return'🦪';
+  if(/milli|million|money/.test(n))return'💵';
+  if(/uber|super|mega|ultra/.test(n))return'⚡';
+  if(/fresh|new|rookie|young/.test(n))return'🌱';
+  if(/weak|kitten|cat|kitty/.test(n))return'🐱';
+  if(/gina|girl|queen|lady/.test(n))return'💅';
+  if(/coooter|cooter/.test(n))return'🏆';
+  if(/church|holy|saint|angel/.test(n))return'😇';
+  if(/war|warrior|battle|fight|knight/.test(n))return'⚔️';
+  if(/space|star|galaxy|cosmic|alien/.test(n))return'🚀';
+  if(/skull|death|bone|reaper/.test(n))return'💀';
+  if(/pizza|taco|nacho|food/.test(n))return'🍕';
+  if(/beer|brew|ale|drink/.test(n))return'🍺';
+  if(/ninja|samurai|sword/.test(n))return'🥷';
+  if(/robot|machine|cyber|tech/.test(n))return'🤖';
+  if(/clown|joke|fool|jester/.test(n))return'🤡';
+  if(/storm|thunder|lightning|rain/.test(n))return'⛈️';
+  if(/sun|solar|bright|shine/.test(n))return'☀️';
+  if(/moon|night|dark|shadow/.test(n))return'🌙';
+  /* Fallback — use first letter */
+  var fallbacks=['🏈','🎯','⚡','🔥','💎','🦅','🐺','👑','🛡️','⚔️','🎲','🌟'];
+  return fallbacks[name.charCodeAt(0)%fallbacks.length];
+}
 function ini(name){return name.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();}
+
+function getTeamColor(teamName){
+  var idx=D.teams.findIndex(function(t){return t.name===teamName;});
+  if(idx===-1)idx=0;
+  return TC[idx%TC.length];
+}
+
+function getTeamColorById(teamId){
+  var idx=D.teams.findIndex(function(t){return t.id===teamId;});
+  if(idx===-1)idx=0;
+  return TC[idx%TC.length];
+}
 function av(team,cls){cls=cls||'';return '<div class="avatar '+cls+'" style="background:'+tc(team.id)+'">'+ini(team.name)+'</div>';}
 function fmt(n){return parseFloat(n).toFixed(1);}
 function gt(id){for(var i=0;i<D.teams.length;i++){if(D.teams[i].id===id)return D.teams[i];}return{id:id,name:'Team '+id,owner:''};}
@@ -2498,7 +2556,7 @@ function mdToHtml(md){
 ════════════════════════════ */
 function updateProAccess(){
   var hasAccess=D.isCommissioner&&(D.isPaid||D.trialActive);
-  var proSections=['recap','preview','waiver','weekly','rankings','seasonrank','aitrades','aidraft'];
+var proSections=['recap','preview','waiver','weekly','rankings','seasonrank','aitrades','aidraft','rookiedraft'];
   proSections.forEach(function(section){
     var btn=document.getElementById('btn-'+section);
     var ph=document.getElementById('ph-'+section);
