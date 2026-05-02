@@ -22,20 +22,16 @@ export default async function handler(req, res) {
 
       const lowerUsername = username.toLowerCase().trim();
 
-      /* Permanent admin whitelist — always full Pro access */
       const whitelist = ['skolsplitter', 'wolfgang22'];
       const isAdmin = whitelist.includes(lowerUsername);
 
-      /* Fetch league users from Sleeper */
       const sleeperRes = await fetch(`https://api.sleeper.app/v1/league/${leagueId}/users`);
       if (!sleeperRes.ok) return res.status(200).json({ isCommissioner: false, error: 'League not found' });
       const users = await sleeperRes.json();
 
-      /* Fetch league to get owner_id */
       const leagueRes = await fetch(`https://api.sleeper.app/v1/league/${leagueId}`);
       const league = await leagueRes.json();
 
-      /* Match username to Sleeper user */
       const matchedUser = users.find(u => (u.display_name || '').toLowerCase() === lowerUsername);
       const isCommissioner = isAdmin || (matchedUser && matchedUser.user_id === league.owner_id);
 
@@ -43,7 +39,6 @@ export default async function handler(req, res) {
         return res.status(200).json({ isCommissioner: false });
       }
 
-      /* Check or create league record in Supabase */
       let { data: record } = await supabase
         .from('leagues')
         .select('*')
@@ -65,7 +60,6 @@ export default async function handler(req, res) {
         record = result.data;
       }
 
-      /* Trial logic — 14 days from activation */
       const now = new Date();
       const trialActivated = record.trial_activated || false;
       const trialEnd = record.trial_end_date ? new Date(record.trial_end_date) : null;
@@ -147,9 +141,8 @@ export default async function handler(req, res) {
     const isAnalytical = analyticalSections.includes(body.section);
     const temperature = isAnalytical ? 0.1 : 0.5;
 
-8. When using commissioner tag content, write it as direct analysis — do NOT say "the commissioner profile says" or "according to the commissioner profile." Just state it as fact in your own voice.
-9. NEVER show uncertainty, self-correction, or second-guessing in your output. Never write phrases like "wait —", "actually —", "let me be precise", "no —", or any mid-sentence correction. If you are unsure which team a player belongs to, consult the VERIFIED FANTASY ROSTER ASSIGNMENTS at the top of the prompt — those assignments are always correct and final. Write with complete confidence at all times.
-10. A player listed on Team A's roster IS on Team A. Their NFL team is irrelevant. Fantasy ownership is determined solely by the roster data provided.
+    const analyticalSystem = 'You are a fantasy football narrator whose sole job is to articulate what the provided data says in an entertaining, punchy voice. You have zero independent opinions about individual players.\n\nABSOLUTE RULES FOR INDIVIDUAL PLAYER ANALYSIS:\n1. ALL player analysis must come exclusively from the [COMMISSIONER PROFILE], [FULL BREAKDOWN], [2026 LIKELY], [CEILING], [FLOOR], and [30-DAY TREND] tags in the data. These are the ONLY valid sources for player narratives.\n2. If a player has NO commissioner tags, you may ONLY state their statistical facts — points, average, games played, positional ranking. You may not add any qualitative opinion, projection, or narrative about that player beyond the raw numbers.\n3. Never use your training knowledge to form opinions about any individual player. You do not know what is best for any player. The spreadsheet knows.\n4. CURRENT PERFORMANCE labels (ELITE STARTER, SOLID STARTER, etc.) are derived from statistical rankings — state them as fact, do not editorialize beyond them.\n5. Dynasty value reflects future potential only — never use it alone to describe current performance quality.\n6. Team-level analysis (records, standings, draft capital, schedule) may use all available data. Only individual player narratives are restricted to commissioner tags.\n7. If a commissioner tag says a player is elite, they are elite. If it says declining, they are declining. Never contradict commissioner tags with training knowledge or outside opinions.\n8. When using commissioner tag content, write it as direct analysis — do NOT say "the commissioner profile says" or "according to the commissioner profile." Just state it as fact in your own voice.\n9. NEVER show uncertainty, self-correction, or second-guessing in your output. Never write phrases like "wait —", "actually —", "let me be precise", "no —", or any mid-sentence correction. If you are unsure which team a player belongs to, consult the VERIFIED FANTASY ROSTER ASSIGNMENTS at the top of the prompt — those are always correct and final. Write with complete confidence at all times.\n10. A player listed on Team A\'s roster IS on Team A. Their NFL team is irrelevant. Fantasy ownership is determined solely by the roster data provided.';
+
     const requestBody = {
       model: 'claude-sonnet-4-6',
       max_tokens: 4000,
