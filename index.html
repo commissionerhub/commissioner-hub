@@ -1584,14 +1584,13 @@ function processData(league,users,rosters,mByWeek,allTxns,tradedPicks,players,cu
  D.leagueName=league.name||'My League';
   D.leagueId=league.league_id||'';
   /* Fetch rookie draft status from Sleeper */
-  try {
-    var draftsRes=await fetch('https://api.sleeper.app/v1/league/'+league.league_id+'/drafts');
-    var drafts=await draftsRes.json();
-    var rookieDraft=drafts.find(function(d){return d.type==='snake'||d.type==='linear';});
-    D.rookieDraftStatus=rookieDraft?rookieDraft.status:'pre_draft';
-  } catch(e){
-    D.rookieDraftStatus='pre_draft';
-  }
+  fetch('https://api.sleeper.app/v1/league/'+league.league_id+'/drafts')
+    .then(function(r){return r.json();})
+    .then(function(drafts){
+      var rookieDraft=drafts.find(function(d){return d.type==='snake'||d.type==='linear';});
+      D.rookieDraftStatus=rookieDraft?rookieDraft.status:'pre_draft';
+    })
+    .catch(function(){D.rookieDraftStatus='pre_draft';});
   D.season=parseInt(league.season)||new Date().getFullYear();
   D.week=currentWeek;
   D.totalWeeks=parseInt((league.settings&&league.settings.playoff_week_start)?league.settings.playoff_week_start-1:14);
