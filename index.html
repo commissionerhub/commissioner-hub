@@ -251,7 +251,40 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .pro-section-block{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;margin-bottom:14px;position:relative;overflow:hidden;}
 .pro-section-block::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--orange);}
 .pro-rank-num{font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--orange);opacity:0.15;position:absolute;top:8px;right:14px;line-height:1;}
-.rising{color:var(--win);font-family:'IBM Plex Mono',monospace;font-size:11px;display:inline-block;padding:2px 8px;background:rgba(34,197,94,0.1);border-radius:100px;margin-top:4px;}
+.pro-rank-item{display:grid;grid-template-columns:52px 1fr;align-items:stretch;background:var(--s2);border-radius:var(--r-sm);border:1px solid var(--border);margin-bottom:10px;overflow:hidden;position:relative;}
+.pro-rank-badge{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--orange);line-height:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 0;background:rgba(255,255,255,0.03);border-right:1px solid var(--border);gap:4px;}
+.pro-rank-emoji{font-size:18px;line-height:1;}
+.pro-rank-content{padding:10px 14px;}
+.pro-rank-name{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:2px;}
+.pro-rank-tagline{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;opacity:0.7;}
+.pro-rank-picks{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:0.05em;margin-bottom:6px;}
+.pro-rank-desc{font-size:12px;color:var(--text2);line-height:1.6;}
+.pro-rank-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);}
+.pro-rank-grade{font-family:'Bebas Neue',sans-serif;font-size:22px;}
+.pro-rank-trend{font-size:11px;font-family:'IBM Plex Mono',monospace;}
+.pro-player-card{display:grid;grid-template-columns:48px 1fr auto;align-items:center;gap:12px;padding:10px 14px;background:var(--s2);border-radius:var(--r-sm);border:1px solid var(--border);margin-bottom:8px;}
+.pro-player-pos{font-family:'Bebas Neue',sans-serif;font-size:13px;padding:4px 6px;border-radius:4px;text-align:center;font-weight:700;}
+.pro-player-pos.qb{background:rgba(239,68,68,0.15);color:#ef4444;}
+.pro-player-pos.rb{background:rgba(34,197,94,0.15);color:#22c55e;}
+.pro-player-pos.wr{background:rgba(99,102,241,0.15);color:#6366f1;}
+.pro-player-pos.te{background:rgba(245,158,11,0.15);color:#f59e0b;}
+.pro-player-pos.k{background:rgba(148,163,184,0.15);color:#94a3b8;}
+.pro-player-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;}
+.pro-player-detail{font-size:11px;color:var(--muted);font-family:'IBM Plex Sans',sans-serif;}
+.pro-player-value{font-family:'IBM Plex Mono',monospace;font-size:11px;text-align:right;}
+.pro-trade-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r-sm);margin-bottom:12px;overflow:hidden;}
+.pro-trade-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(255,255,255,0.03);border-bottom:1px solid var(--border);}
+.pro-trade-verdict{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.1em;padding:4px 10px;border-radius:4px;}
+.pro-trade-verdict.win{background:rgba(34,197,94,0.15);color:#22c55e;}
+.pro-trade-verdict.loss{background:rgba(239,68,68,0.15);color:#ef4444;}
+.pro-trade-verdict.even{background:rgba(148,163,184,0.15);color:#94a3b8;}
+.pro-trade-body{display:grid;grid-template-columns:1fr 40px 1fr;gap:8px;padding:12px 14px;align-items:center;}
+.pro-trade-side{font-size:11px;color:var(--text2);line-height:1.6;}
+.pro-trade-vs{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--muted);text-align:center;}
+.pro-trade-analysis{padding:8px 14px 12px;font-size:12px;color:var(--muted);border-top:1px solid var(--border);line-height:1.6;}
+.pro-section-hd{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text);padding:16px 0 8px;border-bottom:1px solid var(--border);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.pro-section-icon{font-size:20px;}
+  .rising{color:var(--win);font-family:'IBM Plex Mono',monospace;font-size:11px;display:inline-block;padding:2px 8px;background:rgba(34,197,94,0.1);border-radius:100px;margin-top:4px;}
 .falling{color:var(--loss);font-family:'IBM Plex Mono',monospace;font-size:11px;display:inline-block;padding:2px 8px;background:rgba(239,68,68,0.08);border-radius:100px;margin-top:4px;}
 .steady{color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:11px;display:inline-block;padding:2px 8px;background:rgba(255,255,255,0.05);border-radius:100px;margin-top:4px;}
 .pro-callout{background:linear-gradient(135deg,var(--orange-dim),rgba(168,85,247,0.08));border:1px solid rgba(255,107,43,0.25);border-radius:var(--r);padding:14px 18px;margin:16px 0;position:relative;}
@@ -2495,7 +2528,7 @@ function gen(section,btn){
   .then(function(data){
     if(data.error)throw new Error(data.error);
     var outEl=document.getElementById('out-'+section);
-    outEl.innerHTML=mdToHtml(data.text);
+    outEl.innerHTML=mdToHtml(data.text,section);
     outEl.classList.add('on');
     document.getElementById('spin-'+section).classList.remove('on');
     document.getElementById('cp-'+section).classList.remove('hidden');
@@ -2513,7 +2546,80 @@ function gen(section,btn){
     btn.disabled=false;
   });
 }
-function mdToHtml(md){
+function mdToHtml(md,section){
+  function teamCard(num,name,tagline,picks,desc,grade,trend){
+    var color=getTeamColor(name);
+    var emoji=getTeamEmoji(name);
+    var gradeClass=grade?('grade-'+(grade.toLowerCase().replace('+','p'))):'';
+    return '<div class="pro-rank-item" style="border-left:3px solid '+color+';">'+
+      '<div class="pro-rank-badge" style="color:'+color+'">'+num+'<span class="pro-rank-emoji">'+emoji+'</span></div>'+
+      '<div class="pro-rank-content">'+
+        '<div class="pro-rank-name" style="color:'+color+'">'+name+'</div>'+
+        (tagline?'<div class="pro-rank-tagline">'+tagline+'</div>':'')+
+        (picks?'<div class="pro-rank-picks">'+picks+'</div>':'')+
+        '<div class="pro-rank-desc">'+desc+'</div>'+
+        ((grade||trend)?'<div class="pro-rank-footer">'+
+          (grade?'<span class="pro-rank-grade pro-grade '+gradeClass+'">'+grade+'</span>':'')+
+          (trend?'<span class="pro-rank-trend '+(trend.includes('Rising')?'rising':trend.includes('Falling')?'falling':'steady')+'">'+trend+'</span>':'')+
+        '</div>':'')+
+      '</div>'+
+    '</div>';
+  }
+  return md
+    /* Section headers with emoji */
+    .replace(/^\*\*([🏆💎🎯📊🚀🪟💀🤑😬🔄🏅⭐💣☠️🎬🔮📋📰⚡🤝👑🍀😤💪🔥🌟📍⚠️]+)\s*([^*\n]+)\*\*/gm,function(m,icon,title){
+      return '<div class="pro-section-hd"><span class="pro-section-icon">'+icon+'</span>'+title.trim()+'</div>';
+    })
+    /* Team ranking cards: "1. TEAM NAME | TAGLINE\nPICKS: ...\ndesc\n→ trend" */
+    .replace(/^(\d+)\.\s+([A-Z][A-Z\s'&]+?)(?:\s*[|–—]\s*([^\n]+))?\n([\s\S]+?)(?=\n\n|\n\d+\.|\n\*\*|$)/gm,function(m,num,name,tagline,rest){
+      var lines=rest.trim().split('\n');
+      var picks='';var desc='';var grade='';var trend='';
+      lines.forEach(function(l){
+        l=l.trim();
+        if(/^PICKS?:/i.test(l))picks=l;
+        else if(/^PICK:/i.test(l))picks=l;
+        else if(/^TARGET:/i.test(l))desc+=l+'<br>';
+        else if(/↑ Rising|↓ Falling|→ Locked In/i.test(l))trend=l.replace(/[*]/g,'');
+        else if(/^Grade:\s*[A-F]/i.test(l))grade=l.replace(/Grade:\s*/i,'').trim();
+        else desc+=l+' ';
+      });
+      var nameClean=name.trim();
+      var isTeam=D.teams.some(function(t){
+        return t.name.toUpperCase().includes(nameClean)||nameClean.includes(t.name.toUpperCase());
+      });
+      if(!isTeam&&!tagline&&!picks)return m;
+      return teamCard(num,nameClean,tagline||'',picks,desc.trim(),grade,trend);
+    })
+    /* Bold section headers without emoji */
+    .replace(/^\*\*([A-Z][^*\n]{3,})\*\*$/gm,'<div class="pro-section-hd">$1</div>')
+    /* Inline bold */
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    /* Trend indicators */
+    .replace(/↑ Rising/g,'<span class="rising">↑ Rising</span>')
+    .replace(/↓ Falling/g,'<span class="falling">↓ Falling</span>')
+    .replace(/→ Locked In/g,'<span class="steady">→ Locked In</span>')
+    .replace(/↑ ([^\n<]+)/g,'<span class="rising">↑ $1</span>')
+    .replace(/↓ ([^\n<]+)/g,'<span class="falling">↓ $1</span>')
+    .replace(/→ ([^\n<]+)/g,'<span class="steady">→ $1</span>')
+    /* Letter grades */
+    .replace(/\b(A\+|A|B\+|B|C\+|C|D|F)\b(?=\s*[-—\s])/g,function(m){
+      var cls=m.startsWith('A')?'grade-a':m.startsWith('B')?'grade-b':m.startsWith('C')?'grade-c':m.startsWith('D')?'grade-d':'grade-f';
+      return '<span class="pro-grade '+cls+'">'+m+'</span>';
+    })
+    /* HR */
+    .replace(/^---$/gm,'<hr>')
+    /* List items */
+    .replace(/^[-•]\s+\*\*([^*]+)\*\*[:\s]*(.*)$/gm,'<li><strong>$1</strong> $2</li>')
+    .replace(/^[-•] (.+)$/gm,'<li>$1</li>')
+    .replace(/^(\d+)\. (.+)$/gm,'<li><strong>$1.</strong> $2</li>')
+    .replace(/(<li>[\s\S]*?<\/li>\n?)+/g,function(m){return'<ul>'+m+'</ul>';})
+    /* Paragraphs */
+    .replace(/^(?!<[huld]|<hr|<div)(.+)$/gm,'<p>$1</p>')
+    .replace(/<p><\/p>/g,'')
+    .replace(/<p>(<div|<h)/g,'$1')
+    .replace(/(<\/div>|<\/h\d>)<\/p>/g,'$1');
+}
+function mdToHtml_old(md){
   return md
     /* Section headers — styled blocks */
     .replace(/^\*\*([🏆💎🎯📊🚀🪟💀🤑😬🔄🏅⭐💣☠️🎬🔮📋📰⚡🤝👑🍀😤💪🔥]+)\s*([^*]+)\*\*/gm,function(match,emoji,title){
