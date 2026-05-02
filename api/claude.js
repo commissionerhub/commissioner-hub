@@ -137,7 +137,7 @@ export default async function handler(req, res) {
     }
 
     /* ── CLAUDE AI ── */
-    const analyticalSections = ['rankings','seasonrank','aitrades','aidraft'];
+    const analyticalSections = ['rankings','seasonrank','aitrades','aidraft','rookiedraft'];
     const isAnalytical = analyticalSections.includes(body.section);
     const temperature = isAnalytical ? 0.1 : 0.5;
 
